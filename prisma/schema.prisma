@@ -49,27 +49,5 @@ model User {
   Session       Session[]
 }
 
-type Image {
-  image_url String
-  image_id String?
-}
+// TODO: create schema for the other collections
 
-// model Blog {
-//    id String @id @default(auto()) @map("_id") @db.ObjectId
-//    headline String 
-
-// }
-
-// model User {
-
-//   id      String   @id @default(auto()) @map("_id") @db.ObjectId
-
-//   email   String   @unique
-
-//   name    String?
-
-//   address Address?
-
-//   posts   Post[]
-
-// }
