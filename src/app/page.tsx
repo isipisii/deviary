@@ -1,8 +1,13 @@
+import { getServerSideSession } from "@/lib/auth"
+import { ThemeSwitcher } from "@/components/ui/ThemeSwitcher"
 
-export default function Home() {
+export default async function Home() {
+  const session = await getServerSideSession()
+  console.log(session)
+
   return (
    <main> 
-      <h1>Home</h1>
+      <ThemeSwitcher /> 
    </main>
   )
 }
