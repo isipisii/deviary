@@ -1,15 +1,15 @@
-import { prisma } from "@/lib/prisma";
+import { db } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 
-// todo
+// TEST 
 export const POST = async (request: NextRequest) => {
     // const {} = await request.
     try {
-        const user = await prisma.user.create({
+        const user = await db.user.create({
             data: {
                 email: "testemail",
-                password: "123",
-                name: "Alessandro"   
+                name: "Alessandro",
+                image: "asdasdsa"  
             }
         })
 
@@ -26,7 +26,8 @@ export const POST = async (request: NextRequest) => {
 
 export const GET = async (request: NextRequest) => {
     try {
-        const user = await prisma.user.findFirst({
+
+        const user = await db.user.findFirst({
             where: {
               name: 'Alessandro',
             },
