@@ -1,5 +1,5 @@
+import ThemeToggler from "@/components/ui/theme-toggler"
 import { getServerSideSession } from "@/lib/auth"
-import { ThemeSwitcher } from "@/components/ui/ThemeSwitcher"
 
 export default async function Home() {
   const session = await getServerSideSession()
@@ -7,7 +7,7 @@ export default async function Home() {
 
   return (
    <main> 
-      <ThemeSwitcher /> 
+      <ThemeToggler /> 
    </main>
   )
 }
