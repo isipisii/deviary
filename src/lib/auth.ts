@@ -51,6 +51,7 @@ export const authOptions: NextAuthOptions = {
       return session;
     },
   },
+  secret: process.env.NEXTAUTH_SECRET
 };
 
 // for getting server session without putting authOptions in every declaration
