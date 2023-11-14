@@ -1,4 +1,14 @@
 import { ISideBarNavs } from "@/components/sidebar-nav"
+import { 
+    LuNewspaper, 
+    LuSearch, 
+    LuFlame, 
+    LuBoxes, 
+    LuPlus, 
+    LuBookmark, 
+    LuHistory,
+    LuSettings
+} from "react-icons/lu"
 
 export const sideBarNavs: ISideBarNavs[] = [
     {
@@ -7,17 +17,17 @@ export const sideBarNavs: ISideBarNavs[] = [
             {
                 title: "Feed",
                 href: "/feed",
-                icon: "newspaper"
+                icon:  LuNewspaper
             },
             {
                 title: "Search",
                 href: "/search",
-                icon: "search"
+                icon: LuSearch
             },
             {
                 title: "Popular",
                 href: "/popular",
-                icon: "flame"
+                icon: LuFlame
             },
         ]
     },
@@ -28,12 +38,12 @@ export const sideBarNavs: ISideBarNavs[] = [
             {
                 title: "Public Guilds",
                 href: "/public-guilds",
-                icon: "boxes"
+                icon: LuBoxes
             },
             {
                 title: "New Guild",
                 href: "/new-guild",
-                icon: "plus"
+                icon: LuPlus
             },
             {
                 title: "ReactJS",
@@ -53,6 +63,12 @@ export const sideBarNavs: ISideBarNavs[] = [
                 type: "guild",
                 imageUrl: "https://avatars.githubusercontent.com/u/148235334?s=200&v=4"
             },  
+            {
+                title: "ReactJS",
+                href: "/guild",
+                type: "guild",
+                imageUrl: "https://avatars.githubusercontent.com/u/6412038?s=200&v=4"
+            },
         ]
     },
 
@@ -62,17 +78,17 @@ export const sideBarNavs: ISideBarNavs[] = [
             {
                 title: "Bookmarks",
                 href: "/bookmarks",
-                icon: "bookmark"
+                icon: LuBookmark
             },
             {
                 title: "History",
                 href: "/history",
-                icon: "history"
+                icon: LuHistory
             },
             {
                 title: "Settings",
                 href: "/settings",
-                icon: "settings"
+                icon: LuSettings
             },
         ]
     },

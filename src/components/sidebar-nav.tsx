@@ -5,11 +5,9 @@ import { sideBarNavs } from "@/lib/constants";
 import Link from "next/link";
 import { useState } from "react";
 
-import { ChevronDown, ChevronUp } from "lucide-react";
-import dynamic from "next/dynamic";
-import { LucideProps } from "lucide-react";
-import dynamicIconImports from "lucide-react/dynamicIconImports";
+import { LuChevronDown, LuChevronUp } from "react-icons/lu";
 import clsx from "clsx";
+import type { IconType } from "react-icons"
 
 import { Button, Tooltip, ScrollShadow } from "@nextui-org/react";
 
@@ -42,7 +40,7 @@ export function SideBarNavs({ title, items }: ISideBarNavs) {
           <SideBarNavItems
             key={index}
             href={item.href}
-            icon={item.icon as keyof typeof dynamicIconImports}
+            icon={item.icon}
             imageUrl={item.imageUrl}
             title={item.title}
           />
@@ -62,7 +60,7 @@ export function SideBarNavs({ title, items }: ISideBarNavs) {
               bg-background border border-borderColor"
               onClick={() => setSeeMore(prevState => !prevState)}
             >
-              {seeMore ? <ChevronUp className="text-sm"/> : <ChevronDown className="text-sm"/>}
+              {seeMore ? <LuChevronUp className="text-sm"/> : <LuChevronDown className="text-sm"/>}
             </Button>
           </Tooltip>
         </div>
@@ -74,7 +72,7 @@ export function SideBarNavs({ title, items }: ISideBarNavs) {
 interface ISideBarNavItems {
   title: string;
   href: string;
-  icon?: keyof typeof dynamicIconImports;
+  icon?: IconType
   type?: "guild";
   imageUrl?: string;
 }
@@ -82,7 +80,7 @@ interface ISideBarNavItems {
 export function SideBarNavItems({
   title,
   href,
-  icon,
+  icon: Icon,
   type,
   imageUrl,
 }: ISideBarNavItems) {
@@ -91,14 +89,14 @@ export function SideBarNavItems({
       href={href}
       className="bg-[#1d262e4e] flex items-center gap-4 p-2 rounded-[1.2rem]"
     >
-      {icon && !imageUrl ? (
+      {Icon && !imageUrl ? (
         <p
           className={clsx(
             "text-[#DD0DB9] bg-background text-[2rem] p-2 rounded-2xl",
             { "text-red-600": title === "Popular" }
           )}
         >
-          <Icon name={icon} />
+          <Icon/>
         </p>
       ) : (
         <div className="bg-background p-2 rounded-2xl">
@@ -113,16 +111,3 @@ export function SideBarNavItems({
     </Link>
   );
 }
-
-// for dynamic icons
-interface IconProps extends LucideProps {
-  name: keyof typeof dynamicIconImports;
-}
-
-const Icon = ({ name, ...props }: IconProps) => {
-  const LucideIcon = dynamic(dynamicIconImports[name]);
-
-  return <LucideIcon {...props} />;
-};
-
-export default Icon;
