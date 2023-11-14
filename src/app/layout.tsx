@@ -1,35 +1,42 @@
-import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
-import './globals.css'
-import Providers from '@/components/providers/providers'
-import TopNav from '@/components/top-nav'
-import { SideBar } from '@/components/sidebar-nav'
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
+import "./globals.css";
+import Providers from "@/components/providers/providers";
+import TopNav from "@/components/top-nav";
+import { SideBar } from "@/components/sidebar-nav";
+import { getServerSideSession } from "@/lib/auth";
 
-const inter = Inter({ subsets: ['latin'] })
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: 'Deviary',
+  title: "Deviary",
   description: `a developer's diary and community`,
-}
+};
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
+  const session = await getServerSideSession();
+
   return (
     <html lang="en">
       <body className={inter.className + "bg-background"}>
-          <Providers>
-            <TopNav />
-            <div className="flex h-screen flex-row md:overflow-hidden">
+        <Providers>
+          <TopNav />
+          <div className="flex h-screen flex-row md:overflow-hidden">
+            {session?.user && (
               <div className="flex-none w-[280px] border-r border-borderColor hidden md:block overflow-y-auto">
                 <SideBar />
               </div>
-              <div className="flex-grow p-6 md:overflow-y-auto md:p-8">{children}</div>
+            )}
+            <div className="flex-grow p-6 md:overflow-y-auto md:p-8">
+              {children}
             </div>
-          </Providers>
+          </div>
+        </Providers>
       </body>
     </html>
-  )
+  );
 }
