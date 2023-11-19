@@ -1,8 +1,10 @@
 import { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
+import CredentialsProvider from "next-auth/providers/credentials"
 import { db } from "@/lib/prisma";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { getServerSession } from "next-auth";
+import argon2 from "argon2"
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(db),
@@ -10,6 +12,38 @@ export const authOptions: NextAuthOptions = {
     strategy: "jwt",
   },
   providers: [
+    CredentialsProvider({
+      type: "credentials",
+      credentials: {},
+      async authorize(credentials, req) {
+          const { email, password } = credentials as TSignInCredentials
+
+          try {
+              const user = await db.user.findFirst({
+                where: {
+                  email
+                },
+              })
+              if (!user) throw Error("Invalid credentials");
+
+              if(user.password) {
+                const didMatch = await argon2.verify(user.password, password)
+                if (!didMatch) throw Error("Invalid credentials");
+              }
+
+              // the will be the user in jwt's callback params
+              return {
+                  name: user.name,
+                  email: user.email,
+                  id: user.id,
+                  picture: user.image
+              }
+          } catch (error) {
+              console.log(error);
+              return null;
+          }
+        },
+    }),
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
