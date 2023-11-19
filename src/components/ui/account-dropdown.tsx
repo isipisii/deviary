@@ -16,16 +16,17 @@ import { signOut } from "next-auth/react";
 
 export default function AccountDropdown() {
   const { data, status } = useSession();
+  const isAuthenticated = status === "authenticated"
 
   return (
     <>
-      {data?.user &&
+      {data && data.user.image && isAuthenticated && 
         <Dropdown placement="bottom-start" backdrop="transparent" className="bg-background">
           <DropdownTrigger>
             <User
               as="button"
               avatarProps={{
-                src: data.user.image as string,
+                src: data.user.image,
               }}
               className="transition-transform"
               description={data.user.email}
