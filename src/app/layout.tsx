@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import "./globals.css";
+import "./styles/globals.css";
 import Providers from "@/components/providers/providers";
 import TopNav from "@/components/top-nav";
 import { SideBar } from "@/components/sidebar-nav";
@@ -24,14 +24,14 @@ export default async function RootLayout({
     <html lang="en">
       <body className={inter.className + "bg-background"}>
         <Providers>
-          <TopNav />
+          {session?.user && <TopNav />}
           <div className="flex h-screen flex-row md:overflow-hidden">
             {session?.user && (
               <div className="flex-none w-[280px] border-r border-borderColor hidden md:block overflow-y-auto">
                 <SideBar />
               </div>
             )}
-            <div className="flex-grow p-6 md:overflow-y-auto md:p-8">
+            <div className="flex-grow">
               {children}
             </div>
           </div>
