@@ -16,7 +16,7 @@ export function SideBar() {
     <ScrollShadow size={50} className="max-h-[90vh]">
       <div className="flex flex-col gap-8 my-4 p-4">
         {sideBarNavs.map((nav, index) => (
-          <SideBarNavs key={index} title={nav.title} items={nav.items} />
+          <SideBarNav key={index} title={nav.title} items={nav.items} />
         ))}
       </div>
     </ScrollShadow>
@@ -25,10 +25,10 @@ export function SideBar() {
 
 export interface ISideBarNavs {
   title: string;
-  items: ISideBarNavItems[];
+  items: ISideBarNavItem[];
 }
 
-export function SideBarNavs({ title, items }: ISideBarNavs) {
+export function SideBarNav({ title, items }: ISideBarNavs) {
   const isOverflowing = items.filter((item) => item.type === "guild").length > 2;
   const [seeMore, setSeeMore] = useState(false)
   
@@ -37,7 +37,7 @@ export function SideBarNavs({ title, items }: ISideBarNavs) {
       <p className="font-semibold">{title}</p>
       <div className="flex flex-col gap-2">
         {items.slice(0, seeMore ? items.length : 4).map((item, index) => (
-          <SideBarNavItems
+          <SideBarNavItem
             key={index}
             href={item.href}
             icon={item.icon}
@@ -69,7 +69,7 @@ export function SideBarNavs({ title, items }: ISideBarNavs) {
   );
 }
 
-interface ISideBarNavItems {
+interface ISideBarNavItem {
   title: string;
   href: string;
   icon?: IconType
@@ -77,13 +77,13 @@ interface ISideBarNavItems {
   imageUrl?: string;
 }
 
-export function SideBarNavItems({
+export function SideBarNavItem({
   title,
   href,
   icon: Icon,
   type,
   imageUrl,
-}: ISideBarNavItems) {
+}: ISideBarNavItem) {
   return (
     <Link
       href={href}
@@ -92,7 +92,7 @@ export function SideBarNavItems({
       {Icon && !imageUrl ? (
         <p
           className={clsx(
-            "text-[#DD0DB9] bg-background text-[2rem] p-2 rounded-2xl",
+            "text-[#DD0DB9] bg-background text-[1.5rem] p-2 rounded-2xl",
             { "text-red-600": title === "Popular" }
           )}
         >
@@ -102,7 +102,7 @@ export function SideBarNavItems({
         <div className="bg-background p-2 rounded-2xl">
           <img
             src={imageUrl}
-            className="rounded-full h-[25px] w-[25px]"
+            className="rounded-full h-[23px] w-[23px]"
             alt="guild logo"
           />
         </div>
