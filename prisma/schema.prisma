@@ -43,9 +43,12 @@ model User {
   id            String    @id @default(cuid()) @map("_id")
   name          String?
   email         String?   @unique
+  password      String?
   emailVerified DateTime?
   image         String?
   onboarded     Boolean?  @default(false)
+  createdAt     DateTime  @default(now()) @map(name: "created_at")
+  updatedAt     DateTime  @default(now()) @map(name: "updated_at")
   Account       Account[]
   Session       Session[]
 }
