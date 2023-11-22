@@ -13,13 +13,17 @@ import { Button, Tooltip, ScrollShadow } from "@nextui-org/react";
 
 export function SideBar() {
   return (
-    <ScrollShadow size={50} className="max-h-[90vh]">
-      <div className="flex flex-col gap-8 my-4 p-4">
-        {sideBarNavs.map((nav, index) => (
-          <SideBarNav key={index} title={nav.title} items={nav.items} />
-        ))}
-      </div>
-    </ScrollShadow>
+  <>
+    <div className="flex-none w-[280px] border-r border-borderColor hidden md:block overflow-y-auto">
+      <ScrollShadow size={50} className="max-h-[90vh]">
+        <div className="flex flex-col gap-8 my-4 p-4">
+          {sideBarNavs.map((nav, index) => (
+            <SideBarNav key={index} title={nav.title} items={nav.items} />
+          ))}
+        </div>
+      </ScrollShadow> 
+    </div>
+  </>
   );
 }
 
@@ -50,17 +54,17 @@ export function SideBarNav({ title, items }: ISideBarNavs) {
       {/* for guild side bar navs */}
       {title === "Guild" && isOverflowing && (
         <div
-            className="w-full -bottom-4  left-0 absolute
-            h-12 bg-gradient-to-t from-[#00060C]
-          via-[#00060cb2] to-transparent flex items-center justify-center"
+            className={`w-full ${seeMore ? "-bottom-7" : "-bottom-4"} left-0 absolute
+            h-12 bg-gradient-to-t from-background
+            via-background to-transparent flex items-center justify-center`}
         >
-          <Tooltip content={seeMore ? "See less" : "See more"}>
+          <Tooltip content={seeMore ? "See less" : "See more"} className="bg-background">
             <Button     
               className="min-w-0 w-[40px] h-[40px] p-0 rounded-full 
-              bg-background border border-borderColor"
+              bg-background border-2 border-borderColor text-[1.2rem]"
               onClick={() => setSeeMore(prevState => !prevState)}
             >
-              {seeMore ? <LuChevronUp className="text-sm"/> : <LuChevronDown className="text-sm"/>}
+              {seeMore ? <LuChevronUp/> : <LuChevronDown />}
             </Button>
           </Tooltip>
         </div>
@@ -87,16 +91,16 @@ export function SideBarNavItem({
   return (
     <Link
       href={href}
-      className="bg-[#1d262e4e] flex items-center gap-4 p-2 rounded-[1.2rem]"
+      className="bg-navItemBackground hover:bg-navItemHoverBg font-medium flex items-center gap-4 p-2 rounded-[1.2rem]"
     >
       {Icon && !imageUrl ? (
         <p
-          className={clsx(
+          className={clsx( 
             "text-[#DD0DB9] bg-background text-[1.5rem] p-2 rounded-2xl",
             { "text-red-600": title === "Popular" }
           )}
         >
-          <Icon/>
+          <Icon />
         </p>
       ) : (
         <div className="bg-background p-2 rounded-2xl">
