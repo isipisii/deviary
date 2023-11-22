@@ -24,6 +24,9 @@ const config: Config = {
           colors: {
             background: "#00060C",
             foreground: "#ffffff",
+            navItemBackground: "#1d262e4e",
+            navItemHoverBg: "#29364196",
+            secondary: "#DD0DB9",
             primary: {
               50: "#3B096C",
               100: "#520F83",
@@ -58,7 +61,10 @@ const config: Config = {
         light: {
           extend: "light",
           colors: {
-            borderColor: "#DBDBDB",
+            borderColor: "#E4E4E7",
+            secondary: "#DD0DB9",
+            navItemBackground: "#c7c7c72c",
+            navItemHoverBg: "#c7c7c75e"
           },
           layout: {
             disabledOpacity: "0.3",
