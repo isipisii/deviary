@@ -5,6 +5,8 @@ import Providers from "@/components/providers/providers";
 import TopNav from "@/components/top-nav";
 import { SideBar } from "@/components/sidebar-nav";
 import { getServerSideSession } from "@/lib/auth";
+import { Toaster } from "sonner";
+import NextTopLoader from 'nextjs-toploader';
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -24,9 +26,11 @@ export default async function RootLayout({
     <html lang="en">
       <body className={inter.className + "bg-background"}>
         <Providers>
-          {session?.user && <TopNav />}
+          <NextTopLoader height={3} showSpinner={false} color="#DD0DB9"/>
+          <Toaster richColors expand={true} position="bottom-right" />
+          {session && <TopNav />}
           <div className="flex h-screen flex-row md:overflow-hidden">
-            {session?.user && (
+            {session && (
               <div className="flex-none w-[280px] border-r border-borderColor hidden md:block overflow-y-auto">
                 <SideBar />
               </div>
