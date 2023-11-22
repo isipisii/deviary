@@ -1,41 +1,148 @@
-/* eslint-disable @next/next/no-img-element */
-"use client"
+"use client";
 
-import { Input, Divider, Button } from "@nextui-org/react"
+import { useState } from "react";
+import { Input, Divider, Button } from "@nextui-org/react";
 import GoogleButton from "./google-button";
+import { useForm } from "react-hook-form";
+import { signUpSchema } from "@/lib/validators/auth-validator";
+import z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
-export default function SignInForm() {
+import { FaEyeSlash, FaEye } from "react-icons/fa";
+import Link from "next/link";
+
+import { useMutation } from "@tanstack/react-query"
+import { signUp } from "@/lib/services/auth.api";
+import { toast } from "sonner"
+
+export type TSignUpSchema = z.infer<typeof signUpSchema>;
+
+export default function SignUpForm() {
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] = useState(false);
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<TSignUpSchema>({
+    resolver: zodResolver(signUpSchema),
+  });
+  
+  const { mutate, isPending } = useMutation({
+    mutationFn: (formData: TSignUpSchema) => signUp(formData),
+    onSuccess: () => {
+      toast.success("Account created successfully.")
+    },
+    onError: (error) => {
+      toast.error(error.message)
+    }
+  })
+
+  const isButtonDisable = !(
+    !!watch("email") && 
+    !!watch("password") && 
+    !!watch("confirmPassword")
+  )
+
+  function handleSignUp(formData: TSignUpSchema) {
+    mutate(formData)
+  }
+
   return (
-    <form className="max-w-[600px] w-full flex flex-col gap-4">
-      <h2 className="font-semibold text-xl">Sign in to your account</h2>
-      <div className="flex flex-col gap-2">
-        <Input 
-          isClearable
+    <form
+      className="max-w-[500px] w-full flex flex-col gap-4 mx-4"
+      onSubmit={handleSubmit(handleSignUp)}
+    >
+      <h2 className="font-semibold text-2xl">Create an account</h2>
+      <div className="flex flex-col gap-3">
+        <Input
           type="email"
           label="Email"
           labelPlacement="outside"
           placeholder="Enter your email"
-          size="lg"
+          size="md"
           variant="bordered"
+          errorMessage={errors.email?.message}
+          isInvalid={!!errors.email}
+          {...register("email")}
         />
+
         <Input
-          isClearable
-          type="password"
+          type={isPasswordVisible ? "text" : "password"}
           label="Password"
           labelPlacement="outside"
           placeholder="Enter your password"
-          size="lg"
+          size="md"
           variant="bordered"
+          errorMessage={errors.password?.message}
+          isInvalid={!!errors.password}
+          {...register("password")}
+          endContent={
+            <button
+              className="focus:outline-none"
+              type="button"
+              onClick={() => setIsPasswordVisible((prevState) => !prevState)}
+            >
+              {isPasswordVisible ? (
+                <FaEyeSlash className="text-lg text-default-400 pointer-events-none" />
+              ) : (
+                <FaEye className="text-lg text-default-400 pointer-events-none" />
+              )}
+            </button>
+          }
         />
-        <Button color="secondary" size="lg" variant="solid" className="font-semibold">Sign in</Button>
+
+        <Input
+          type={isConfirmPasswordVisible ? "text" : "password"}
+          label="Confirm password"
+          labelPlacement="outside"
+          placeholder="Re-enter your password"
+          size="md"
+          variant="bordered"
+          errorMessage={errors.confirmPassword?.message}
+          isInvalid={!!errors.confirmPassword}
+          {...register("confirmPassword")}
+          endContent={
+            <button
+              className="focus:outline-none"
+              type="button"
+              onClick={() => setIsConfirmPasswordVisible((prevState) => !prevState)}
+            >
+              {isConfirmPasswordVisible ? (
+                <FaEyeSlash className="text-lg text-default-400 pointer-events-none" />
+              ) : (
+                <FaEye className="text-lg text-default-400 pointer-events-none" />
+              )}
+            </button>
+          }
+        />
+
+        <Button
+          type="submit"
+          color="secondary"
+          size="md"
+          variant="solid"
+          isLoading={isPending}
+          className="text-white font-semibold"
+          isDisabled={isButtonDisable}
+        >
+          Sign up
+        </Button>
       </div>
+
       <div className="flex gap-4 w-full items-center">
-        <Divider className="w-[35%]"/>
-        <p className="w-full text-center opacity-60 text-sm">Or continue with</p>  
-        <Divider className="w-[35%]"/>
+        <Divider className="w-[35%]" />
+        <p className="w-full text-center opacity-60 text-sm">
+          Or sign up with
+        </p>
+        <Divider className="w-[35%]" />
       </div>
-      
+
       <GoogleButton />
+      <p className="text-center">
+        Have an account? <Link href="/sign-in" className="text-primary-500 text-sm">Sign in</Link>
+      </p>
     </form>
-  )
+  );
 }

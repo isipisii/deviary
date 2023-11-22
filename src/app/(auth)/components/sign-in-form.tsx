@@ -4,45 +4,79 @@ import { useState } from "react";
 import { Input, Divider, Button } from "@nextui-org/react";
 import GoogleButton from "./google-button";
 import { useForm } from "react-hook-form";
-import { signInSchema } from "@/lib/validations/auth";
+import { signInSchema } from "@/lib/validators/auth-validator";
 import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { FaEyeSlash, FaEye } from "react-icons/fa";
 import Link from "next/link";
+import { toast } from "sonner";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation"
 
-type TSignInSchema = z.infer<typeof signInSchema>;
+export type TSignInSchema = z.infer<typeof signInSchema>;
 
 export default function SignInForm() {
+  const router = useRouter()
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [isSigningIn, setIsSigningIn] = useState(false);
   const {
     register,
     handleSubmit,
     watch,
-    setValue,
     formState: { errors },
   } = useForm<TSignInSchema>({
     resolver: zodResolver(signInSchema),
   });
   // const isButtonDisable = !!watch(["email"]) || !!watch(["password"])
+  // const { mutate, isPending, data } =  useMutation({
+  //   mutationFn: handleSignIn,
+  //   onSuccess: () => {
+  //     router.replace("/")
+  //   }
+  // })
 
-  function submit(formValue: TSignInSchema) {
-    console.log(formValue);
+  const isButtonDisable =  !(!!watch("email") && !!watch("password")) || isSigningIn
+
+  async function handleSignIn(formValue: TSignInSchema) {
+    try {
+      setIsSigningIn(true)
+
+      const res = await signIn("credentials", {
+        email: formValue.email,
+        password: formValue.password,
+        redirect: false
+      }) 
+
+      router.refresh()
+
+      if(res?.ok) {
+        router.push("/")
+      }
+
+      if(res?.error) {
+        toast.error("Invalid Credentials")
+      }
+
+      setIsSigningIn(false)
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   return (
     <form
-      className="max-w-[600px] w-full flex flex-col gap-4 mx-4"
-      onSubmit={handleSubmit(submit)}
+      className="max-w-[500px] w-full flex flex-col gap-4 mx-4"
+      onSubmit={handleSubmit(handleSignIn)}
     >
-      <h2 className="font-semibold text-xl">Sign in to your account</h2>
+      <h2 className="font-semibold text-2xl">Sign in to your account</h2>
       <div className="flex flex-col gap-3">
         <Input
           type="email"
           label="Email"
           labelPlacement="outside"
           placeholder="Enter your email"
-          size="lg"
+          size="md"
           variant="bordered"
           errorMessage={errors.email?.message}
           isInvalid={!!errors.email}
@@ -54,7 +88,7 @@ export default function SignInForm() {
           label="Password"
           labelPlacement="outside"
           placeholder="Enter your password"
-          size="lg"
+          size="md"
           variant="bordered"
           errorMessage={errors.password?.message}
           isInvalid={!!errors.password}
@@ -77,10 +111,11 @@ export default function SignInForm() {
         <Button
           type="submit"
           color="secondary"
-          size="lg"
+          size="md"
           variant="solid"
-          className="font-semibold"
-          // disabled={!isButtonDisable}
+          isLoading={isSigningIn}
+          isDisabled={isButtonDisable}
+          className="text-white font-semibold"
         >
           Sign in
         </Button>
@@ -96,7 +131,7 @@ export default function SignInForm() {
 
       <GoogleButton />
       <p className="text-center">
-        Dont have an account? <Link href="sign-up" className="text-primary-500">Sign up</Link>
+        Dont have an account? <Link href="/sign-up" className="text-primary-500">Sign up</Link>
       </p>
     </form>
   );
