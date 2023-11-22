@@ -5,6 +5,7 @@ import { db } from "@/lib/prisma";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { getServerSession } from "next-auth";
 import argon2 from "argon2"
+import { TSignInSchema } from "@/app/(auth)/components/sign-in-form";
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(db),
@@ -16,7 +17,7 @@ export const authOptions: NextAuthOptions = {
       type: "credentials",
       credentials: {},
       async authorize(credentials, req) {
-          const { email, password } = credentials as TSignInCredentials
+          const { email, password } = credentials as TSignInSchema
 
           try {
               const user = await db.user.findFirst({
@@ -26,12 +27,10 @@ export const authOptions: NextAuthOptions = {
               })
               if (!user) throw Error("Invalid credentials");
 
-              if(user.password) {
-                const didMatch = await argon2.verify(user.password, password)
-                if (!didMatch) throw Error("Invalid credentials");
-              }
+              const didMatch = await argon2.verify(user?.password ?? "", password)
+              if (!didMatch) throw Error("Invalid credentials");
 
-              // the will be the user in jwt's callback params
+              // this will be the user in jwt's param
               return {
                   name: user.name,
                   email: user.email,
@@ -85,7 +84,7 @@ export const authOptions: NextAuthOptions = {
       return session;
     },
   },
-  secret: process.env.NEXTAUTH_SECRET
+  secret: process.env.NEXTAUTH_SECRET,
 };
 
 // for getting server session without putting authOptions in every declaration
