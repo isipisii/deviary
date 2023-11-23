@@ -3,6 +3,7 @@
 
 import { sideBarNavs } from "@/lib/constants";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
 
 import { LuChevronDown, LuChevronUp } from "react-icons/lu";
@@ -88,16 +89,22 @@ export function SideBarNavItem({
   type,
   imageUrl,
 }: ISideBarNavItem) {
+  const pathname = usePathname()
+  const isActive = (href: string) => pathname === href
+
   return (
     <Link
       href={href}
-      className="bg-navItemBackground hover:bg-navItemHoverBg font-medium flex items-center gap-4 p-2 rounded-[1.2rem]"
+      className= {clsx(
+        "bg-navItemBackground hover:bg-navItemHoverBg font-medium flex items-center gap-4 p-2 rounded-[1.2rem]",
+        {"bg-navItemHoverBg font-semibold": isActive(href)}
+      )}
     >
       {Icon && !imageUrl ? (
         <p
           className={clsx( 
             "text-[#DD0DB9] bg-background text-[1.5rem] p-2 rounded-2xl",
-            { "text-red-600": title === "Popular" }
+            { "text-red-600": title === "Popular", }
           )}
         >
           <Icon />
