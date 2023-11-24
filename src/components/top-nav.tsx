@@ -11,7 +11,7 @@ export default function TopNav() {
   const { theme } = useTheme();
 
   return (
-    <nav className="border border-borderColor">
+    <nav className="border-b border-borderColor">
       <div className="flex p-4 justify-between items-center">
         {/* logo */}
         <img
