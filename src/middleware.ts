@@ -12,12 +12,10 @@ export default withAuth(
     req.nextUrl.pathname.startsWith("/sign-in") ||
     req.nextUrl.pathname.startsWith("/sign-up")
 
-
     if (isAuthPage) {
       if (isAuth) {
-        return NextResponse.redirect(new URL("/", req.url))
+        return NextResponse.redirect(new URL("/feed", req.url))
       }
-
       return null
     }
 
