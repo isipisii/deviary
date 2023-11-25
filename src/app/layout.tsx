@@ -7,6 +7,9 @@ import { SideBar } from "@/components/sidebar-nav";
 import { getServerSideSession } from "@/lib/auth";
 import { Toaster } from "sonner";
 import NextTopLoader from 'nextjs-toploader';
+import "@uploadthing/react/styles.css";
+import { db } from "@/lib/prisma";
+import { redirect } from "next/navigation";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,6 +24,13 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   const session = await getServerSideSession();
+
+  // // for checking if the user isnt onboarded
+  // const user = await db.user.findFirst({
+  //   where: {
+  //     id: session?.user.id
+  //   }
+  // })
 
   return (
     <html lang="en">
