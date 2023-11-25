@@ -51,7 +51,19 @@ model User {
   updatedAt     DateTime  @default(now()) @map(name: "updated_at")
   Account       Account[]
   Session       Session[]
+  Post          Post[]
 }
 
 // TODO: create schema for the other collections
+model Post {
+  id            String @id @default(cuid()) @map("_id")
+  creatorId     String
+  user          User     @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+  type          PostType
+}
 
+
+enum PostType  {
+  BLOG_POST
+  BUG_POST
+}
