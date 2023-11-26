@@ -11,8 +11,8 @@ datasource db {
 }
 
 model Account {
-  id                 String  @id @default(cuid()) @map("_id")
-  userId             String
+  id                 String @id @default(auto()) @map("_id") @db.ObjectId
+  userId             String  @db.ObjectId
   type               String
   provider           String
   providerAccountId  String
@@ -32,36 +32,63 @@ model Account {
 }
 
 model Session {
-  id           String   @id @default(cuid()) @map("_id")
+  id           String @id @default(auto()) @map("_id") @db.ObjectId
   sessionToken String   @unique
-  userId       String
+  userId       String  @db.ObjectId
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
+type Image {
+  imageKey String
+  imageUrl String
+}
+
 model User {
-  id            String    @id @default(cuid()) @map("_id")
-  name          String?
-  email         String?   @unique
-  password      String?
-  emailVerified DateTime?
-  image         String?
-  onboarded     Boolean?  @default(false)
-  createdAt     DateTime  @default(now()) @map(name: "created_at")
-  updatedAt     DateTime  @default(now()) @map(name: "updated_at")
-  Account       Account[]
-  Session       Session[]
-  Post          Post[]
+  id              String @id @default(auto()) @map("_id") @db.ObjectId
+  name            String?
+  email           String?   @unique
+  password        String?
+  emailVerified   DateTime?
+  image           Image?
+  onboarded       Boolean?  @default(false)
+  createdAt       DateTime  @default(now()) @map(name: "created_at")
+  updatedAt       DateTime  @default(now()) @map(name: "updated_at")
+  Account         Account[]
+  Session         Session[]
+  Post            Post[]
+
+  guildsBelongId  String[] @db.ObjectId
+  guildsBelong     Guild[]  @relation("GuildMembers", fields: [guildsBelongId], references: [id])
+
+  guildsCreatedId String[] @db.ObjectId
+  guildsCreated   Guild[]  @relation("GuildCreator")
+}
+
+model Guild {
+  id              String @id @default(auto()) @map("_id") @db.ObjectId
+  guildName       String
+
+  guildCreatorId  String @db.ObjectId
+  guildCreator    User  @relation("GuildCreator", fields: [guildCreatorId], references: [id])
+  
+  guildMembersId  String[] @db.ObjectId
+  guildMembers    User[]  @relation("GuildMembers", fields: [guildMembersId], references: [id])
+
+  createdAt       DateTime  @default(now()) @map(name: "created_at")
+  updatedAt       DateTime  @default(now()) @map(name: "updated_at")
 }
 
 // TODO: create schema for the other collections
 model Post {
-  id            String @id @default(cuid()) @map("_id")
-  creatorId     String
-  user          User     @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+  id            String @id @default(auto()) @map("_id") @db.ObjectId
+  authorId     String @db.ObjectId
+  author         User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
   type          PostType
+  tags          String[]
+  createdAt     DateTime  @default(now()) @map(name: "created_at")
+  updatedAt     DateTime  @default(now()) @map(name: "updated_at")
 }
-
 
 enum PostType  {
   BLOG_POST
