@@ -2,7 +2,7 @@
 "use client";
 
 import { useState } from "react";
-import { Input, Button } from "@nextui-org/react";
+import { Input, Button, Avatar } from "@nextui-org/react";
 import { useForm } from "react-hook-form";
 import { onboardingSchema } from "@/lib/validators/auth-validator";
 import z from "zod";
@@ -50,6 +50,7 @@ export default function OnBoardingForm({ user }: IOnboardingForm) {
 
 //   const isButtonDisable =  !(!!watch("email") && !!watch("password")) || isSigningIn
 
+// TODO TOMORROW: TRY TO PUT THE FILE UPLOAD IN SERVER SIDE
   function log(formData: TOnBoardingSchema) {
     console.log(formData)
   }
@@ -57,25 +58,27 @@ export default function OnBoardingForm({ user }: IOnboardingForm) {
     <form
         className="max-w-[450px] w-full flex flex-col gap-4 mx-4"
         onSubmit={handleSubmit(log)}
-    >   
-      <h2 className="font-bold text-2xl text-center">Profile</h2>
-      <p className="text-center">Customize your deviary profile</p>
+    >  
+      <div className="grid gap-2">
+        <h2 className="font-bold text-2xl text-center">Profile</h2>
+        <p className="text-center">Customize your deviary profile</p>
+      </div>
+      
       <div className="flex flex-col gap-3">
 
-        <UploadButton
-          endpoint="imageUploader"
-          onClientUploadComplete={(res) => {
-            // Do something with the response
-            const imageUrl = res[0].url
-            setImageUploaded(imageUrl)
-          }}
-          onUploadError={(error: Error) => {
-            // Do something with the error.
-            alert(`ERROR! ${error.message}`);
-          }}
-        />
-
-        <img src={imageUploaded} alt="image"/>
+        <div className="flex flex-col items-center gap-2 ">
+          <Avatar radius="sm" className="h-[100px] w-[100px]" src={imageUploaded} />
+          <UploadButton
+            endpoint="imageUploader"
+            onClientUploadComplete={(res) => {
+              const imageUrl = res[0].url
+              setImageUploaded(imageUrl)
+            }}
+            onUploadError={(error: Error) => {
+              toast.error(error.message)
+            }}
+          />
+        </div>
 
         <Input
             type="name"

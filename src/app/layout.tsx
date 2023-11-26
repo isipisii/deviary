@@ -41,7 +41,10 @@ export default async function RootLayout({
           {session && <TopNav />}
           <div className="flex h-screen flex-row md:overflow-hidden">
             {session && (
-              <div className="flex-none w-[280px] border-r border-borderColor hidden md:block overflow-y-auto">
+              <div                       
+                className="flex-none w-[280px] border-r border-borderColor hidden 
+                md:block overflow-y-auto shadow-lg"
+              >
                 <SideBar />
               </div>
             )}

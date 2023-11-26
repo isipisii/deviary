@@ -11,14 +11,13 @@ export default function TopNav() {
   const { theme } = useTheme();
 
   return (
-    <nav className="border-b border-borderColor">
+    <nav className="border-b border-borderColor shadow-sm">
       <div className="flex p-4 justify-between items-center">
         {/* logo */}
         <img
           src={theme === "light" ? "/images/deviary-light.svg" :  "/images/deviary-dark.svg" }
           alt="logo"
         />
-
         <div className="flex gap-4 items-center">
             <ThemeToggler />
             <Tooltip content="Notifications" className="bg-backgorund">

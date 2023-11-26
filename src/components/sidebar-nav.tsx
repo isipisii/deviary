@@ -14,17 +14,16 @@ import { Button, Tooltip, ScrollShadow } from "@nextui-org/react";
 
 export function SideBar() {
   return (
-  <>
-    <div className="flex-none w-[280px] border-r border-borderColor hidden md:block overflow-y-auto">
-      <ScrollShadow size={50} className="max-h-[90vh]">
-        <div className="flex flex-col gap-8 my-4 p-4">
-          {sideBarNavs.map((nav, index) => (
-            <SideBarNav key={index} title={nav.title} items={nav.items} />
-          ))}
-        </div>
-      </ScrollShadow> 
-    </div>
-  </>
+    <ScrollShadow 
+      size={50} 
+      className="max-h-[90vh]"
+    >
+      <div className="flex flex-col gap-8 my-4 p-4">
+        {sideBarNavs.map((nav, index) => (
+          <SideBarNav key={index} title={nav.title} items={nav.items} />
+        ))}
+      </div>
+    </ScrollShadow> 
   );
 }
 
