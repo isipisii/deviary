@@ -14,6 +14,7 @@ import Link from "next/link";
 import { useMutation } from "@tanstack/react-query"
 import { signUp } from "@/lib/services/auth.api";
 import { toast } from "sonner"
+import { AxiosError } from "axios";
 
 export type TSignUpSchema = z.infer<typeof signUpSchema>;
 
@@ -34,8 +35,8 @@ export default function SignUpForm() {
     onSuccess: () => {
       toast.success("Account created successfully.")
     },
-    onError: (error) => {
-      toast.error(error.message)
+    onError: (error: AxiosError<ErrorResponse>) => {
+      toast.error(error.response?.data?.message)
     }
   })
 
