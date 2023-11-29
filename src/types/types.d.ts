@@ -1,10 +1,12 @@
-// todo: use zod later
+//this is for axios generic's type response 
+interface ErrorResponse {
+    message: string
+}
 
-type TSignUpCredentials = {
-    confirmPassword: string
-} & TSignInCredentials
-
-type TSignInCredentials = {
+type TUser = {
+    id: string
     email: string
-    password: string
+    onboarded: boolean
+    name: string
+    image: string
 }
