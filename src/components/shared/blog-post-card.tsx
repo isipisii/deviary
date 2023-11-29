@@ -5,6 +5,7 @@ import truncateString from "@/utils/truncateString"
 import { Button } from "@nextui-org/react"
 import { useSession } from "next-auth/react"
 import { TbArrowBigUp, TbArrowBigUpFilled, TbShare3 } from "react-icons/tb";
+import { Avatar } from "@nextui-org/react";
 import { FaRegComments } from "react-icons/fa";
 
 export default function BlogPostCard() {
@@ -27,10 +28,9 @@ export default function BlogPostCard() {
         {/* blog details */}
         <div className="absolute bottom-4 left-1/2 -translate-x-1/2 w-[90%] flex justify-center flex-col gap-2">
             <div className='grid gap-1'>
-                <img 
-                    src={data?.user.image ?? ""} 
-                    alt="basta" 
-                    className=" object-cover rounded-full h-[40px] w-[40px]"
+                <Avatar
+                    src={data?.user.image as string}
+                    className="h-[40px] w-[40px]"
                 />
                 <h3 className="font-bold text-xl text-white">{truncateString("Recap of NextJS Conf 2023 and v14 release.")}</h3>
             </div>
