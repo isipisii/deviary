@@ -22,12 +22,9 @@ export const signUpSchema = z.object({
     path: ["confirmPassword"]
 })
 
-
-
 export const onboardingSchema = z.object({
     name: z.string()
     .min(1, {message: "Name is required"})
     .max(50, {message: "Name should not exceed to 50 characters."}),
-    image: z.string().nullish(),
     email: z.string().email()
 })
