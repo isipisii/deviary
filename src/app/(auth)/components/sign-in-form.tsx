@@ -130,7 +130,7 @@ export default function SignInForm() {
       </div>
 
       <GoogleButton />
-      <p className="text-center">
+      <p className="text-center text-sm">
         Dont have an account? <Link href="/sign-up" className="text-primary-500">Sign up</Link>
       </p>
     </form>

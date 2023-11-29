@@ -82,7 +82,7 @@ model Guild {
 // TODO: create schema for the other collections
 model Post {
   id            String @id @default(auto()) @map("_id") @db.ObjectId
-  authorId     String @db.ObjectId
+  authorId      String @db.ObjectId
   author         User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
   type          PostType
   tags          String[]

@@ -21,10 +21,10 @@ export const POST = async (request: NextRequest) => {
             return NextResponse.json({
                 errors: signUpCredentials.error.flatten().fieldErrors,
                 message: "Error in sign up credentials.",
-            }, { status: 400 })
+            }, { status: 400 })   
         }
 
-        const existingUserEmail = await db.user.findFirst({
+        const existingUserEmail = await db.user.findUnique({
             where: {
                 email
             }

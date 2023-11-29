@@ -15,10 +15,12 @@ import { useMutation } from "@tanstack/react-query"
 import { signUp } from "@/lib/services/auth.api";
 import { toast } from "sonner"
 import { AxiosError } from "axios";
+import { useRouter } from "next/navigation"
 
 export type TSignUpSchema = z.infer<typeof signUpSchema>;
 
 export default function SignUpForm() {
+  const router = useRouter()
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] = useState(false);
   const {
@@ -28,26 +30,26 @@ export default function SignUpForm() {
     formState: { errors },
   } = useForm<TSignUpSchema>({
     resolver: zodResolver(signUpSchema),
-  });
-  
-  const { mutate, isPending } = useMutation({
-    mutationFn: (formData: TSignUpSchema) => signUp(formData),
+  });  
+  const { mutate: signUpMutation, isPending } = useMutation({
+    mutationFn: signUp,
     onSuccess: () => {
       toast.success("Account created successfully.")
+      router.push("/sign-in")
     },
     onError: (error: AxiosError<ErrorResponse>) => {
       toast.error(error.response?.data?.message)
     }
   })
 
-  const isButtonDisable = !(
+  const isButtonDisabled = !(
     !!watch("email") && 
     !!watch("password") && 
     !!watch("confirmPassword")
   )
 
   function handleSignUp(formData: TSignUpSchema) {
-    mutate(formData)
+    signUpMutation(formData)
   }
 
   return (
@@ -126,7 +128,7 @@ export default function SignUpForm() {
           variant="solid"
           isLoading={isPending}
           className="text-white font-semibold"
-          isDisabled={isButtonDisable}
+          isDisabled={isButtonDisabled}
         >
           Sign up
         </Button>
@@ -141,8 +143,8 @@ export default function SignUpForm() {
       </div>
 
       <GoogleButton />
-      <p className="text-center">
-        Have an account? <Link href="/sign-in" className="text-primary-500 text-sm">Sign in</Link>
+      <p className="text-center text-sm">
+        Have an account? <Link href="/sign-in" className="text-primary-500">Sign in</Link>
       </p>
     </form>
   );
