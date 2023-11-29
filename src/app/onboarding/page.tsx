@@ -9,7 +9,8 @@ export default async function OnBoarding() {
   const user = {
     name: session?.user.name as string,
     email: session?.user.email as string,
-    image: session?.user.image as string
+    image: session?.user.image as string,
+    id: session?.user.id as string
   }
 
   return (
