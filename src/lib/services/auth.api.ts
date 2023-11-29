@@ -1,24 +1,11 @@
 import { TSignUpSchema } from "@/app/(auth)/components/sign-up-form";
 import axios from "axios";
 
-// export const signUp = async (formData: TSignUpSchema) => {
-//     const response = await fetch("api/auth/sign-up", {
-//       headers: {
-//         "Content-Type": "application/json",
-//       },
-//       method: "POST",
-//       body: JSON.stringify(formData)
-//     })
-
-//     if (!response.ok) {
-//       const error = await response.json();
-//       throw new Error(error.message);
-//     }  
-
-//     return response.json()
-// }
-
-
-export const signUp = async (formData: TSignUpSchema) => {
+export async function signUp(formData: TSignUpSchema) {
    return await axios.post("/api/auth/sign-up", formData)
+}
+
+export async function onBoard({ formData, userId }: { formData: FormData; userId: string }) {
+   const response = await axios.patch(`/api/onboarding/${userId}`, formData)
+   return response.data as TUser
 }
