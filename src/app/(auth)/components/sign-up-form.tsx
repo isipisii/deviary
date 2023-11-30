@@ -15,7 +15,7 @@ import { useMutation } from "@tanstack/react-query"
 import { signUp } from "@/lib/services/auth.api";
 import { toast } from "sonner"
 import { AxiosError } from "axios";
-import { useRouter } from "next/navigation"
+import { useRouter } from 'next-nprogress-bar';
 
 export type TSignUpSchema = z.infer<typeof signUpSchema>;
 
@@ -42,6 +42,7 @@ export default function SignUpForm() {
     }
   })
 
+  
   const isButtonDisabled = !(
     !!watch("email") && 
     !!watch("password") && 

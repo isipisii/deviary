@@ -4,7 +4,7 @@
 import { useState } from "react"
 import { signIn } from "next-auth/react"
 import { Button } from "@nextui-org/react"
-import { useRouter } from "next/navigation"
+import { useRouter } from 'next-nprogress-bar';
 
 export default function GoogleButton() {
     const router = useRouter()
@@ -17,6 +17,7 @@ export default function GoogleButton() {
             await signIn("google")
 
             setIsSigningIn(false)
+            router.push('/feed');
         } catch (error) {
             console.error(error)
         }

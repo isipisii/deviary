@@ -12,7 +12,7 @@ import { FaEyeSlash, FaEye } from "react-icons/fa";
 import Link from "next/link";
 import { toast } from "sonner";
 import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation"
+import { useRouter } from 'next-nprogress-bar';
 
 export type TSignInSchema = z.infer<typeof signInSchema>;
 
