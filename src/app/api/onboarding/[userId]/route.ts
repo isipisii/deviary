@@ -1,6 +1,5 @@
 import { db } from "@/lib/prisma"
 import { NextResponse, NextRequest } from "next/server"
-import { getServerSideSession } from "@/lib/auth"
 import { utapi } from "@/utils/uploadthingapi"
 
 export const PATCH = async (request: NextRequest, { params }: { params: { userId: string } }) => {
