@@ -47,10 +47,11 @@ export default function OnBoardingForm({ user }: IOnboardingForm) {
   
   const { mutate: onBoardingMutation, isPending } =  useMutation({
     mutationFn: onBoard,
-    onSuccess: (data) => {
-      toast.success("Profile updated")
-      update({name: data.name, image: data.image})
-      
+    onSuccess: async (data) => {
+      toast.success("Profile updated")  
+      // updates the session in client and jwt in server 
+      await update({ name: data.name, image: data.image, onboarded: data.onboarded })
+    
       router.push("/feed")
     },
     onError: (error: AxiosError<ErrorResponse>) => {
@@ -58,7 +59,7 @@ export default function OnBoardingForm({ user }: IOnboardingForm) {
     },
   })
 
-  const isButtonDisabled =  !(!!watch("email") && !!watch("name")) || isPending
+  const isButtonDisabled = !(!!watch("email") && !!watch("name")) || isPending
 
   function handleOnboard(formValues: TOnBoardingSchema) {
     const { email, name } = formValues;

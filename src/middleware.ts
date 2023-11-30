@@ -1,7 +1,6 @@
 import { getToken } from "next-auth/jwt"
 import { withAuth } from "next-auth/middleware"
 import { NextResponse, NextRequest } from "next/server"
-// import { getServerSideSession } from "./lib/auth"
 
 // using with auth from next auth
 export default withAuth(
@@ -11,11 +10,24 @@ export default withAuth(
     const isAuthPage =
     req.nextUrl.pathname.startsWith("/sign-in") ||
     req.nextUrl.pathname.startsWith("/sign-up")
+    const isOnboardingPage =  req.nextUrl.pathname.startsWith("/onboarding")
 
     if (isAuthPage) {
       if (isAuth) {
         return NextResponse.redirect(new URL("/feed", req.url))
       }
+      return null
+    }
+
+    //redirects the user to feed if the current page is onboarding and the user's onboarded status is true
+    if(isOnboardingPage && isAuth) {
+        if(token?.onboarded) return NextResponse.redirect(new URL("/feed", req.url))
+        return null
+    }
+    
+     //otherwise, redirect the user to onboarding page
+    if(!isOnboardingPage && isAuth) {
+      if(!token?.onboarded) return NextResponse.redirect(new URL("/onboarding", req.url))
       return null
     }
 
@@ -36,20 +48,6 @@ export default withAuth(
     },
   }
 )
-
-// using server session
-// export async function middleware(request: NextRequest) {
-//   const session = await getServerSideSession()
-//   const isAuthenticated = !!session?.user
-//   const isInAuthPage = request.nextUrl.pathname.startsWith("/sign-in") || request.nextUrl.pathname.startsWith("/sign-up")
-  
-//   if(isAuthenticated && isInAuthPage) {
-//     return NextResponse.redirect(new URL('/', request.url))
-//   }
-
-//   return NextResponse.redirect(new URL('/sign-in', request.url))
-
-// }
  
 export const config = {
   // these are the paths where the middleware will run

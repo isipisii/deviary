@@ -35,7 +35,8 @@ export const authOptions: NextAuthOptions = {
                   name: user.name,
                   email: user.email,
                   id: user.id,
-                  picture: user.image
+                  picture: user.image,
+                  onboarded: user.onboarded
               }
           } catch (error) {
               console.log(error);
@@ -50,7 +51,7 @@ export const authOptions: NextAuthOptions = {
   ],
 
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger, session }) {
       const existingUser = await db.user.findFirst({
         where: {
           email: token.email,
@@ -60,7 +61,15 @@ export const authOptions: NextAuthOptions = {
       if (!existingUser) {
         if (user) {
           token.id = user?.id
+          token.onboarded = false
         }
+        return token
+      }
+
+      // bug when updating the jwt
+      if (trigger === "update" && session?.onboarded) {
+        token.onboarded = session.onboarded as boolean
+
         return token
       }
 
@@ -69,6 +78,7 @@ export const authOptions: NextAuthOptions = {
         name: existingUser.name,
         email: existingUser.email,
         picture: existingUser.image,
+        onboarded: existingUser.onboarded
       }
     },
 
@@ -79,6 +89,7 @@ export const authOptions: NextAuthOptions = {
         session.user.name = token.name;
         session.user.email = token.email;
         session.user.image = token.picture;
+        session.user.onboarded = token.onboarded as boolean
       }
 
       return session;
