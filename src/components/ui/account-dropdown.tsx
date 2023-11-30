@@ -11,10 +11,12 @@ import {
   DropdownSection,
 } from "@nextui-org/react";
 import { signOut } from "next-auth/react";
+import { useRouter } from 'next-nprogress-bar';
 
 export default function AccountDropdown() {
   const { data, status } = useSession();
   const isAuthenticated = status === "authenticated"
+  const router = useRouter()
 
   // TODO: make a loader
   return (
@@ -44,7 +46,7 @@ export default function AccountDropdown() {
           color="danger" 
           onClick={async () =>  {
             await signOut()
-            
+            router.push("/sign-in")
           }}
           className="text-danger"
         >
