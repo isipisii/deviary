@@ -50,7 +50,7 @@ model User {
   email           String?   @unique
   password        String?
   emailVerified   DateTime?
-  image           Image?
+  image           String?
   onboarded       Boolean?  @default(false)
   createdAt       DateTime  @default(now()) @map(name: "created_at")
   updatedAt       DateTime  @default(now()) @map(name: "updated_at")
