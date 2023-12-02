@@ -9,14 +9,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { useMutation } from "@tanstack/react-query"
 import { toast } from "sonner";
-import { useRouter } from "next/navigation"
+import { useRouter } from "next-nprogress-bar";
 import { onBoard } from "@/lib/services/auth.api";
 import { UploadButton } from "@/utils/uploadthing";
 import useLoadImageFile from "@/lib/hooks/useLoadImageFile";
 import { AxiosError } from "axios";
 import { useSession } from "next-auth/react";
 
-import { IoClose } from "react-icons/io5";
+import EditAvatar from "@/components/shared/edit-avatar";
 
 export type TOnBoardingSchema = z.infer<typeof onboardingSchema>;
 
@@ -59,13 +59,13 @@ export default function OnBoardingForm({ user }: IOnboardingForm) {
     },
   })
 
-  const isButtonDisabled = !(!!watch("email") && !!watch("name")) || isPending
+  const isButtonDisabled = !(!!watch("name")) || isPending
 
   function handleOnboard(formValues: TOnBoardingSchema) {
-    const { email, name } = formValues;
+    const {  name } = formValues;
     const form = new FormData();
   
-    form.append("email", email);
+    // form.append("email", email);
     form.append("name", name);
     if (selectedImageFile) form.append("imageFile", selectedImageFile);
   
@@ -84,29 +84,13 @@ export default function OnBoardingForm({ user }: IOnboardingForm) {
       
       <div className="flex flex-col gap-3">
         {/* profile */}
-        <div className="flex flex-col items-center gap-2 relative h-[150px] w-[150px] self-center">
-          {selectedImage && (
-            <Button 
-              variant="flat"
-              isIconOnly
-              radius="full"
-              className="absolute top-0 -right-3 z-10 text-[1.3rem]"
-              onClick={handleRemoveImage}
-            >
-              <IoClose />
-            </Button>
-          )}
-          <label htmlFor="file-input" className="cursor-pointer">
-            <Avatar 
-              radius="full" 
-              className="h-[150px] w-[150px]" 
-              src={selectedImage || user.image} 
-              classNames={{ base: "border-borderColor border"}}
-            />
-          </label>
-          <input id="file-input" type="file" onChange={handleFileChange} className="hidden" />
-        </div>
-      
+        <EditAvatar 
+          selectedImage={selectedImage} 
+          handleFileChange={handleFileChange} 
+          handleRemoveImage={handleRemoveImage} 
+          userCurrentImage={user.image}
+        />
+        <p className="text-lg font-semibold text-center">{user.email}</p>
         <Input
             type="name"
             label="Name"
@@ -120,7 +104,7 @@ export default function OnBoardingForm({ user }: IOnboardingForm) {
             isInvalid={!!errors.name}
             {...register("name")}
         />  
-        <Input
+        {/* <Input
             type="email"
             label="Email"
             labelPlacement="outside"
@@ -130,7 +114,7 @@ export default function OnBoardingForm({ user }: IOnboardingForm) {
             isDisabled={isPending}
             defaultValue={user.email} 
             {...register("email")}
-        />
+        /> */}
 
         <Button
           type="submit"
