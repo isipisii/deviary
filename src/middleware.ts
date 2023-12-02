@@ -6,32 +6,32 @@ import { NextResponse, NextRequest } from "next/server"
 export default withAuth(
   async function middleware(req) {
     const token = await getToken({ req })
-    const isAuth = !!token
+    const isAuthenticated = !!token
     const isAuthPage =
     req.nextUrl.pathname.startsWith("/sign-in") ||
     req.nextUrl.pathname.startsWith("/sign-up")
     const isOnboardingPage =  req.nextUrl.pathname.startsWith("/onboarding")
 
     if (isAuthPage) {
-      if (isAuth) {
+      if (isAuthenticated) {
         return NextResponse.redirect(new URL("/feed", req.url))
       }
       return null
     }
 
     //redirects the user to feed if the current page is onboarding and the user's onboarded status is true
-    if(isOnboardingPage && isAuth) {
+    if(isOnboardingPage && isAuthenticated) {
         if(token?.onboarded) return NextResponse.redirect(new URL("/feed", req.url))
         return null
     }
     
      //otherwise, redirect the user to onboarding page
-    if(!isOnboardingPage && isAuth) {
+    if(!isOnboardingPage && isAuthenticated) {
       if(!token?.onboarded) return NextResponse.redirect(new URL("/onboarding", req.url))
       return null
     }
 
-    if (!isAuth) {
+    if (!isAuthenticated) {
       return NextResponse.redirect(
         new URL("/sign-in", req.url)
       );
