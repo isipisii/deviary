@@ -6,10 +6,11 @@ import TopNav from "@/components/top-nav";
 import { SideBar } from "@/components/sidebar-nav";
 import { getServerSideSession } from "@/lib/auth";
 import { Toaster } from "sonner";
-import NextTopLoader from 'nextjs-toploader';
+import NextTopLoader from "nextjs-toploader";
 import "@uploadthing/react/styles.css";
 import { db } from "@/lib/prisma";
 import { redirect } from "next/navigation";
+import clsx from "clsx";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,10 +21,13 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({
   children,
+  pathname,
 }: {
   children: React.ReactNode;
+  pathname: string;
 }) {
   const session = await getServerSideSession();
+  // console.log(pathname)
 
   // // for checking if the user isnt onboarded
   // const user = await db.user.findFirst({
@@ -36,22 +40,8 @@ export default async function RootLayout({
     <html lang="en">
       <body className={inter.className + "bg-background"}>
         <Providers>
-          <NextTopLoader height={3} showSpinner={false} color="#DD0DB9"/>
           <Toaster richColors expand={true} position="bottom-right" />
-          {session && <TopNav />}
-          <div className="flex h-screen flex-row md:overflow-hidden">
-            {session && (
-              <div                       
-                className="flex-none w-[280px] border-r border-borderColor hidden 
-                md:block overflow-y-auto shadow-lg"
-              >
-                <SideBar />
-              </div>
-            )}
-            <div className="flex-grow">
-              {children}
-            </div>
-          </div>
+          {children}
         </Providers>
       </body>
     </html>
