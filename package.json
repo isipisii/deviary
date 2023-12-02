@@ -33,7 +33,8 @@
     "react-icons": "^4.11.0",
     "sonner": "^1.2.0",
     "uploadthing": "^6.0.3",
-    "zod": "^3.22.4"
+    "zod": "^3.22.4",
+    "zustand": "^4.4.7"
   },
   "devDependencies": {
     "@types/node": "^20",
