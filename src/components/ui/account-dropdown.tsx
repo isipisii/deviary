@@ -13,12 +13,14 @@ import {
 import { signOut } from "next-auth/react";
 import { useRouter } from 'next-nprogress-bar';
 
+import { FaRegUser } from "react-icons/fa";
+import { PiSignOutBold } from "react-icons/pi";
+import { LuSettings, LuUser2 } from "react-icons/lu";
+
 export default function AccountDropdown() {
-  const { data, status } = useSession();
-  const isAuthenticated = status === "authenticated"
+  const { data } = useSession();
   const router = useRouter()
 
-  // TODO: make a loader
   return (
     <Dropdown placement="bottom-start" backdrop="transparent" className="bg-background">
       <DropdownTrigger>
@@ -34,14 +36,15 @@ export default function AccountDropdown() {
       </DropdownTrigger>
       <DropdownMenu aria-label="User Actions" variant="flat">
         <DropdownSection showDivider>
-          <DropdownItem key="profile">
+          <DropdownItem key="profile" startContent={<LuUser2 />}>
             Profile
           </DropdownItem>
-          <DropdownItem key="settings">
+          <DropdownItem key="settings" startContent={<LuSettings />}>
             My Settings
           </DropdownItem>
         </DropdownSection>
         <DropdownItem 
+          startContent={<PiSignOutBold  />}
           key="logout" 
           color="danger" 
           onClick={async () =>  {
