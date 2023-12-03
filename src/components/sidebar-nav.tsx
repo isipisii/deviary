@@ -6,21 +6,49 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
-import { LuChevronDown, LuChevronUp } from "react-icons/lu";
+import { LuChevronDown, LuChevronUp, LuChevronLeft } from "react-icons/lu";
 import clsx from "clsx";
 import type { IconType } from "react-icons";
+import { useSideBarNavStore } from "@/lib/store/useSideBarNavStore";
 
-import { Button, Tooltip, ScrollShadow, Spinner } from "@nextui-org/react";
+import { Button, Tooltip, Spinner } from "@nextui-org/react";
 
 export function SideBar() {
+  const { isSideBarMinimized, minimizeSideBar, maximizeSideBar } = useSideBarNavStore(state => state)
+
+  function handleMinimizeToggler() {
+    if(isSideBarMinimized) {
+      maximizeSideBar()
+    } else minimizeSideBar()
+  }
+
   return (
-    <ScrollShadow size={50} className="max-h-[90vh]">
-      <div className="flex flex-col gap-8 my-4 p-4">
-        {sideBarNavs.map((nav, index) => (
-          <SideBarNav key={index} title={nav.title} items={nav.items} />
-        ))}
+    <div
+      className={`flex-none  border-r border-borderColor hidden transition-all ease-in-out duration-300
+      md:block shadow-lg pt-[90px] fixed h-screen ${isSideBarMinimized ? "w-[90px]" : "w-[290px]"}`}
+    > 
+      <div className="absolute -right-4 top-[5.5rem] z-20">
+        <Tooltip  
+          content="Minimize"
+          className="bg-background z-40"
+        >
+          <Button
+            className="min-w-0 w-[40px] h-[40px] p-0 rounded-full 
+              bg-white border-2 border-borderColor text-[1.3rem] text-black"
+            onClick={handleMinimizeToggler}
+          >
+            <LuChevronLeft className={`${isSideBarMinimized ? "-rotate-180" : "-rotate-0"} transition-all ease-in-out duration-1000 delay-150`} />
+          </Button>
+        </Tooltip>
       </div>
-    </ScrollShadow>
+      <div className="w-full h-full overflow-y-auto">
+        <div className="flex flex-col gap-8 my-4 p-4">
+          {sideBarNavs.map((nav, index) => (
+            <SideBarNav key={index} title={nav.title} items={nav.items} />
+          ))}
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -30,6 +58,7 @@ export interface ISideBarNavs {
 }
 
 export function SideBarNav({ title, items }: ISideBarNavs) {
+  const { isSideBarMinimized, minimizeSideBar, maximizeSideBar } = useSideBarNavStore(state => state)
   const [guilds, setGuilds] = useState<ISideBarNavItem[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const isOverflowing = guilds.length > 2;
@@ -62,11 +91,12 @@ export function SideBarNav({ title, items }: ISideBarNavs) {
     },
   ];
 
+  // REMINDER: use useQuery for fetching if theres already an actual api endppint for this
   useEffect(() => {
-    // mock up api call since i dont have a be for guilds
+    // mock up api call since i dont have yet an api for guilds
     async function getGuilds() {
       setIsLoading(true);
-      const guilds = (await new Promise((resolve, reject) => {
+      const guilds = (await new Promise((resolve) => {
         setTimeout(() => {
           resolve(guildsArr);
         }, 4000);
@@ -77,11 +107,12 @@ export function SideBarNav({ title, items }: ISideBarNavs) {
     }
 
     getGuilds();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
     <div className="flex flex-col gap-2 relative">
-      <p className="font-semibold">{title}</p>
+      {!isSideBarMinimized && <p className="font-semibold">{title}</p>}
       <div className="flex flex-col gap-2">
         {items.map((item, index) => (
           <SideBarNavItem
@@ -112,14 +143,15 @@ export function SideBarNav({ title, items }: ISideBarNavs) {
               ))}
       </div>
 
-      {/* for guild side bar navs */}
+      {/*button and gradient only for guild side bar navs */}
       {title === "Guild" && isOverflowing && (
         <div
-          className={`w-full ${
-            seeMore ? "-bottom-7" : "-bottom-4"
-          } left-0 absolute
-            h-12 bg-gradient-to-t from-background
-            via-background to-transparent flex items-center justify-center`}
+          className={clsx(
+            `w-full left-0 absolute h-12 bg-gradient-to-t 
+          from-background via-background to-transparent flex 
+          items-center justify-center -bottom-4`,
+            { "-bottom-7": seeMore }
+          )}
         >
           <Tooltip
             content={seeMore ? "See less" : "See more"}
@@ -127,7 +159,7 @@ export function SideBarNav({ title, items }: ISideBarNavs) {
           >
             <Button
               className="min-w-0 w-[40px] h-[40px] p-0 rounded-full 
-              bg-background border-2 border-borderColor text-[1.2rem]"
+              bg-white border-2 border-borderColor text-[1.2rem] text-black"
               onClick={() => setSeeMore((prevState) => !prevState)}
             >
               {seeMore ? <LuChevronUp /> : <LuChevronDown />}
@@ -156,6 +188,7 @@ export function SideBarNavItem({
 }: ISideBarNavItem) {
   const pathname = usePathname();
   const isActive = (href: string) => pathname === href;
+  const { isSideBarMinimized } = useSideBarNavStore(state => state)
 
   return (
     <Link
@@ -183,7 +216,7 @@ export function SideBarNavItem({
           />
         </div>
       )}
-      {title}
+      {isSideBarMinimized ? "" : title}
     </Link>
   );
 }
