@@ -7,9 +7,7 @@ export default withAuth(
   async function middleware(req) {
     const token = await getToken({ req })
     const isAuthenticated = !!token
-    const isAuthPage =
-    req.nextUrl.pathname.startsWith("/sign-in") ||
-    req.nextUrl.pathname.startsWith("/sign-up")
+    const isAuthPage = req.nextUrl.pathname.startsWith("/sign-in") ||  req.nextUrl.pathname.startsWith("/sign-up") || req.nextUrl.pathname === "/"
     const isOnboardingPage =  req.nextUrl.pathname.startsWith("/onboarding")
 
     if (isAuthPage) {
