@@ -7,7 +7,8 @@ import {
     LuPlus, 
     LuBookmark, 
     LuHistory,
-    LuSettings
+    LuSettings,
+    LuPencilLine
 } from "react-icons/lu"
 
 export const sideBarNavs: ISideBarNavs[] = [
@@ -18,6 +19,11 @@ export const sideBarNavs: ISideBarNavs[] = [
                 title: "Feed",
                 href: "/feed",
                 icon:  LuNewspaper
+            },
+            {
+                title: "Create Post",
+                href: "/post/create",
+                icon:  LuPencilLine
             },
             {
                 title: "Search",
@@ -36,8 +42,8 @@ export const sideBarNavs: ISideBarNavs[] = [
         title: "Guild",
         items: [
             {
-                title: "Public Guilds",
-                href: "/public-guilds",
+                title: "Guilds",
+                href: "/guilds",
                 icon: LuBoxes
             },
             {
@@ -45,30 +51,30 @@ export const sideBarNavs: ISideBarNavs[] = [
                 href: "/new-guild",
                 icon: LuPlus
             },
-            {
-                title: "ReactJS",
-                href: "/guild",
-                type: "guild",
-                imageUrl: "https://avatars.githubusercontent.com/u/6412038?s=200&v=4"
-            },
-            {
-                title: "Libre Minds",   
-                href: "/guild",
-                type: "guild",
-                imageUrl: "https://avatars.githubusercontent.com/u/148235334?s=200&v=4"
-            },  
-            {
-                title: "Libre Minds",   
-                href: "/guild",
-                type: "guild",
-                imageUrl: "https://avatars.githubusercontent.com/u/148235334?s=200&v=4"
-            },  
-            {
-                title: "ReactJS",
-                href: "/guild",
-                type: "guild",
-                imageUrl: "https://avatars.githubusercontent.com/u/6412038?s=200&v=4"
-            },
+            // {
+            //     title: "ReactJS",
+            //     href: "/guild",
+            //     type: "guild",
+            //     imageUrl: "https://avatars.githubusercontent.com/u/6412038?s=200&v=4"
+            // },
+            // {
+            //     title: "Libre Minds",   
+            //     href: "/guild",
+            //     type: "guild",
+            //     imageUrl: "https://avatars.githubusercontent.com/u/148235334?s=200&v=4"
+            // },  
+            // {
+            //     title: "Libre Minds",   
+            //     href: "/guild",
+            //     type: "guild",
+            //     imageUrl: "https://avatars.githubusercontent.com/u/148235334?s=200&v=4"
+            // },  
+            // {
+            //     title: "ReactJS",
+            //     href: "/guild",
+            //     type: "guild",
+            //     imageUrl: "https://avatars.githubusercontent.com/u/6412038?s=200&v=4"
+            // },
         ]
     },
 
