@@ -27,9 +27,9 @@ export function SideBar() {
       className={`flex-none  border-r border-borderColor hidden transition-all ease-in-out duration-300
       md:block shadow-lg pt-[90px] fixed h-screen ${isSideBarMinimized ? "w-[90px]" : "w-[290px]"}`}
     > 
-      <div className="absolute -right-4 top-[5.5rem] z-20">
+      <div className="absolute -right-5  top-[5.5rem] z-20">
         <Tooltip  
-          content="Minimize"
+          content={isSideBarMinimized ? "Maximize" : "Minimize"}
           className="bg-background z-40"
         >
           <Button
@@ -158,11 +158,11 @@ export function SideBarNav({ title, items }: ISideBarNavs) {
             className="bg-background"
           >
             <Button
-              className="min-w-0 w-[40px] h-[40px] p-0 rounded-full 
+              className="min-w-0 w-[35px] h-[35px] p-0 rounded-full 
               bg-white border-2 border-borderColor text-[1.2rem] text-black"
               onClick={() => setSeeMore((prevState) => !prevState)}
             >
-              {seeMore ? <LuChevronUp /> : <LuChevronDown />}
+              <LuChevronDown className={`${seeMore ? "-rotate-180" : "-rotate-0"} transition-all ease-in-out duration-1000 delay-150`}  />
             </Button>
           </Tooltip>
         </div>
@@ -194,7 +194,7 @@ export function SideBarNavItem({
     <Link
       href={href}
       className={clsx(
-        "bg-navItemBackground hover:bg-navItemHoverBg font-medium flex items-center gap-4 p-2 rounded-[1.2rem]",
+        "bg-navItemBackground hover:bg-navItemHoverBg font-medium flex items-center gap-4 p-2 rounded-[1.2rem] transition-all ease-in-out duration-1000",
         { "bg-navItemHoverBg font-semibold": isActive(href) }
       )}
     >
