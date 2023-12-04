@@ -18,7 +18,6 @@ export default function GoogleButton() {
             await signIn("google")
 
             setIsSigningIn(false)
-            router.push('/feed');
         } catch (error) {
             console.error(error)
         }
