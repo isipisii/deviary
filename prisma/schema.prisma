@@ -39,11 +39,6 @@ model Session {
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
-type Image {
-  imageKey String
-  imageUrl String
-}
-
 model User {
   id              String @id @default(auto()) @map("_id") @db.ObjectId
   name            String?
@@ -53,10 +48,14 @@ model User {
   image           String?
   onboarded       Boolean?  @default(false)
   createdAt       DateTime  @default(now()) @map(name: "created_at")
-  updatedAt       DateTime  @default(now()) @map(name: "updated_at")
-  Account         Account[]
-  Session         Session[]
-  Post            Post[]
+  updatedAt       DateTime  @updatedAt @map(name: "updated_at")
+  
+  accounts        Account[]
+  sessions        Session[]
+  blogposts       BlogPost[]
+  diaries         Diary[]
+  bookmarks       Bookmark[]
+  // GuildMember     GuildMember[]
 
   guildsBelongId  String[] @db.ObjectId
   guildsBelong     Guild[]  @relation("GuildMembers", fields: [guildsBelongId], references: [id])
@@ -77,20 +76,65 @@ model Guild {
 
   createdAt       DateTime  @default(now()) @map(name: "created_at")
   updatedAt       DateTime  @default(now()) @map(name: "updated_at")
+
+  // GuildMember     GuildMember[]
 }
 
-// TODO: create schema for the other collections
-model Post {
+// model GuildMember {
+//   id               String @id @default(auto()) @map("_id") @db.ObjectId
+//   memberId           String
+//   user             User  @relation(fields: [memberId], references: [id]) 
+// }
+
+model BlogPost {
   id            String @id @default(auto()) @map("_id") @db.ObjectId
   authorId      String @db.ObjectId
-  author         User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  author        User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
   type          PostType
   tags          String[]
+  
+  thumbnail     Image
   createdAt     DateTime  @default(now()) @map(name: "created_at")
   updatedAt     DateTime  @default(now()) @map(name: "updated_at")
+
+  Bookmark      Bookmark[]
+} 
+
+// TODO
+model Diary {
+  id            String @id @default(auto()) @map("_id") @db.ObjectId
+  authorId      String @db.ObjectId
+  author        User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  type          PostType
+  tags          String[]
+  
+  thumbnail     Image
+  createdAt     DateTime  @default(now()) @map(name: "created_at")
+  updatedAt     DateTime  @default(now()) @map(name: "updated_at")
+
+  Bookmark      Bookmark[]
+}
+
+// TODO
+model Bookmark {
+  id            String @id @default(auto()) @map("_id") @db.ObjectId
+  
+  userId        String @db.ObjectId
+  user          User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  blogPostId    String? @db.ObjectId
+  blogPost      BlogPost? @relation(fields: [blogPostId], references: [id], onDelete: Cascade)
+  
+  diaryId       String? @db.ObjectId
+  diary         Diary? @relation(fields: [diaryId], references: [id], onDelete: Cascade)
 }
 
 enum PostType  {
-  BLOG_POST
-  BUG_POST
+  BLOG_POST 
+  CODE_DIARY
+}
+
+type Image {
+  imageKey String
+  imageUrl String
 }
