@@ -45,11 +45,15 @@ export const PATCH = async (request: NextRequest, { params }: { params: { userId
         })
         
         return NextResponse.json({
-           updatedUser
-        })
+           data: updatedUser,
+           message: "Profile updated",
+           success: true
+        }, { status: 200 })
 
     } catch (error) {
-        console.error(error)
+        NextResponse.json({
+            message: "Internal Server Error"
+        }, { status: 500 })
     }
 } 
 

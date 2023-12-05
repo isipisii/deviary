@@ -7,5 +7,5 @@ export async function signUp(formData: TSignUpSchema) {
 
 export async function onBoard({ formData, userId }: { formData: FormData; userId: string }) {
    const response = await axios.patch(`/api/onboarding/${userId}`, formData)
-   return response.data as TUser
+   return response.data.data as TUser
 }
