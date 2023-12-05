@@ -37,7 +37,10 @@ export function SideBar() {
               bg-white border-2 border-borderColor text-[1.3rem] text-black"
             onClick={handleMinimizeToggler}
           >
-            <LuChevronLeft className={`${isSideBarMinimized ? "-rotate-180" : "-rotate-0"} transition-all ease-in-out duration-1000 delay-150`} />
+            <LuChevronLeft 
+              className={`${isSideBarMinimized ? "-rotate-180" : "-rotate-0"} transition-all 
+              ease-in-out duration-1000 delay-150`} 
+            />
           </Button>
         </Tooltip>
       </div>
@@ -190,11 +193,13 @@ export function SideBarNavItem({
   const isActive = (href: string) => pathname === href;
   const { isSideBarMinimized } = useSideBarNavStore(state => state)
 
+  // navItemBackground: "#c7c7c72c",
+  // navItemHoverBg: "#c7c7c75e"
   return (
     <Link
       href={href}
       className={clsx(
-        "bg-navItemBackground hover:bg-navItemHoverBg font-medium flex items-center gap-4 p-2 rounded-[1.2rem] transition-all ease-in-out duration-1000",
+        "bg-navItemBackground hover:bg-navItemHoverBg  flex items-center gap-4 p-2 rounded-[1.2rem] transition-all ease-in-out duration-1000",
         { "bg-navItemHoverBg font-semibold": isActive(href) }
       )}
     >
@@ -202,7 +207,7 @@ export function SideBarNavItem({
         <p
           className={clsx(
             "text-[#DD0DB9] bg-background text-[1.5rem] p-2 rounded-2xl",
-            { "text-red-600": title === "Popular" }
+            {"text-red-600": title === "Popular"}
           )}
         >
           <Icon />
