@@ -25,6 +25,7 @@ export const authOptions: NextAuthOptions = {
                   email
                 },
               })
+              
               if (!user) throw Error("Invalid credentials");
 
               const didMatch = await argon2.verify(user?.password ?? "", password)
@@ -66,7 +67,7 @@ export const authOptions: NextAuthOptions = {
         return token
       }
 
-      // bug when updating the jwt
+      // updates the token inside server if the update is triggered
       if (trigger === "update" && session?.onboarded) {
         token.onboarded = session.onboarded as boolean
 
