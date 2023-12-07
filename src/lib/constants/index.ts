@@ -11,6 +11,10 @@ import {
     LuPencilLine
 } from "react-icons/lu"
 
+export const githubLinkRegex = /^(https?:\/\/)?(www\.)?github\.com\/[\w-]+/
+export const facebookLinkRegex = /^(https?:\/\/)?(www\.)?facebook\.com\/[\w-]+/
+export const linkedinLinkRegex = /^(https?:\/\/)?(www\.)?linkedin\.com\/[\w-]+/
+
 export const sideBarNavs: ISideBarNavs[] = [
     {
         title: "Discover",
