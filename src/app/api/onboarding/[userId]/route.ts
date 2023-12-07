@@ -8,6 +8,9 @@ export const PATCH = async (request: NextRequest, { params }: { params: { userId
 
     const name = body.get("name")
     const imageFile = body.get("imageFile")
+    const githubProfileLink = body.get("githubLink")
+    const facebookProfileLink = body.get("facebookLink")
+    
     let uploadedImage = ""
 
     try {
@@ -32,6 +35,21 @@ export const PATCH = async (request: NextRequest, { params }: { params: { userId
             uploadedImage = response.data?.url as string
         }
 
+        await db.social.upsert({
+            where: {
+                userId: existingUser.id,
+            },
+            update: {
+                github: githubProfileLink as string,
+                facebook: facebookProfileLink as string,
+            },
+            create: {
+                github: githubProfileLink as string,
+                facebook: facebookProfileLink as string,
+                userId: existingUser.id,
+            },
+        });
+
         // update the user's data
         const updatedUser = await db.user.update({
             where: {
@@ -40,8 +58,16 @@ export const PATCH = async (request: NextRequest, { params }: { params: { userId
             data: {
                 name: name as string ||  existingUser?.name,
                 image: uploadedImage || existingUser?.image,
-                onboarded: true
-            }
+                onboarded: true,
+            },
+            select: {
+                id: true,
+                name: true,
+                image: true,
+                onboarded: true,
+                social: true,
+                email: true,
+            },
         })
         
         return NextResponse.json({
