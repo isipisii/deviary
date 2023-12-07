@@ -17,6 +17,7 @@ import { AxiosError } from "axios";
 import { useSession } from "next-auth/react";
 
 import EditAvatar from "@/components/shared/edit-avatar";
+import { FaGithub, FaFacebook } from "react-icons/fa";
 
 export type TOnBoardingSchema = z.infer<typeof onboardingSchema>;
 
@@ -62,11 +63,13 @@ export default function OnBoardingForm({ user }: IOnboardingForm) {
   const isButtonDisabled = !(!!watch("name")) || isPending
 
   function handleOnboard(formValues: TOnBoardingSchema) {
-    const {  name } = formValues;
+    const { name } = formValues;
     const form = new FormData();
   
     // form.append("email", email);
     form.append("name", name);
+    form.append("githubLink", formValues.githubLink as string)
+    form.append("facebookLink", formValues.facebookLink as string)
     if (selectedImageFile) form.append("imageFile", selectedImageFile);
   
     onBoardingMutation({ formData: form, userId: user?.id });
@@ -92,29 +95,50 @@ export default function OnBoardingForm({ user }: IOnboardingForm) {
         />
         <p className="text-lg font-semibold text-center">{user.email}</p>
         <Input
-            type="name"
-            label="Name"
-            labelPlacement="outside"
-            placeholder="Enter your name"
+          label="Name"
+          labelPlacement="outside"
+          placeholder="Enter your name"
+          size="md"
+          radius="lg"
+          variant="bordered"
+          isDisabled={isPending}
+          defaultValue={user.name ?? ""} 
+          errorMessage={errors.name?.message}
+          isInvalid={!!errors.name}
+          {...register("name")}
+        /> 
+
+        <div className="flex flex-col gap-2">
+          <p className="font-semibold">Socials</p>
+          <Input
+            label="Github (optional)"
+            placeholder="Provide your GitHub link"
             size="md"
+            radius="lg"
             variant="bordered"
-            isDisabled={isPending}
-            defaultValue={user.name ?? ""} 
-            errorMessage={errors.name?.message}
-            isInvalid={!!errors.name}
-            {...register("name")}
-        />  
-        {/* <Input
-            type="email"
-            label="Email"
-            labelPlacement="outside"
-            placeholder="Enter your email"
+            isDisabled={isPending} 
+            errorMessage={errors.githubLink?.message}
+            isInvalid={!!errors.githubLink}
+            {...register("githubLink")}
+            startContent={
+              <FaGithub className="mr-1" />
+            }
+          /> 
+          <Input
+            label="Facebook (optional)"
+            placeholder="Provide your Facebook link"
             size="md"
+            radius="lg"
             variant="bordered"
-            isDisabled={isPending}
-            defaultValue={user.email} 
-            {...register("email")}
-        /> */}
+            isDisabled={isPending} 
+            errorMessage={errors.facebookLink?.message}
+            isInvalid={!!errors.facebookLink}
+            {...register("facebookLink")}
+            startContent={
+              <FaFacebook className="mr-1" />
+            }
+          /> 
+        </div>
 
         <Button
           type="submit"
