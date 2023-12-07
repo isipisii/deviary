@@ -28,7 +28,7 @@ export default function EditAvatar({
             variant="flat"
             isIconOnly
             radius="full"
-            className="absolute top-0 -right-3 z-10 text-[1.3rem]"
+            className="absolute top-0 -right-3 z-20 text-[1.3rem]"
             onClick={handleRemoveImage}
         >
             <IoClose />
