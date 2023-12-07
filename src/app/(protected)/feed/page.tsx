@@ -21,7 +21,7 @@ export default async function Feed() {
   //   }
   // }
   return (
-    <main className="p-12">
+    <div className="p-12">
         <div className="flex items-center justify-between">
             <h2 className="font-semibold text-3xl" >Feed</h2>
             <Button 
@@ -34,7 +34,7 @@ export default async function Feed() {
             </Button>
         </div>
         <FeedContainer />
-    </main>
+    </div>
   )
 }
 

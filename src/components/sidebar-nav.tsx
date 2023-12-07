@@ -24,7 +24,7 @@ export function SideBar() {
 
   return (
     <div
-      className={`flex-none  border-r border-borderColor hidden transition-all ease-in-out duration-300
+      className={`flex-none  border-r border-borderColor hidden transition-all ease-in-out duration-1000
       md:block shadow-lg pt-[90px] fixed h-screen ${isSideBarMinimized ? "w-[90px]" : "w-[290px]"}`}
     > 
       <div className="absolute -right-5  top-[5.5rem] z-20">
@@ -61,7 +61,7 @@ export interface ISideBarNavs {
 }
 
 export function SideBarNav({ title, items }: ISideBarNavs) {
-  const { isSideBarMinimized, minimizeSideBar, maximizeSideBar } = useSideBarNavStore(state => state)
+  const { isSideBarMinimized } = useSideBarNavStore(state => state)
   const [guilds, setGuilds] = useState<ISideBarNavItem[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const isOverflowing = guilds.length > 2;
@@ -199,7 +199,7 @@ export function SideBarNavItem({
     <Link
       href={href}
       className={clsx(
-        "bg-navItemBackground hover:bg-navItemHoverBg  flex items-center gap-4 p-2 rounded-[1.2rem] transition-all ease-in-out duration-1000",
+        "bg-navItemBackground hover:bg-navItemHoverBg  flex items-center gap-4 p-2 rounded-[1.2rem] transition-all ease-in-out duration-100",
         { "bg-navItemHoverBg font-semibold": isActive(href) }
       )}
     >
@@ -221,7 +221,7 @@ export function SideBarNavItem({
           />
         </div>
       )}
-      {isSideBarMinimized ? "" : title}
+      {isSideBarMinimized ? null : title}
     </Link>
   );
 }
