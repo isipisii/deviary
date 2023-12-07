@@ -1,4 +1,5 @@
 import z from "zod"
+import {  githubLinkRegex, facebookLinkRegex, linkedinLinkRegex } from "../constants"
 
 export const signInSchema = z.object({
     email: z.string()
@@ -22,9 +23,12 @@ export const signUpSchema = z.object({
     path: ["confirmPassword"]
 })
 
+
 export const onboardingSchema = z.object({
     name: z.string()
     .min(1, {message: "Name is required"})
     .max(50, {message: "Name should not exceed to 50 characters."}),
-    // email: z.string().email()
+    githubLink: z.string().refine(data => githubLinkRegex.test(data), { message: "Please put valid github link" }).nullable(),
+    facebookLink: z.string().refine(data => facebookLinkRegex.test(data), { message: "Please put valid facebook link" }).nullable(),
+    // linkedinLink: z.string().refine(data => linkedinLinkRegex.test(data), { message: "Please put valid linkedin link" }).nullish()
 })
