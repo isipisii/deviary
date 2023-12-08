@@ -18,7 +18,7 @@ export default function TopNav() {
 
   return (
     <nav className="border-b border-borderColor shadow-sm fixed w-full bg-background z-[20] top-0">
-      <div className="flex p-4 justify-between items-center w-full">
+      <div className="flex px-6 py-4 justify-between items-center w-full">
         {/* logo */}
         <img
           src={
