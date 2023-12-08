@@ -5,7 +5,7 @@ import { onboardingSchema } from "@/lib/validators/auth-validator"
 import { getServerSideSession } from "@/lib/auth"
 
 export const PATCH = async (request: NextRequest, { params }: { params: { userId: string } }) => {
-    const session = getServerSideSession()
+    const session = await getServerSideSession()
     const body = await request.formData() 
     const userId = params.userId
 
@@ -23,14 +23,12 @@ export const PATCH = async (request: NextRequest, { params }: { params: { userId
     })
 
     try {
-
         if(!session) return NextResponse.json({
             success: false,
             message: "Unauthenticated, please log in first",
         }, { status: 400 })   
 
         if(!parsedOnboardingData.success) {
-            console.log(parsedOnboardingData.error)
             return NextResponse.json({
                 errors: parsedOnboardingData.error.flatten().fieldErrors,
                 message: "Error in onboarding data.",
@@ -44,7 +42,7 @@ export const PATCH = async (request: NextRequest, { params }: { params: { userId
 
         const existingUser = await db.user.findUnique({
             where: {
-                id: userId
+                id: session.user.id
             }
         })
 
