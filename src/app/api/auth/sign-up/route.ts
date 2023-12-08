@@ -48,7 +48,8 @@ export const POST = async (request: NextRequest) => {
 
         return NextResponse.json({
             data: user,
-            message: "successful"
+            message: "Account created",
+            success: false
         }, { status: 201 })
 
     } catch (error) {
