@@ -16,7 +16,7 @@ import { Button, Tooltip, Spinner } from "@nextui-org/react";
 export function SideBar() {
   const { isSideBarMinimized, minimizeSideBar, maximizeSideBar } = useSideBarNavStore(state => state)
 
-  function handleMinimizeToggler() {
+  function handleToggleMinimize() {
     if(isSideBarMinimized) {
       maximizeSideBar()
     } else minimizeSideBar()
@@ -35,7 +35,7 @@ export function SideBar() {
           <Button
             className="min-w-0 w-[40px] h-[40px] p-0 rounded-full 
               bg-white border-2 border-borderColor text-[1.3rem] text-black"
-            onClick={handleMinimizeToggler}
+            onClick={handleToggleMinimize}
           >
             <LuChevronLeft 
               className={`${isSideBarMinimized ? "-rotate-180" : "-rotate-0"} transition-all 
@@ -44,6 +44,7 @@ export function SideBar() {
           </Button>
         </Tooltip>
       </div>
+      
       <div className="w-full h-full overflow-y-auto">
         <div className="flex flex-col gap-8 my-4 p-4">
           {sideBarNavs.map((nav, index) => (
@@ -130,7 +131,7 @@ export function SideBarNav({ title, items }: ISideBarNavs) {
         {isLoading
           ? title === "Guild" && (
               <div className="w-full flex items-center justify-center mt-4">
-                <Spinner color="primary" labelColor="primary" />
+                <Spinner color="secondary" labelColor="primary" />
               </div>
             )
           : title === "Guild" &&
@@ -199,14 +200,14 @@ export function SideBarNavItem({
     <Link
       href={href}
       className={clsx(
-        "bg-navItemBackground hover:bg-navItemHoverBg  flex items-center gap-4 p-2 rounded-[1.2rem] transition-all ease-in-out duration-100",
+        "bg-navItemBackground hover:bg-navItemHoverBg  flex items-center gap-4 p-2 rounded-[1.2rem] transition-all ease-in-out duration-1000",
         { "bg-navItemHoverBg font-semibold": isActive(href) }
       )}
     >
       {Icon && !imageUrl ? (
         <p
           className={clsx(
-            "text-[#DD0DB9] bg-background text-[1.5rem] p-2 rounded-2xl",
+            "text-secondary bg-background text-[1.5rem] p-2 rounded-2xl",
             {"text-red-600": title === "Popular"}
           )}
         >
