@@ -24,7 +24,7 @@ export function SideBar() {
 
   return (
     <div
-      className={`flex-none  border-r border-borderColor hidden transition-all ease-in-out duration-1000
+      className={`flex-none border-r-1 border-borderColor hidden transition-all ease-in-out duration-1000
       md:block shadow-lg pt-[90px] fixed h-screen ${isSideBarMinimized ? "w-[90px]" : "w-[290px]"}`}
     > 
       <div className="absolute -right-5  top-[5.5rem] z-20">
@@ -200,8 +200,8 @@ export function SideBarNavItem({
     <Link
       href={href}
       className={clsx(
-        "bg-navItemBackground hover:bg-navItemHoverBg  flex items-center gap-4 p-2 rounded-[1.2rem] transition-all ease-in-out duration-1000",
-        { "bg-navItemHoverBg font-semibold": isActive(href) }
+        "bg-light hover:bg-lightHover  flex items-center gap-4 p-2 rounded-[1.2rem] transition-all ease-in-out duration-1000",
+        { "bg-lightHover font-semibold": isActive(href) }
       )}
     >
       {Icon && !imageUrl ? (

@@ -12,11 +12,11 @@ export default function BlogPostCard() {
   const { data } = useSession()
 
   return (
-    <div className="relative h-[400px] w-[300px] rounded-3xl border-2 border-borderColor">
+    <div className="relative h-[400px] w-[300px] rounded-3xl border-2 border-borderColor shadow-2xl">
         {/* image and bg gradient */}
         <img 
             // src={index % 2 === 0 ? "https://res.cloudinary.com/daily-now/image/upload/f_auto,q_auto/v1/posts/c9351b4fa8cdb6f53a50c523baf7965e?_a=AQAEufR" : "/images/nxt.png"}
-            src={"https://res.cloudinary.com/daily-now/image/upload/f_auto,q_auto/v1/posts/c9351b4fa8cdb6f53a50c523baf7965e?_a=AQAEufR"}
+            src={"https://res.cloudinary.com/daily-now/image/upload/f_auto,q_auto/v1/posts/321132ebaae9e0f22b7727d30efe160a?_a=AQAEufR"}
             alt="basta" 
             className="w-full h-full object-cover rounded-3xl"
         />
