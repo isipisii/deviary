@@ -1,5 +1,5 @@
 import type { Config } from 'tailwindcss'
-const {nextui} = require("@nextui-org/react");
+const { nextui } = require("@nextui-org/react");
 
 const config: Config = {
   content: [
@@ -24,8 +24,8 @@ const config: Config = {
           colors: {
             background: "#00060C",
             foreground: "#ffffff",
-            navItemBackground: "#1d262e4e",
-            navItemHoverBg: "#29364196",
+            light: "#1d262e4e",
+            lightHover: "#29364196",
             secondary: "#DD0DB9",
             primary: {
               50: "#3B096C",
@@ -61,10 +61,10 @@ const config: Config = {
         light: {
           extend: "light",
           colors: {
-            borderColor: "#E4E4E7",
+            borderColor: "#cbcbcb",
             secondary: "#DD0DB9",
-            navItemBackground: "#c7c7c72c",
-            navItemHoverBg: "#c7c7c75e"
+            light: "#c7c7c72c",
+            lightHover: "#c7c7c75e"
           },
           layout: {
             disabledOpacity: "0.3",
