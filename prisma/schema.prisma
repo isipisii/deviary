@@ -103,6 +103,7 @@ model BlogPost {
   type          PostType
   tags          String[]
   title         String
+  content       String
   
   thumbnail     Image
   createdAt     DateTime  @default(now()) @map(name: "created_at")
