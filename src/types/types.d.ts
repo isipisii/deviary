@@ -10,3 +10,15 @@ type TUser = {
     name: string
     image: string
 }
+
+type TBlogPost = {
+    content: string
+    thumbnail: {
+        imageKey: string
+        imageUrl: striong
+    }
+    title: string
+    authorId: string
+    tags: string
+    created_at: Date
+}
