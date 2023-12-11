@@ -41,8 +41,6 @@ export default function SignUpForm() {
       toast.error(error.response?.data?.message)
     }
   })
-
-  
   const isButtonDisabled = !(
     !!watch("email") && 
     !!watch("password") && 
