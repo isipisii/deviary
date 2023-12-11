@@ -194,8 +194,6 @@ export function SideBarNavItem({
   const isActive = (href: string) => pathname === href;
   const { isSideBarMinimized } = useSideBarNavStore(state => state)
 
-  // navItemBackground: "#c7c7c72c",
-  // navItemHoverBg: "#c7c7c75e"
   return (
     <Link
       href={href}
