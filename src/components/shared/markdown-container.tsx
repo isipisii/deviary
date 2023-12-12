@@ -1,23 +1,36 @@
-"use client"
+"use client";
 
-import Markdown from 'react-markdown'
-import remarkGfm from 'remark-gfm'
-import rehypeRaw from "rehype-raw"
-import remarkToc from 'remark-toc'
-import { useTheme } from 'next-themes'
+import { MdPreview, MdCatalog, MdEditor } from "md-editor-rt";
+import "md-editor-rt/lib/style.css";
+import { useState } from "react";
+import { useTheme } from "next-themes";
 
-export default function MarkdownContainer({ markdown }: { markdown: string }) {
-  const { theme } = useTheme()
+import type { Themes } from "md-editor-rt";
+
+export default function MarkdownContainer({ markdown, setValue }: { markdown: string, setValue: (v: string) => void }) {
+  const [id] = useState("preview-only");
+  const { theme } = useTheme();
+
   return (
-    <div className='w-full'>
-      <Markdown
-        rehypePlugins={[rehypeRaw]}
-        remarkPlugins={[remarkGfm, remarkToc]}
-        // className={`prose `}
-        className="markdown-body"
-      >
-        {markdown}
-      </Markdown>
+    <div className="w-full">
+      <MdEditor
+        editorId={id}
+        onChange={setValue}
+        modelValue={markdown}
+        theme={theme as Themes}
+        style={{ borderRadius: ".9rem"}}
+        language="en-US"
+        pageFullscreen={false}
+        scrollAuto
+        toolbarsExclude={[
+          "revoke",
+          "next",
+          "save",
+          "htmlPreview",
+          "catalog",
+          "github",
+        ]}
+      />
     </div>
-  )
+  );
 }
