@@ -2,7 +2,11 @@ import { db } from "@/lib/prisma";
 import { NextResponse, NextRequest } from "next/server";
 import { getServerSideSession } from "@/lib/auth";
 
-export const DELETE = async (request: NextRequest, { params }: { params: { postId: string }}) => {
+type TParams = {
+    params: { postId: string }
+}
+
+export const DELETE = async (request: NextRequest, { params }: TParams) => {
     const session = await getServerSideSession()
     const postId = params.postId
 
@@ -25,7 +29,7 @@ export const DELETE = async (request: NextRequest, { params }: { params: { postI
             }
         })
 
-        return  NextResponse.json({
+        return NextResponse.json({
             message: "Blog post deleted",
             success: true
         }, { status: 204 })
@@ -36,3 +40,37 @@ export const DELETE = async (request: NextRequest, { params }: { params: { postI
         }, { status: 500 })
     }
 }   
+
+export const GET = async (request: NextRequest, { params }: TParams) => {
+    const postId = params.postId
+
+    try {
+        if(!postId) {
+            return  NextResponse.json({
+                 message: "Missing params"
+             }, { status: 400 })
+        }
+
+        const blogPost = await db.blogPost.findUnique({
+            where: {
+                id: postId
+            }
+        })
+
+        if(!blogPost) {
+            return  NextResponse.json({
+                message: "Blog post not found"
+            }, { status: 404 })
+        }
+
+        return NextResponse.json({
+            data: blogPost,
+            success: true
+        }, { status: 201 })
+
+    } catch (error) {
+        NextResponse.json({
+            message: "Internal Server Error"
+        }, { status: 500 })
+    }
+}
