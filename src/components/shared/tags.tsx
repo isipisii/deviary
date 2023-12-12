@@ -65,7 +65,7 @@ return (
             className="max-w-[700px] "
             classNames={{
                 label: "font-semibold", 
-                inputWrapper:"bg-light border-borderColor border-2 rounded-xl",
+                inputWrapper:" border-borderColor border-2 rounded-xl",
             }}
             value={tag}
             onChange={(e) => setTag(e.target.value)}
