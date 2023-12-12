@@ -28,14 +28,6 @@ export default function SignInForm() {
   } = useForm<TSignInSchema>({
     resolver: zodResolver(signInSchema),
   });
-  // const isButtonDisable = !!watch(["email"]) || !!watch(["password"])
-  // const { mutate, isPending, data } =  useMutation({
-  //   mutationFn: handleSignIn,
-  //   onSuccess: () => {
-  //     router.replace("/")
-  //   }
-  // })
-
   const isButtonDisable =  !(!!watch("email") && !!watch("password")) || isSigningIn
 
   async function handleSignIn(formValue: TSignInSchema) {
