@@ -1,12 +1,13 @@
-import type { Config } from 'tailwindcss'
+import type { Config } from "tailwindcss";
 const { nextui } = require("@nextui-org/react");
+import { withUt } from "uploadthing/tw";
 
-const config: Config = {
+export default withUt({
   content: [
-    './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
-    './src/components/**/*.{js,ts,jsx,tsx,mdx}',
-    './src/app/**/*.{js,ts,jsx,tsx,mdx}',
-    "./node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}"
+    "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}",
   ],
   // theme: {
   //   extend: {
@@ -22,6 +23,7 @@ const config: Config = {
         dark: {
           extend: "dark", // <- inherit default values from dark theme
           colors: {
+            typography: "#71717A",
             background: "#00060C",
             foreground: "#ffffff",
             light: "#1d262e4e",
@@ -61,10 +63,11 @@ const config: Config = {
         light: {
           extend: "light",
           colors: {
+            typography: "#71717A",
             borderColor: "#cbcbcb",
             secondary: "#DD0DB9",
             light: "#c7c7c72c",
-            lightHover: "#c7c7c75e"
+            lightHover: "#c7c7c75e",
           },
           layout: {
             disabledOpacity: "0.3",
@@ -82,8 +85,7 @@ const config: Config = {
         },
       },
     }),
+    require('@tailwindcss/typography'),
   ],
   darkMode: "class",
-
-}
-export default config
+});
