@@ -2,7 +2,6 @@ import { db } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSideSession } from "@/lib/auth";
 import { utapi } from "@/utils/uploadthingapi";
-import { blogSchema } from "@/lib/validators/post-validator";
 
 type TParams = {
     params: { blogId: string }
@@ -11,7 +10,7 @@ type TParams = {
 export const PATCH = async (request: NextRequest, { params }: TParams) => {
     const body = await request.formData()
     const session = await getServerSideSession()
-    const postId = params.blogId
+    const blogId = params.blogId
 
     const title = body.get("title")
     const tags =  body.get("tags")?.toString().split(",")
@@ -24,15 +23,15 @@ export const PATCH = async (request: NextRequest, { params }: TParams) => {
     }
 
     try {
-        // if(!session) {
-        //     return  NextResponse.json({
-        //          message: "Unauthenticated"
-        //      }, { status: 500 })
-        //  }
+        if(!session) {
+            return  NextResponse.json({
+                 message: "Unauthenticated, please log in first"
+             }, { status: 500 })
+         }
 
         const post = await db.post.findUnique({
             where: {
-                id: postId,
+                id: blogId,
                 type: "BLOG_POST"
             },
             include: {
@@ -82,7 +81,8 @@ export const PATCH = async (request: NextRequest, { params }: TParams) => {
 
     } catch (error) {
         return NextResponse.json({
-            message: "Internal Server Error"
+            message: "Internal Server Error",
+            error
         }, { status: 500 })
     }
 }   
@@ -116,7 +116,8 @@ export const GET = async (request: NextRequest, { params }: TParams) => {
 
     } catch (error) {
         return NextResponse.json({
-            message: "Internal Server Error"
+            message: "Internal Server Error",
+            error
         }, { status: 500 })
     }
 }
