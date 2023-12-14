@@ -7,7 +7,6 @@ import { blogSchema } from "@/lib/validators/post-validator";
 export const POST = async (request: NextRequest) => {
     const session = await getServerSideSession()
     const body = await request.formData()
-    console.log(body)
 
     const title = body.get("title")
     const tags =  body.get("tags")?.toString().split(",")
@@ -20,16 +19,16 @@ export const POST = async (request: NextRequest) => {
     })
 
     try {
-        // if(!session) return NextResponse.json({
-        //     success: false,
-        //     message: "Unauthenticated, please log in first"
-        // }, { status: 400 })
+        if(!session) return NextResponse.json({
+            success: false,
+            message: "Unauthenticated, please log in first"
+        }, { status: 400 })
 
 
         if(!parsedBlogData.success) {
             return NextResponse.json({
                 errors: parsedBlogData.error.flatten().fieldErrors,
-                message: "Error in onboarding data.",
+                message: "Error in diary data.",
             }, { status: 400 })   
         }
 
@@ -38,7 +37,7 @@ export const POST = async (request: NextRequest) => {
         const createdPost = await db.post.create({
             data: {
                 type: "BLOG_POST",
-                authorId: "6569d20892aa29abbf2e3705",
+                authorId: session.user.id,
                 tags,
                 blog: {
                     create: {
@@ -62,6 +61,6 @@ export const POST = async (request: NextRequest) => {
         }, { status: 200 })
     
     } catch (error) {
-        return NextResponse.json({ message: "Internal Server Error", success: false }, {status: 500})
+        return NextResponse.json({ message: "Internal Server Error", success: false }, { status: 500 })
     }
 }
