@@ -1,6 +1,7 @@
 import { db } from "@/lib/prisma";
-import { NextResponse, NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { getServerSideSession } from "@/lib/auth";
+import { utapi } from "@/utils/uploadthingapi";
 
 type TParams = {
     params: { postId: string }
@@ -11,66 +12,48 @@ export const DELETE = async (request: NextRequest, { params }: TParams) => {
     const postId = params.postId
 
     try {
-        if(!postId) {
-           return  NextResponse.json({
-                message: "Missing params"
-            }, { status: 400 })
-        }
-
         if(!session) {
             return  NextResponse.json({
                  message: "Unauthenticated"
-             }, { status: 500 })
-         }
-
-        await db.blogPost.delete({
-            where: {
-                id: postId
-            }
-        })
-
-        return NextResponse.json({
-            message: "Blog post deleted",
-            success: true
-        }, { status: 204 })
-
-    } catch (error) {
-        NextResponse.json({
-            message: "Internal Server Error"
-        }, { status: 500 })
-    }
-}   
-
-export const GET = async (request: NextRequest, { params }: TParams) => {
-    const postId = params.postId
-
-    try {
-        if(!postId) {
-            return  NextResponse.json({
-                 message: "Missing params"
-             }, { status: 400 })
+            }, { status: 500 })
         }
 
-        const blogPost = await db.blogPost.findUnique({
+        const post = await db.post.findUnique({
             where: {
                 id: postId
+            },
+            include: {
+                blog: true
             }
         })
 
-        if(!blogPost) {
+        if(!post) {
             return  NextResponse.json({
-                message: "Blog post not found"
+                message: "Post not found"
             }, { status: 404 })
         }
 
+        //delete thumbnail if the postt type is blog
+        if(post?.blog) {
+            const res = await utapi.deleteFiles(post.blog.thumbnail.imageKey)
+            console.log(res)
+        }
+
+        const deletedPost = await db.post.delete({
+            where: {
+                id: postId
+            }
+        })
+
         return NextResponse.json({
-            data: blogPost,
+            deletedPost: deletedPost,
+            message: "Blog post deleted",
             success: true
-        }, { status: 201 })
+        }, { status: 200 })
 
     } catch (error) {
-        NextResponse.json({
-            message: "Internal Server Error"
+        return NextResponse.json({
+            message: error
         }, { status: 500 })
     }
-}
+}   
