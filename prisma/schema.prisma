@@ -121,23 +121,16 @@ model Post {
   Bookmark      Bookmark[]
 }
 
-// TODO
 model Diary {
   id             String @id @default(auto()) @map("_id") @db.ObjectId
   postId         String @db.ObjectId @unique
   post           Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
-  bugTitle       String
-  bugCodeSnippet String
-  bugDescription String
+  title       String
+  codeSnippet String
+  description String?
   solution       String
 }
 
-// model Tag {
-//   id     String @id @default(auto()) @map("_id") @db.ObjectId
-//   tag    String
-// }
-
-// TODO
 model Bookmark {
   id            String @id @default(auto()) @map("_id") @db.ObjectId
   userId        String @db.ObjectId
