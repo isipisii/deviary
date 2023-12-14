@@ -7,7 +7,7 @@ import z from "zod";
 type TSignUpSchema = z.infer<typeof signUpSchema>
 //creates new user
 export const POST = async (request: NextRequest) => {
-    const body: TSignUpSchema= await request.json()
+    const body: TSignUpSchema = await request.json()
     const { email, password: rawPassword, confirmPassword } = body
     
     const signUpCredentials = signUpSchema.safeParse({
