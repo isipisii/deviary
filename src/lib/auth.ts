@@ -67,7 +67,7 @@ export const authOptions: NextAuthOptions = {
         return token
       }
 
-      // updates the token inside server if the update is triggered
+      // updates the token inside the server if the update is triggered
       if (trigger === "update" && session?.onboarded) {
         token.onboarded = session.onboarded as boolean
 

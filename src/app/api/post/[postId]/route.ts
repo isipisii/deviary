@@ -14,7 +14,7 @@ export const DELETE = async (request: NextRequest, { params }: TParams) => {
     try {
         if(!session) {
             return  NextResponse.json({
-                 message: "Unauthenticated"
+                 message: "Unauthenticated, please log in first"
             }, { status: 500 })
         }
 
