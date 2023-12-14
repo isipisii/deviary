@@ -59,8 +59,7 @@ model User {
 
   accounts        Account[]
   sessions        Session[]
-  blogposts       BlogPost[]
-  diaries         Diary[]
+  posts           Post[]
   bookmarks       Bookmark[]
   // GuildMember     GuildMember[]
 
@@ -72,6 +71,8 @@ model User {
 
   createdAt       DateTime  @default(now()) @map(name: "created_at")
   updatedAt       DateTime  @updatedAt @map(name: "updated_at")
+
+
 }
 
 model Guild {
@@ -96,51 +97,55 @@ model Guild {
 //   user             User  @relation(fields: [memberId], references: [id]) 
 // }
 
-model BlogPost {
+model Blog {
   id            String @id @default(auto()) @map("_id") @db.ObjectId
-  authorId      String @db.ObjectId
-  author        User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  type          PostType
-  tags          String[]
+  postId        String @db.ObjectId @unique
+  post          Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
   title         String
   content       String
-  
   thumbnail     Image
+}
+
+model Post {
+  id            String @id @default(auto()) @map("_id") @db.ObjectId
+  authorId      String @db.ObjectId
+  author        User   @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  type          PostType
+  tags          String[]
+
+  diary         Diary?
+  blog          Blog?
+       
   createdAt     DateTime  @default(now()) @map(name: "created_at")
   updatedAt     DateTime  @default(now()) @map(name: "updated_at")
-
   Bookmark      Bookmark[]
-} 
+}
 
 // TODO
 model Diary {
-  id            String @id @default(auto()) @map("_id") @db.ObjectId
-  authorId      String @db.ObjectId
-  author        User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  type          PostType
-  tags          String[]
-  
-  codeSnippet   String 
-  thumbnail     Image
-  createdAt     DateTime  @default(now()) @map(name: "created_at")
-  updatedAt     DateTime  @default(now()) @map(name: "updated_at")
-
-  Bookmark      Bookmark[]
+  id             String @id @default(auto()) @map("_id") @db.ObjectId
+  postId         String @db.ObjectId @unique
+  post           Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+  bugTitle       String
+  bugCodeSnippet String
+  bugDescription String
+  solution       String
 }
+
+// model Tag {
+//   id     String @id @default(auto()) @map("_id") @db.ObjectId
+//   tag    String
+// }
 
 // TODO
 model Bookmark {
   id            String @id @default(auto()) @map("_id") @db.ObjectId
-  
   userId        String @db.ObjectId
   user          User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  blogPostId    String? @db.ObjectId
-  blogPost      BlogPost? @relation(fields: [blogPostId], references: [id], onDelete: Cascade)
-  
-  diaryId       String? @db.ObjectId
-  diary         Diary? @relation(fields: [diaryId], references: [id], onDelete: Cascade)
+  postId        String @db.ObjectId
+  post          Post @relation(fields: [postId], references: [id], onDelete: Cascade)
 }
+
 
 enum PostType  {
   BLOG_POST 
