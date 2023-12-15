@@ -125,9 +125,9 @@ model Diary {
   id             String @id @default(auto()) @map("_id") @db.ObjectId
   postId         String @db.ObjectId @unique
   post           Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
-  title       String
-  codeSnippet String
-  description String?
+  title          String
+  codeSnippet    String?
+  description    String
   solution       String
 }
 
