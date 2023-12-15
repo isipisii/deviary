@@ -7,7 +7,7 @@ import { useTheme } from "next-themes";
 
 import type { Themes } from "md-editor-rt";
 
-export default function MarkdownContainer({ markdown, setValue }: { markdown: string, setValue: (v: string) => void }) {
+export default function MarkdownEditor({ markdown, setValue }: { markdown: string, setValue: (v: string) => void }) {
   const [id] = useState("preview-only");
   const { theme } = useTheme();
 
@@ -30,6 +30,11 @@ export default function MarkdownContainer({ markdown, setValue }: { markdown: st
           "catalog",
           "github",
         ]}
+        placeholder="Content*"
+        onDrop={(e) => {
+          e.preventDefault();
+          console.log(e.dataTransfer?.files[0]);
+        }}
       />
     </div>
   );
