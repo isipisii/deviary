@@ -16,7 +16,7 @@ import useLoadImageFile from "@/lib/hooks/useLoadImageFile";
 import { AxiosError } from "axios";
 import { useSession } from "next-auth/react";
 
-import EditAvatar from "@/components/shared/edit-avatar";
+import LoadAvatar from "@/components/shared/load-avatar";
 import { FaGithub, FaFacebook } from "react-icons/fa";
 
 export type TOnBoardingSchema = z.infer<typeof onboardingSchema>;
@@ -87,7 +87,7 @@ export default function OnBoardingForm({ user }: IOnboardingForm) {
       
       <div className="flex flex-col gap-3">
         {/* profile */}
-        <EditAvatar 
+        <LoadAvatar 
           selectedImage={selectedImage} 
           handleFileChange={handleFileChange} 
           handleRemoveImage={handleRemoveImage} 
