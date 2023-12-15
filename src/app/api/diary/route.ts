@@ -2,12 +2,12 @@ import { db } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import { diarySchema } from "@/lib/validators/post-validator";
 import { getServerSideSession } from "@/lib/auth";
-import { TDiary } from "@/lib/validators/post-validator";
+import { TDiarySchema } from "@/lib/validators/post-validator";
 
 export const POST = async (request: NextRequest) => {
     const session = await getServerSideSession()
     const body = await request.json()
-    const  { title, description, solution, codeSnippet, tags } = body as TDiary & { tags: string }
+    const  { title, description, solution, codeSnippet, tags } = body as TDiarySchema & { tags: string }
     const parsedDiaryData = diarySchema.safeParse({
         title,
         description,
@@ -38,7 +38,7 @@ export const POST = async (request: NextRequest) => {
                         title: parsedDiaryData.data.title,
                         description: parsedDiaryData.data.description,
                         solution: parsedDiaryData.data.solution,
-                        codeSnippet: parsedDiaryData.data.codeSnippet
+                        codeSnippet: parsedDiaryData.data.codeSnippet 
                     }
                 }
             },

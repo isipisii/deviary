@@ -2,7 +2,7 @@ import { db } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import { utapi } from "@/utils/uploadthingapi";
 import { getServerSideSession } from "@/lib/auth";
-import { blogSchema } from "@/lib/validators/post-validator";
+import { blogSchemaServer } from "@/lib/validators/post-validator";
 
 export const POST = async (request: NextRequest) => {
     const session = await getServerSideSession()
@@ -13,9 +13,10 @@ export const POST = async (request: NextRequest) => {
     const thumbnail = body.get("thumbnail")
     const content = body.get("content")
 
-    const parsedBlogData = blogSchema.safeParse({
+    const parsedBlogData = blogSchemaServer.safeParse({
         title,
-        // content
+        content,
+        tags
     })
 
     try {
@@ -28,7 +29,7 @@ export const POST = async (request: NextRequest) => {
         if(!parsedBlogData.success) {
             return NextResponse.json({
                 errors: parsedBlogData.error.flatten().fieldErrors,
-                message: "Error in diary data.",
+                message: "Error in blog data.",
             }, { status: 400 })   
         }
 
