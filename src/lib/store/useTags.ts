@@ -23,7 +23,7 @@ export const useTags = create<TTagsState>((set, get) => ({
             return;
         }
 
-        if(isInserted || formattedTag === "") {
+        if(isInserted || formattedTag === "" || formattedTag.length === 1) {
             return;
         } else {
             set({ tags:  [...get().tags, formattedTag] })
