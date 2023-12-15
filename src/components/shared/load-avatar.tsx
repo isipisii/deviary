@@ -4,19 +4,19 @@ import { Avatar, Button } from "@nextui-org/react";
 import React, { ChangeEvent } from "react";
 import { IoClose } from "react-icons/io5";
 
-interface IEditAvatar {
+interface ILoadAvatar {
   selectedImage: string;
   handleRemoveImage: () => void;
   handleFileChange: (e: ChangeEvent<HTMLInputElement>) => void;
   userCurrentImage: string;
 }
 
-export default function EditAvatar({
+export default function LoadAvatar({
   selectedImage,
   handleFileChange,
   handleRemoveImage,
   userCurrentImage,
-}: IEditAvatar) {
+}: ILoadAvatar) {
     
   return (
     <div 
