@@ -34,7 +34,7 @@ export default function LoadThumbnail({ selectedImage, handleFileChange, handleR
                 //eslint-disable-next-line @next/next/no-img-element
                 <img className="w-full h-full rounded-2xl object-cover" src={selectedImage || currentThumbnail} alt="NextUI Fruit Image with Zoom" />
             ) : (
-                <div className="flex items-center justify-center w-full h-full bg-light hover:bg-lightHover transition-all ease-in-out duration-1000 rounded-xl">
+                <div className="flex items-center justify-center w-full h-full hover:bg-light transition-all ease-in-out duration-1000 rounded-xl">
                     <div className="flex items-center gap-2">
                         <FaImage />
                         <p className="font-semibold text-sm">Thumbnail</p>
