@@ -25,8 +25,9 @@ export default function Tags({ initialTags }: { initialTags?: string[] }) {
     }
 
 return (
-    <form onSubmit={handleInsertTag}>   
-        <div className="flex gap-3 flex-wrap max-w-[700px] mb-3">
+    <form onSubmit={handleInsertTag} className="flex flex-col gap-3">   
+        {tags.length > 0 && 
+        <div className="flex gap-3 flex-wrap max-w-[700px]">
             {tags.map((tag, index) => (
                 <Chip
                     onClose={() => removeTag(tag)}
@@ -47,22 +48,23 @@ return (
                 color="danger"
                 variant="bordered" 
                 radius="full" 
+                size="sm"
                 startContent={
                     <IoClose />
                 }
                 onClick={removeAllTags}
-                className="font-semibold "
+                className="font-semibold"
             >
                 Remove all
             </Button>
             )}
-        </div>
+        </div>}
         <Input
             labelPlacement="inside"
             label="Tag (optional)"
             radius="lg"
             variant="bordered"
-            className="max-w-[700px] "
+            className="max-w-[700px]"
             classNames={{
                 label: "font-semibold", 
                 inputWrapper:" border-borderColor border-2 rounded-xl",
