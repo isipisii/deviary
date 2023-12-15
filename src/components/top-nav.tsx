@@ -22,9 +22,9 @@ export default function TopNav() {
         {/* logo */}
         <img
           src={
-            theme === "light"
-              ? "/images/deviary-light.svg"
-              : "/images/deviary-dark.svg"
+            theme === "dark"
+              ? "/images/deviary-dark.svg"
+              : "/images/deviary-light.svg"
           }
           alt="logo"
         />
