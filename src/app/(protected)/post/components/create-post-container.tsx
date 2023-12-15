@@ -2,8 +2,8 @@
 
 import { useState } from "react"
 import PostTypeTab from "./post-type-tab"
-import CreateBlogPostForm from "./create-blog-post-form"
-import CreateDiaryForm from "./create-diary-form"
+import BlogPostForm from "./blog-post-form"
+import DiaryForm from "./diary-form"
 
 export default function CreatePostContainer() {
   const [selectedTabItem, setSelectedTabItem] = useState("blog-post")
@@ -11,8 +11,8 @@ export default function CreatePostContainer() {
   return (
     <div className="space-y-6">
         <PostTypeTab selectedTabItem={selectedTabItem} setSelectedTabItem={setSelectedTabItem} />
-        {selectedTabItem === "blog-post" && <CreateBlogPostForm />}
-        {selectedTabItem === "diary" && <CreateDiaryForm />}
+        {selectedTabItem === "blog-post" && <BlogPostForm />}
+        {selectedTabItem === "diary" && <DiaryForm />}
     </div>
   )
 }
