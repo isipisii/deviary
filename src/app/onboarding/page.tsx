@@ -1,7 +1,5 @@
 import { getServerSideSession } from "@/lib/auth"
-import { redirect } from "next/navigation"
-import { db } from "@/lib/prisma"
-import OnBoardingForm from "./compoonents/onboarding-form"
+import OnBoardingForm from "./components/onboarding-form"
 
 export default async function OnBoarding() {
   const session = await getServerSideSession()
