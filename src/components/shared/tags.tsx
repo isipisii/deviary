@@ -64,6 +64,7 @@ return (
             label="Tag (optional)"
             radius="lg"
             variant="bordered"
+            size="sm"
             className="max-w-[700px]"
             classNames={{
                 label: "font-semibold", 
