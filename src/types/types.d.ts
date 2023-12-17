@@ -1,4 +1,4 @@
-//this is for axios generic's type response 
+//this is for axios' generic type response 
 interface ErrorResponse {
     message: string
 }
