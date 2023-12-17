@@ -12,36 +12,21 @@ import z from "zod"
 import { useTags } from "@/lib/store/useTags";
 import useLoadImageFile from "@/lib/hooks/useLoadImageFile"
 import { UploadButton } from "@/utils/uploadthing";
-import { FaRegImages } from "react-icons/fa6";
 import { toast } from "sonner";
 import MarkdownEditor from "@/components/shared/markdown-editor";
-import { useMutation } from "@tanstack/react-query";
-import { createBlogPost } from "@/lib/services/post.api";
-import { AxiosError } from "axios";
+import { useCreateBlogPost } from "@/lib/services/post.api";
 import { useState } from "react";
-import { useRouter } from "next-nprogress-bar";
 
 export type TBlogSchema = z.infer<typeof blogSchema>
 
 export default function BlogPostForm({ isEditing }: { isEditing?: boolean } ) {
   const { tags, removeAllTags } = useTags(state => state)
   const [content, setContent] = useState("")
-  const router = useRouter()
   const { handleFileChange, selectedImage, selectedImageFile, handleRemoveImage } = useLoadImageFile()
   const { watch, register, formState: { errors }, handleSubmit, reset } = useForm<TBlogSchema>({
     resolver: zodResolver(blogSchema)
   })
-  const { mutate: createBlogPostMutation, isPending } = useMutation({
-    mutationFn: createBlogPost, 
-     onSuccess: () => {
-      clearForm()
-      router.push("/feed")
-    },
-    onError: (error:AxiosError<ErrorResponse>) => {
-      toast.error(error.response?.data?.message)
-    }
-  })
-
+  const { mutate: createBlogPostMutation, isPending } = useCreateBlogPost(clearForm)
   const isButtonDisabled = !(!!watch("title") && content && selectedImage) || isPending
   
   function handleCreateBlogPost(formValue: TBlogSchema) {
@@ -63,7 +48,7 @@ export default function BlogPostForm({ isEditing }: { isEditing?: boolean } ) {
   }
 
   return (
-    <div className="max-w-[900px] flex-col flex gap-4">
+    <div className="flex-col flex gap-4">
       <LoadThumbnail
         handleFileChange={handleFileChange}
         selectedImage={selectedImage}
@@ -76,6 +61,7 @@ export default function BlogPostForm({ isEditing }: { isEditing?: boolean } ) {
             isRequired
             label="Title"
             radius="lg"
+            size="sm"
             variant="bordered"
             classNames={{
                 label: "font-semibold", 
@@ -124,7 +110,8 @@ export default function BlogPostForm({ isEditing }: { isEditing?: boolean } ) {
             <Button 
               type="submit" 
               color="secondary" 
-              size="lg"
+              size="md"
+              isLoading={isPending}
               className="rounded-xl text-white max-w-[200px] w-full font-semibold"
               isDisabled={isButtonDisabled}
             >
