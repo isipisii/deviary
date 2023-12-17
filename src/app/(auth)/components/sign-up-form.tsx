@@ -11,10 +11,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { FaEyeSlash, FaEye } from "react-icons/fa";
 import Link from "next/link";
 
-import { useMutation } from "@tanstack/react-query"
-import { signUp } from "@/lib/services/auth.api";
-import { toast } from "sonner"
-import { AxiosError } from "axios";
+import { useSignUp } from "@/lib/services/auth.api";
 import { useRouter } from 'next-nprogress-bar';
 
 export type TSignUpSchema = z.infer<typeof signUpSchema>;
@@ -31,21 +28,12 @@ export default function SignUpForm() {
   } = useForm<TSignUpSchema>({
     resolver: zodResolver(signUpSchema),
   });  
-  const { mutate: signUpMutation, isPending } = useMutation({
-    mutationFn: signUp,
-    onSuccess: () => {
-      toast.success("Account created successfully.")
-      router.push("/sign-in")
-    },
-    onError: (error: AxiosError<ErrorResponse>) => {
-      toast.error(error.response?.data?.message)
-    }
-  })
+  const { mutate: signUpMutation, isPending } = useSignUp()
   const isButtonDisabled = !(
     !!watch("email") && 
     !!watch("password") && 
     !!watch("confirmPassword")
-  )
+  ) 
 
   function handleSignUp(formData: TSignUpSchema) {
     signUpMutation(formData)
