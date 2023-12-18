@@ -19,22 +19,9 @@ export const metadata: Metadata = {
   description: `a developer's diary and community`,
 };
 
-export default async function RootLayout({
-  children,
-  pathname,
-}: {
+export default async function RootLayout({ children, }: {
   children: React.ReactNode;
-  pathname: string;
 }) {
-  const session = await getServerSideSession();
-  // console.log(pathname)
-
-  // // for checking if the user isnt onboarded
-  // const user = await db.user.findFirst({
-  //   where: {
-  //     id: session?.user.id
-  //   }
-  // })
 
   return (
     <html lang="en">
