@@ -33,10 +33,9 @@ export const DELETE = async (request: NextRequest, { params }: TParams) => {
             }, { status: 404 })
         }
 
-        //delete thumbnail if the postt type is blog
+        //delete thumbnail if the post is blog
         if(post?.blog) {
             const res = await utapi.deleteFiles(post.blog.thumbnail.imageKey)
-            console.log(res)
         }
 
         const deletedPost = await db.post.delete({
@@ -53,7 +52,44 @@ export const DELETE = async (request: NextRequest, { params }: TParams) => {
 
     } catch (error) {
         return NextResponse.json({
-            message: error
+            message: "Internal Server Error",
+            error
         }, { status: 500 })
     }
 }   
+
+export const GET = async (request: NextRequest, { params }: TParams) => {
+    const postId = params.postId
+
+    try {
+        const post = await db.post.findUnique({
+            where: {
+                id: postId
+            },
+            include: {
+                blog: true,
+                diary: true
+            }
+        })
+
+        if(!post) {
+            return NextResponse.json({
+                message: "Post not found",
+                success: false
+            }, { status: 404 })
+        }
+
+        return NextResponse.json({
+            success: true,
+            data: post,
+            message: "Post found"
+        }, { status: 200 })
+
+    } catch (error) {
+        return NextResponse.json({
+            success: false,
+            message: "Internal Server Error",
+            error
+        }, { status: 500 })
+    }
+}
