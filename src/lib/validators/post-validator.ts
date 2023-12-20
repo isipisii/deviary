@@ -14,7 +14,8 @@ export const blogSchemaServer = z.object({
     tags: z.string().array().max(10, {message: "Tags should not be more than 10 items"}).nullable()
 }) 
 
-export type TDiary = z.infer<typeof diarySchema>
+export type TDiarySchema = z.infer<typeof diarySchema>
+
 export const diarySchema = z.object({
     title: z.string()
     .min(1, { message: "Title is required" })
