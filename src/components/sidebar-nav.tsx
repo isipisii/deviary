@@ -206,7 +206,7 @@ export function SideBarNavItem({
         <p
           className={clsx(
             "text-secondary bg-background text-[1.5rem] p-2 rounded-2xl",
-            {"text-red-600": title === "Popular"}
+            {"text-red-700": title === "Popular"}
           )}
         >
           <Icon />
