@@ -86,38 +86,3 @@ export const PATCH = async (request: NextRequest, { params }: TParams) => {
         }, { status: 500 })
     }
 }   
-
-export const GET = async (request: NextRequest, { params }: TParams) => {
-    const postId = params.blogId
-
-    try {
-        if(!postId) {
-            return  NextResponse.json({
-                 message: "Missing params"
-             }, { status: 400 })
-        }
-
-        const post = await db.post.findUnique({
-            where: {
-                id: postId
-            }
-        })
-
-        if(!post) {
-            return  NextResponse.json({
-                message: "Blog post not found"
-            }, { status: 404 })
-        }
-
-        return NextResponse.json({
-            data: post,
-            success: true
-        }, { status: 201 })
-
-    } catch (error) {
-        return NextResponse.json({
-            message: "Internal Server Error",
-            error
-        }, { status: 500 })
-    }
-}
