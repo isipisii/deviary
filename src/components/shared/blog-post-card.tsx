@@ -8,21 +8,26 @@ import { TbArrowBigUp, TbArrowBigUpFilled, TbShare3 } from "react-icons/tb";
 import { Avatar } from "@nextui-org/react";
 import { FaRegComments } from "react-icons/fa";
 
-export default function BlogPostCard() {
+interface IBlogPostCard {
+    post: TPost
+}
+
+export default function BlogPostCard({ post }: IBlogPostCard) {
   const { data } = useSession()
+  const { thumbnail, content, title } = post?.blog as TBlog
 
   return (
     <div className="relative h-[400px] w-[300px] rounded-3xl border-2 border-borderColor shadow-2xl">
         {/* image and bg gradient */}
         <img 
             // src={index % 2 === 0 ? "https://res.cloudinary.com/daily-now/image/upload/f_auto,q_auto/v1/posts/c9351b4fa8cdb6f53a50c523baf7965e?_a=AQAEufR" : "/images/nxt.png"}
-            src={"https://res.cloudinary.com/daily-now/image/upload/f_auto,q_auto/v1/posts/321132ebaae9e0f22b7727d30efe160a?_a=AQAEufR"}
+            src={thumbnail.imageUrl ?? "https://res.cloudinary.com/daily-now/image/upload/f_auto,q_auto/v1/posts/321132ebaae9e0f22b7727d30efe160a?_a=AQAEufR"}
             alt="basta" 
             className="w-full h-full object-cover rounded-3xl"
         />
         <div 
             className="w-full absolute bottom-0 rounded-b-3xl h-full bg-gradient-to-t from-[#0C1319]
-            via-[#0c1319b6] to-[#24253300]"
+            via-[#0c1319c8] to-[#24253300]"
         />
         
         {/* blog details */}
@@ -32,7 +37,7 @@ export default function BlogPostCard() {
                     src={data?.user.image as string}
                     className="h-[40px] w-[40px]"
                 />
-                <h3 className="font-bold text-xl text-white">{truncateString("Recap of NextJS Conf 2023 and v14 release.")}</h3>
+                <h3 className="font-bold text-xl text-white shadow-lg">{truncateString(title)}</h3>
             </div>
             <div>
                 <p className="text-sm text-[#A1A1AA]">Yesterday</p>
