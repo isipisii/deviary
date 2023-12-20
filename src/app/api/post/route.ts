@@ -13,7 +13,7 @@ export const GET = async (request: NextRequest) => {
     const filter = url.searchParams.get("filter")?.toString().split(",")
 
     const posts = await db.post.findMany({
-        //puts the where clause if there's a filter from the req url
+        //puts the where clause if there's a filter from the search params
         ...(filter && {
           where: {
             tags: {
@@ -30,7 +30,7 @@ export const GET = async (request: NextRequest) => {
           },
         }),
         orderBy: {
-          createdAt: "asc",
+          createdAt: "desc",
         },
         include: {
           blog: true,
@@ -38,7 +38,7 @@ export const GET = async (request: NextRequest) => {
         },
     });
 
-    //no data remaining
+    //if no data remaining
     if (posts.length === 0) {
       return NextResponse.json({
           data: [],
@@ -62,14 +62,14 @@ export const GET = async (request: NextRequest) => {
     });
 
     const data = {
-      data: posts,
+      posts,
       metaData: {
         lastCursor: cursor,
         hasNextPage: nextPage.length > 0,
       },
     };
 
-    return NextResponse.json({ data }, { status: 200 });
+    return NextResponse.json({ data, success: true }, { status: 200 });
   } catch (error) {
     return NextResponse.json(
       {
