@@ -1,6 +1,6 @@
 import { db } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
-import { TDiary, diarySchema } from "@/lib/validators/post-validator";
+import { TDiarySchema, diarySchema } from "@/lib/validators/post-validator";
 import { getServerSideSession } from "@/lib/auth";
 
 type TParams = { 
@@ -10,7 +10,7 @@ type TParams = {
 }
 export const PATCH = async (request: NextRequest, { params }: TParams) => {
     const session = await getServerSideSession()
-    const { title, description, solution, codeSnippet, tags } = await request.json() as TDiary & { tags: string }
+    const { title, description, solution, codeSnippet, tags } = await request.json() as TDiarySchema & { tags: string }
     const diaryId = params.diaryId
     const parsedDiaryData = diarySchema.safeParse({
         title,
