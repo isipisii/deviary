@@ -5,7 +5,6 @@ import { useInView } from "react-intersection-observer";
 import { useEffect } from "react";
 import { useFeedPosts } from "@/lib/services/post.api";
 
-// TODO: MAKE A CARD COMPONENT FOR DIARY and PUT NECESSARY PROPS IN BLOG POST CARD
 export default function FeedContainer() {
   const { ref, inView } = useInView();
   const { fetchNextPage, hasNextPage, isFetchingNextPage, data, isLoading } = useFeedPosts()
@@ -36,6 +35,7 @@ export default function FeedContainer() {
                 <div ref={ref} key={index}>
                   <div className="h-[200px] border">
                     <h1>{post.id}</h1>
+                    <h1>{post.diary?.title}</h1>
                     <h1>{post.type}</h1>
                     <h1>{index + 1}</h1>
                     {post.tags.map((tag, index) => (
@@ -56,6 +56,7 @@ export default function FeedContainer() {
                 <div className="h-[200px] border" key={index}>
                   <h1>{post.id}</h1>
                   <h1>{post.type}</h1>
+                  <h1>{post.diary?.title}</h1>
                   <h1>{index + 1}</h1>
                   {post.tags.map((tag, index) => (
                     <h1 key={index}>{tag}</h1>
