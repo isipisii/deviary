@@ -8,7 +8,7 @@ import { IoClose } from "react-icons/io5";
 
 export default function Tags({ initialTags }: { initialTags?: string[] }) {
     const { tags, insertTag, removeTag, removeAllTags, setInitialTags } = useTags(state => state)
-    const showRemoveAll = tags.length >= 3
+    const showRemoveAll = tags.length > 1
     const [tag, setTag] = useState("")
 
     useEffect(() => {
