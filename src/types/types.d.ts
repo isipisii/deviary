@@ -6,7 +6,7 @@ interface ErrorResponse {
 type TUser = {
     id: string
     email: string
-    onboarded: boolean
+    onboarded?: boolean
     name: string
     image: string
 }
@@ -20,20 +20,21 @@ type TFeedPostsPage = {
 }
 
 type TPost = {
-    type: PostType.BLOG_POST | PostType.CODE_DIARY
-    tags: string[]
+    type: "BLOG_POST" | "CODE_DIARY"
+    tags: string[]    
     id: string
+    author?: TUser
     blog?: TBlog 
     diary?: TDiary
-    authorId: string
-    created_at: Date
+    authorId?: string
+    created_at?: Date
 }
 
 type TBlog = {
     content: string
-    thumbnail: {
-        imageKey: string
-        imageUrl: striong
+    thumbnail?: {
+        imageKey?: string
+        imageUrl?: string
     }
     title: string
 }
@@ -45,7 +46,7 @@ type TDiary = {
     solution: string
 }
 
-// enum PostType {
-//     CODE_DIARY = "CODE_DIARY",
-//     BLOG_POST = "BLOG_POST"
-// }
+enum PostType {
+    DIARY = "DIARY",
+    BLOG = "BLOG"
+}
