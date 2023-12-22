@@ -50,8 +50,17 @@ export const POST = async (request: NextRequest) => {
                         }
                     }
                 }
-            }, include: {
-                blog: true
+            }, 
+            include: {
+                blog: true,
+                author: {
+                    select: {
+                        id: true,
+                        name: true,
+                        email: true,
+                        image: true
+                    }
+                }
             }
         })
         
