@@ -4,6 +4,8 @@ import BlogPostCard from "@/components/shared/blog-post-card";
 import { useInView } from "react-intersection-observer";
 import { useEffect } from "react";
 import { useFeedPosts } from "@/lib/services/post.api";
+import DiaryCard from "@/components/shared/diary-card";
+import PostsSkeletonLoader from "@/components/shared/skeleton-loaders/posts-skeleton-loader";
 
 export default function FeedContainer() {
   const { ref, inView } = useInView();
@@ -18,8 +20,9 @@ export default function FeedContainer() {
   }, [hasNextPage, inView, fetchNextPage]);
 
   return (
-    <div className="w-full flex items-center flex-col justify-center">
-      <div className="flex gap-12 flex-wrap mt-8 ">
+    <div className="w-full flex items-center flex-col justify-center">    
+      {/* <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 mt-8 w-full"> */}
+      <div className="flex gap-12 items-center justify-center flex-wrap mt-8 w-full">
         {data?.pages.map((page) =>
           page.posts?.map((post, index) => {
             // this is for the last element in order to put the ref for infinite scrolling
@@ -33,43 +36,23 @@ export default function FeedContainer() {
               }
               return (
                 <div ref={ref} key={index}>
-                  <div className="h-[200px] border">
-                    <h1>{post.id}</h1>
-                    <h1>{post.diary?.title}</h1>
-                    <h1>{post.type}</h1>
-                    <h1>{index + 1}</h1>
-                    {post.tags.map((tag, index) => (
-                      <h1 key={index}>{tag}</h1>
-                    ))}
-                  </div>
+                  <DiaryCard post={post}/>
                 </div>
               );
             } else {
               if(post.type === "BLOG_POST") {
                 return (
-                  <div ref={ref} key={index}>
-                    <BlogPostCard post={post} />
-                  </div>
+                  <BlogPostCard post={post} key={index} />
                 )
               }
               return (
-                <div className="h-[200px] border" key={index}>
-                  <h1>{post.id}</h1>
-                  <h1>{post.type}</h1>
-                  <h1>{post.diary?.title}</h1>
-                  <h1>{index + 1}</h1>
-                  {post.tags.map((tag, index) => (
-                    <h1 key={index}>{tag}</h1>
-                  ))}
-                </div>
+                <DiaryCard post={post} key={index} />
               );
             }
           })
         )}
+       {(isLoading || isFetchingNextPage) && ( <PostsSkeletonLoader />)}
       </div>
-      {(isLoading || isFetchingNextPage) && (
-        <p className="mb-4">Loading...</p>
-      )}
     </div>
   );
 }
