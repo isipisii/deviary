@@ -32,10 +32,19 @@ export const GET = async (request: NextRequest) => {
         orderBy: {
           createdAt: "desc",
         },
+      
         include: {
           blog: true,
-          diary: true
-        },
+          diary: true,
+          author: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+              image: true
+            }
+          }
+        }
     });
 
     //if no data remaining
