@@ -68,7 +68,7 @@ export const PATCH = async (request: NextRequest, { params }: TParams) => {
                 },
             },
             include: {
-                blog: true
+                blog: true,
             }
         })
 
