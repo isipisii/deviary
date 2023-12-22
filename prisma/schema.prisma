@@ -113,7 +113,7 @@ model Post {
   type          PostType
   tags          String[]
 
-  diary         Diary?
+  diary         Diary? 
   blog          Blog?
        
   createdAt     DateTime  @default(now()) @map(name: "created_at")
