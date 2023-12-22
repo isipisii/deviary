@@ -47,13 +47,14 @@ export function useCreateBlogPost(clearForm: () => void) {
                   if (index === 0) {
                     return {
                       ...page,
-                      posts: [data as TPost, ...page.posts],
+                      posts: [data, ...(page.posts ? page.posts : new Array())],
                     };
                   }
                   return page;
                 }),
               }
-            : undefined;
+            : oldData;
+
           return newData;
         }
       );
@@ -76,7 +77,7 @@ export function useCreateDiary(formReturn: UseFormReturn) {
       const response = await axios.post("/api/diary", diaryData);
       return response.data.data;
     },
-    onSuccess: (data) => {
+    onSuccess: (data: TPost) => {
       //for optimistic update of the ui
       queryClient.setQueryData<InfiniteData<TFeedPostsPage>>(
         ["posts"],
@@ -88,13 +89,14 @@ export function useCreateDiary(formReturn: UseFormReturn) {
                   if (index === 0) {
                     return {
                       ...page,
-                      posts: [data as TPost, ...page.posts],
+                      posts: [data, ...(page.posts ? page.posts : new Array())],
                     };
                   }
                   return page;
                 }),
               }
             : oldData;
+
           return newData;
         }
       );
@@ -105,6 +107,7 @@ export function useCreateDiary(formReturn: UseFormReturn) {
       router.push("/feed");
     },
     onError: (error: AxiosError<ErrorResponse>) => {
+      console.log(error);
       toast.error(error.response?.data?.message);
     },
   });
