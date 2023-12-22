@@ -26,39 +26,40 @@ export default function Tags({ initialTags }: { initialTags?: string[] }) {
 
 return (
     <form onSubmit={handleInsertTag} className="flex flex-col gap-3">   
-        {tags.length > 0 && 
-        <div className="flex gap-3 flex-wrap max-w-[700px]">
-            {tags.map((tag, index) => (
-                <Chip
-                    onClose={() => removeTag(tag)}
-                    radius="full"
-                    size="lg"
-                    color="secondary"
-                    variant="dot"
-                    classNames={{
-                        base: "border-borderColor border-2"
-                    }}
-                    key={index}
-                >
-                    {tag}
-                </Chip>
-            ))}
-            {showRemoveAll && (
-            <Button 
-                color="danger"
-                variant="bordered" 
-                radius="full" 
-                size="sm"
-                startContent={
-                    <IoClose />
-                }
-                onClick={removeAllTags}
-                className="font-semibold"
-            >
-                Remove all
-            </Button>
-            )}
-        </div>}
+        {tags.length > 0 && (
+            <div className="flex gap-3 flex-wrap max-w-[700px]">
+                {tags.map((tag, index) => (
+                    <Chip
+                        onClose={() => removeTag(tag)}
+                        radius="full"
+                        size="lg"
+                        color="secondary"
+                        variant="dot"
+                        classNames={{
+                            base: "border-borderColor border-2"
+                        }}
+                        key={index}
+                    >
+                        {tag}
+                    </Chip>
+                ))}
+                {showRemoveAll && (
+                    <Button 
+                        color="danger"
+                        variant="bordered" 
+                        radius="full" 
+                        size="sm"
+                        startContent={
+                            <IoClose />
+                        }
+                        onClick={removeAllTags}
+                        className="font-semibold"
+                    >
+                        Remove all
+                    </Button>
+                )}
+         </div>
+        )}
         <Input
             labelPlacement="inside"
             label="Tag (optional)"
