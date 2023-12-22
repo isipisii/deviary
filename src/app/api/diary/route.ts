@@ -32,7 +32,7 @@ export const POST = async (request: NextRequest) => {
             data: {
                 tags: tags.split(","),
                 type: "CODE_DIARY",
-                authorId: "6569d20892aa29abbf2e3705",
+                authorId: session.user.id,
                 diary: {
                     create: {
                         title: parsedDiaryData.data.title,
@@ -43,7 +43,15 @@ export const POST = async (request: NextRequest) => {
                 }
             },
             include: {
-                diary: true
+                diary: true,
+                author: {
+                    select: {
+                        id: true,
+                        name: true,
+                        email: true,
+                        image: true
+                    }
+                }
             }
         })
 
