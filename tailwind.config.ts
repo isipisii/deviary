@@ -26,6 +26,7 @@ export default withUt({
             typography: "#71717A",
             background: "#00060C",
             foreground: "#ffffff",
+            cardBg: "#0f131d",
             light: "#1d262e4e",
             lightHover: "#29364196",
             secondary: "#DD0DB9",
@@ -68,6 +69,7 @@ export default withUt({
             secondary: "#DD0DB9",
             light: "#c7c7c72c",
             lightHover: "#c7c7c75e",
+            cardBg: "#FFFFFF"
           },
           layout: {
             disabledOpacity: "0.3",
