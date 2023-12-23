@@ -4,6 +4,7 @@ import { FiFilter } from "react-icons/fi";
 import FeedContainer from "./components/feed-container";
 import { dehydrate, HydrationBoundary, QueryClient } from "@tanstack/react-query";
 import { getFeedPosts } from "@/lib/services/post.api";
+import FilterDropdown from "@/components/ui/filter-dropdown";
 
 export default async function Feed() {
   const queryClient = new QueryClient()
@@ -19,14 +20,7 @@ export default async function Feed() {
     <div className="p-12">
         <div className="flex items-center justify-between">
             <h2 className="font-semibold text-3xl">Feed</h2>
-            <Button 
-                variant="bordered" 
-                size="md"
-                className="border-borderColor border-1 rounded-xl text-[1rem]" 
-                startContent={<FiFilter />}
-            >
-              Filter
-            </Button>
+            <FilterDropdown />
         </div>
         <HydrationBoundary state={dehydrate(queryClient)}>
           <FeedContainer />
