@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
-import { useTheme } from "next-themes";
+import Image from "next/image";
 import AccountDropdown from "./ui/account-dropdown";
 import { FiBell } from "react-icons/fi";
 import {
@@ -11,23 +11,16 @@ import {
 import ThemeToggler from "./ui/theme-toggler";
 import { Skeleton } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
+import Logo from "./ui/logo";
 
 export default function TopNav() {
-  const { theme } = useTheme();
   const { data } = useSession();
 
   return (
     <nav className="border-b border-borderColor shadow-sm fixed w-full bg-background z-[20] top-0">
       <div className="flex px-6 py-4 justify-between items-center w-full">
         {/* logo */}
-        <img
-          src={
-            theme === "dark"
-              ? "/images/deviary-dark.svg"
-              : "/images/deviary-light.svg"
-          }
-          alt="logo"
-        />
+        <Logo />
         <div className="flex gap-4 items-center">
           <ThemeToggler />
           <Tooltip content="Notifications" className="bg-background">
