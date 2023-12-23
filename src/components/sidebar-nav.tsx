@@ -10,8 +10,7 @@ import { LuChevronDown, LuChevronUp, LuChevronLeft } from "react-icons/lu";
 import clsx from "clsx";
 import type { IconType } from "react-icons";
 import { useSideBarNavStore } from "@/lib/store/useSideBarNavStore";
-
-import { Button, Tooltip, Spinner } from "@nextui-org/react";
+import { Button, Tooltip, Spinner, CircularProgress } from "@nextui-org/react";
 
 export function SideBar() {
   const { isSideBarMinimized, minimizeSideBar, maximizeSideBar } = useSideBarNavStore(state => state)
@@ -131,7 +130,7 @@ export function SideBarNav({ title, items }: ISideBarNavs) {
         {isLoading
           ? title === "Guild" && (
               <div className="w-full flex items-center justify-center mt-4">
-                <Spinner color="secondary" labelColor="primary" />
+                <CircularProgress color="secondary" aria-label="Loading..." />
               </div>
             )
           : title === "Guild" &&
