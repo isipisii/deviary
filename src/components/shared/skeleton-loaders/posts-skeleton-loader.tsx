@@ -3,11 +3,11 @@ import { Skeleton } from "@nextui-org/react";
 export default function PostsSkeletonLoader() {
   return (
     <>
-      {[...new Array(6)].map((_, index) => {
+      {[...new Array(5)].map((_, index) => {
         // if (index % 2 === 0) {
           return (
             <div
-              className="border-2 p-4 border-borderColor h-[400px] w-[330px] rounded-3xl shadow-xl bg-[#0f131d] grid gap-3"
+              className="border-2 p-4 border-borderColor h-[400px] w-[330px] rounded-3xl shadow-xl bg-cardBg grid gap-3"
               key={index}
             >
               <div className="grid gap-3">
