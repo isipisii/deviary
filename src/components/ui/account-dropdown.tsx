@@ -13,7 +13,6 @@ import {
 import { signOut } from "next-auth/react";
 import { useRouter } from 'next-nprogress-bar';
 
-import { FaRegUser } from "react-icons/fa";
 import { PiSignOutBold } from "react-icons/pi";
 import { LuSettings, LuUser2 } from "react-icons/lu";
 
