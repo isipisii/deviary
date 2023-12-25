@@ -105,3 +105,23 @@ export const sideBarNavs: ISideBarNavs[] = [
     },
 
 ]
+
+export const postContextMenuItems = [
+    {
+        label: "Bookmark",
+        key: "bookmark"
+    },
+    {
+        label: "Copy link",
+        key: "copy-link"
+    },
+    {
+        label: "Edit",
+        key: "edit"
+    },
+    {
+        label: "Delete",
+        key: "delete"
+    },
+
+  ]
