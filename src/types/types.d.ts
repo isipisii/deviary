@@ -4,7 +4,7 @@ interface ErrorResponse {
 }
 
 type TUser = {
-    id: string
+    id: readonly string 
     email: string
     onboarded?: boolean
     name: string
@@ -20,9 +20,9 @@ type TFeedPostsPage = {
 }
 
 type TPost = {
-    type: "BLOG_POST" | "CODE_DIARY"
+    type: "BLOG_POST" | "CODE_DIARY" 
     tags: string[]    
-    id: string
+    id: readonly string 
     author?: TUser
     blog?: TBlog 
     diary?: TDiary
@@ -47,6 +47,6 @@ type TDiary = {
 }
 
 enum PostType {
-    DIARY = "DIARY",
-    BLOG = "BLOG"
+    DIARY = "CODE_DIARY",
+    BLOG = "BLOG_POST"
 }
