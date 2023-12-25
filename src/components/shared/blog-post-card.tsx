@@ -4,6 +4,7 @@
 import truncateString from "@/utils/truncateString"
 import { Avatar } from "@nextui-org/react";
 import PostActions from "../ui/post-actions";
+import PostContextMenu from "../ui/post-context-menu";
 
 interface IBlogPostCard {
     post: TPost
@@ -14,7 +15,7 @@ export default function BlogPostCard({ post }: IBlogPostCard) {
   const { name, image } = post.author as TUser
 
   return (
-    <div className="h-[400px] w-[330px] rounded-3xl border-2 border-borderColor shadow-lg">
+    <div className="h-[400px] w-[350px] rounded-3xl border-2 border-borderColor shadow-lg">
         <div className="relative h-full w-full">
             {/* image and bg gradient */}
             <img 
@@ -27,15 +28,30 @@ export default function BlogPostCard({ post }: IBlogPostCard) {
                 className="w-full absolute bottom-0 left-0 rounded-b-3xl h-full bg-gradient-to-t from-[#0C1319]
                 via-[#0c1319c8] to-[#24253300]"
             />
+
+            {/* <div className="absolute top-4 right-4">
+                <PostContextMenu 
+                    className="bg-background" 
+                    postType="BLOG_POST"  
+                    post={post}
+                />
+            </div> */}
             
             {/* blog details */}
-            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 w-[90%] flex justify-center flex-col gap-2">
-                <div className='grid gap-1'>
-                    <Avatar
-                        src={image as string}
-                        className="h-[40px] w-[40px]"
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 w-[90%] flex justify-center flex-col gap-2">         
+                <div className="flex justify-between">
+                    <div className='grid gap-1'>
+                        <Avatar
+                            src={image as string}
+                            className="h-[40px] w-[40px]"
+                        />
+                        <h3 className="font-bold text-xl text-white shadow-lg">{truncateString(title, 70)}</h3>
+                    </div>
+                    <PostContextMenu 
+                        className="bg-background" 
+                        postType="BLOG_POST"  
+                        post={post}
                     />
-                    <h3 className="font-bold text-xl text-white shadow-lg">{truncateString(title)}</h3>
                 </div>
                 <div>
                     <p className="text-sm text-[#A1A1AA]">Yesterday</p>
