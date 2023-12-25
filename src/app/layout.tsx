@@ -1,18 +1,13 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Noto_Sans, Inter, Roboto } from "next/font/google";
 import "./styles/globals.css";
 import Providers from "@/components/providers/providers";
-import TopNav from "@/components/top-nav";
-import { SideBar } from "@/components/sidebar-nav";
-import { getServerSideSession } from "@/lib/auth";
 import { Toaster } from "sonner";
-import NextTopLoader from "nextjs-toploader";
 import "@uploadthing/react/styles.css";
-import { db } from "@/lib/prisma";
-import { redirect } from "next/navigation";
-import clsx from "clsx";
 
-const inter = Inter({ subsets: ["latin"] });
+// const inter = Noto_Sans({ weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"], subsets: ["latin"] });
+// const inter = Inter({ weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"], subsets: ["latin"] });
+// const inter = Roboto({ weight: ["100", "300", "400", "500", "700", "900"], style: ["normal"], subsets: ["cyrillic"] });
 
 export const metadata: Metadata = {
   title: "Deviary",
@@ -24,10 +19,10 @@ export default async function RootLayout({ children, }: {
 }) {
 
   return (
-    <html lang="en">
-      <body className={inter.className + "bg-background"}>
+    <html lang="en" suppressHydrationWarning>
+      <body className={"bg-background"}>
         <Providers>
-          <Toaster richColors expand={true} position="bottom-right" />
+          <Toaster richColors expand={true} position="bottom-right" className="bg-background" />
           {children}
         </Providers>
       </body>
