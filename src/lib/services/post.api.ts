@@ -107,8 +107,47 @@ export function useCreateDiary(formReturn: UseFormReturn) {
       router.push("/feed");
     },
     onError: (error: AxiosError<ErrorResponse>) => {
-      console.log(error);
       toast.error(error.response?.data?.message);
     },
   });
+}
+
+export function useDeletePost() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (postId: string) => {
+      const response = await axios.delete(`/api/post/${postId}`)
+      return response.data
+    },
+    onSuccess: async (data) => {  
+      // await queryClient.invalidateQueries({queryKey: ["posts"]})
+      queryClient.setQueryData<InfiniteData<TFeedPostsPage>>(
+        ["posts"],
+        (oldData) => {
+          console.log(oldData, "old")
+          const newData = oldData
+            ? {
+                ...oldData,
+                pages: oldData.pages.map((page) => {
+                    //checks if the page has a value
+                    if(page) {
+                      return {
+                        ...page,
+                        posts: page.posts ? page.posts.filter((post) => post.id !== data.deletedPost.id) : []
+                      };
+                    }
+                    return page
+                }),
+              }
+            : oldData;
+          console.log(newData, "new")
+          return newData;
+        }
+      );
+    },
+    onError: (error: AxiosError<ErrorResponse>) => {
+      toast.error(error.response?.data.message);
+    }
+  })
 }
