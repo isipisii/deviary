@@ -2,7 +2,6 @@ import { db } from "@/lib/prisma";
 import { NextResponse, NextRequest } from "next/server";
 
 export const GET = async (request: NextRequest) => {
-  const url = new URL(request.url);
 
   try {
     // get page and lastCursor from query
