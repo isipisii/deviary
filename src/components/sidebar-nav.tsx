@@ -6,11 +6,11 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
-import { LuChevronDown, LuChevronUp, LuChevronLeft } from "react-icons/lu";
-import clsx from "clsx";
+import { LuChevronDown, LuChevronLeft } from "react-icons/lu";
 import type { IconType } from "react-icons";
 import { useSideBarNavStore } from "@/lib/store/useSideBarNavStore";
-import { Button, Tooltip, Spinner, CircularProgress } from "@nextui-org/react";
+import { Button, Tooltip, CircularProgress } from "@nextui-org/react";
+import { cn } from "@/utils/cn";
 
 export function SideBar() {
   const { isSideBarMinimized, minimizeSideBar, maximizeSideBar } = useSideBarNavStore(state => state)
@@ -149,7 +149,7 @@ export function SideBarNav({ title, items }: ISideBarNavs) {
       {/*button and gradient only for guild side bar navs */}
       {title === "Guild" && isOverflowing && (
         <div
-          className={clsx(
+          className={cn(
             `w-full left-0 absolute h-12 bg-gradient-to-t 
           from-background via-background to-transparent flex 
           items-center justify-center -bottom-4`,
@@ -196,14 +196,17 @@ export function SideBarNavItem({
   return (
     <Link
       href={href}
-      className={clsx(
-        "bg-light hover:bg-lightHover  flex items-center gap-4 p-2 rounded-[1.2rem] transition-all ease-in-out duration-1000",
-        { "bg-lightHover font-semibold": isActive(href) }
-      )}
+      // className={clsx(
+      //   "bg-light hover:bg-lightHover  flex items-center gap-4 p-2 rounded-[1.2rem] transition-all ease-in-out duration-1000 font-[500] text-navTextColor",
+      //   { "bg-lightHover font-[600] text-activeNavTextColor": isActive(href) }
+      // )}
+      className={`bg-light hover:bg-lightHover  
+      flex items-center gap-4 p-2 rounded-[1.2rem] text-[.9rem] transition-all ease-in-out duration-1000 
+      font-[500] ${isActive(href) ? "bg-lightHover font-[600] text-activeNavTextColor" : "text-navTextColor"}`}
     >
       {Icon && !imageUrl ? (
         <p
-          className={clsx(
+          className={cn(
             "text-secondary bg-background text-[1.5rem] p-2 rounded-2xl",
             {"text-red-700": title === "Popular"}
           )}
