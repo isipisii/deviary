@@ -23,6 +23,8 @@ export default withUt({
         dark: {
           extend: "dark", // <- inherit default values from dark theme
           colors: {
+            navTextColor: "#959db0",
+            activeNavTextColor: "#ffffff",
             typography: "#71717A",
             background: "#00060C",
             foreground: "#ffffff",
@@ -64,6 +66,8 @@ export default withUt({
         light: {
           extend: "light",
           colors: {
+            navTextColor: "#555454",
+            activeNavTextColor: "#000000",
             typography: "#71717A",
             borderColor: "#cbcbcb",
             secondary: "#DD0DB9",
