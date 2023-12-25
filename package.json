@@ -35,6 +35,7 @@
     "react-intersection-observer": "^9.5.3",
     "react-syntax-highlighter": "^15.5.0",
     "sonner": "^1.2.0",
+    "tailwind-merge": "^2.2.0",
     "uploadthing": "^6.0.3",
     "zod": "^3.22.4",
     "zustand": "^4.4.7"
