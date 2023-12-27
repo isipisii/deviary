@@ -17,10 +17,7 @@ export const PATCH = async (request: NextRequest, { params }: TParams) => {
     const thumbnail = body.get("thumbnail")
     const content = body.get("content")
 
-    let newThumbnail = {
-        imageKey: "",
-        imageUrl: ""
-    }
+    let newThumbnail = null
 
     try {
         if(!session) {
@@ -32,7 +29,6 @@ export const PATCH = async (request: NextRequest, { params }: TParams) => {
         const post = await db.post.findUnique({
             where: {
                 id: blogId,
-                type: "BLOG_POST"
             },
             include: {
                 blog: true
@@ -49,8 +45,10 @@ export const PATCH = async (request: NextRequest, { params }: TParams) => {
             await utapi.deleteFiles(post.blog?.thumbnail.imageKey as string)
 
             const uploadedNewThumbnail = await utapi.uploadFiles(thumbnail)
-            newThumbnail.imageKey = uploadedNewThumbnail.data?.key as string
-            newThumbnail.imageUrl = uploadedNewThumbnail.data?.url as string
+            newThumbnail = {
+                imageKey: uploadedNewThumbnail.data?.key as string,
+                imageUrl: uploadedNewThumbnail.data?.url as string
+            }
         }
 
         const updatedBlogPost = await db.post.update({
@@ -58,12 +56,17 @@ export const PATCH = async (request: NextRequest, { params }: TParams) => {
                 id: post.id
             },
             data: {
-                tags: tags ?? post.tags,
+                tags,
                 blog: {
                     update: {
-                        title: title as string ?? post.blog?.title,
-                        thumbnail: newThumbnail ?? post.blog?.thumbnail,
-                        content: content as string ?? post.blog?.content,
+                        title: title as string,
+                        thumbnail: {
+                            update: {
+                                imageKey:  newThumbnail?.imageKey ?? post.blog?.thumbnail.imageKey,
+                                imageUrl:  newThumbnail?.imageUrl ?? post.blog?.thumbnail.imageUrl
+                            }
+                        },
+                        content: content as string ,
                     },
                 },
             },
@@ -74,10 +77,10 @@ export const PATCH = async (request: NextRequest, { params }: TParams) => {
 
 
         return NextResponse.json({
-            blog: updatedBlogPost,
+            data: updatedBlogPost,
             message: "Blog post updated",
             success: true
-        }, { status: 201 })
+        }, { status: 200 })
 
     } catch (error) {
         return NextResponse.json({
