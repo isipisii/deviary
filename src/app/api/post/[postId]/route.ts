@@ -35,7 +35,7 @@ export const DELETE = async (request: NextRequest, { params }: TParams) => {
 
         //delete thumbnail if the post is blog
         if(post?.blog) {
-            const res = await utapi.deleteFiles(post.blog.thumbnail.imageKey)
+            await utapi.deleteFiles(post.blog.thumbnail.imageKey)
         }
 
         const deletedPost = await db.post.delete({
