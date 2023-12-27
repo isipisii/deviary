@@ -7,7 +7,7 @@ export const GET = async (request: NextRequest) => {
     // get page and lastCursor from query
     const url = new URL(request.url);
 
-    const take = Number(url.searchParams.get("take") as string);
+    const take = Number(url.searchParams.get("take"));
     const lastCursor = url.searchParams.get("lastCursor") as string;
     const filter = url.searchParams.get("filter")?.toString().split(",")
 
