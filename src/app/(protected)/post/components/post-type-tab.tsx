@@ -10,8 +10,7 @@ interface IPostTypeTab {
     selectedTabItem: string
 }
 
-export default function PostTypeTab({ selectedTabItem, setSelectedTabItem }: IPostTypeTab) {
-  
+export default function PostTypeTab({ selectedTabItem, setSelectedTabItem }: IPostTypeTab) { 
   return (
     <Tabs 
         aria-label="Options" 
