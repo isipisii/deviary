@@ -16,7 +16,7 @@ export default function Providers({ children }: { children: ReactNode }) {
       <QueryClientProvider client={queryClient}>
         <ReactQueryDevtools initialIsOpen={false} />
         <NextUIProvider>
-            <ThemeProvider>
+            <ThemeProvider enableSystem>
               <ProgressBar
                 height="3px"
                 color="#DD0DB9"
