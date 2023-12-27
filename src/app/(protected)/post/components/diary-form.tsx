@@ -7,25 +7,36 @@ import { TDiarySchema } from "@/lib/validators/post-validator"
 import { diarySchema } from "@/lib/validators/post-validator"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useTags } from "@/lib/store/useTags"
-import { useCreateDiary } from "@/lib/services/post.api"
+import { useCreateDiary, useUpdateDiary } from "@/lib/services/post.api"
 
-export default function DiaryForm() {
+export default function DiaryForm({ postToEdit }: { postToEdit?: TPost }) {
   const { tags } = useTags(state => state)
-  const { watch, register, formState: { errors }, handleSubmit, reset } = useForm<TDiarySchema>({
-    resolver: zodResolver(diarySchema)
+  const { watch, register, formState: { errors }, handleSubmit } = useForm<TDiarySchema>({
+    resolver: zodResolver(diarySchema),
+  
   })
-  const { mutate: createDiaryMutation, isPending } = useCreateDiary(useForm())
-  const isButtonDisabled = !(!!watch("title") && !!watch("description") && !!watch("solution")) || isPending
+  const { mutate: createDiaryMutation, isPending: isCreating } = useCreateDiary(useForm())
+  const { mutate: updateDiaryMutation, isPending: isUpdating } = useUpdateDiary()
+  const isButtonDisabled = !(!!watch("title") && !!watch("description") && !!watch("solution")) || isCreating || isUpdating
+  const isPending = isCreating || isUpdating
 
   function handleCreateDiary(formValue: TDiarySchema) {
     const joinedTags = tags.join(",")
     createDiaryMutation({...formValue, tags: joinedTags})
   }
   
+  function handleUpdateDiary(formValue: TDiarySchema){
+    const joinedTags = tags.join(",")
+    updateDiaryMutation({ 
+      diaryData: {...formValue, tags: joinedTags}, 
+      postId: postToEdit?.id as string
+    })
+  }
+
   return (
     <div className="grid gap-4">
-      <Tags />
-      <form className="flex-col flex gap-4" onSubmit={handleSubmit(handleCreateDiary)}>
+      <Tags initialTags={postToEdit?.tags} />
+      <form className="flex-col flex gap-4" onSubmit={handleSubmit(!postToEdit ? handleCreateDiary : handleUpdateDiary)}>
         <Input
           labelPlacement="inside"
           isRequired
@@ -41,6 +52,7 @@ export default function DiaryForm() {
           errorMessage={errors.title?.message}
           isInvalid={!!errors.title}
           isDisabled={isPending}
+          defaultValue={postToEdit?.diary?.title || ""}
         />
         <Textarea
           labelPlacement="inside"
@@ -56,6 +68,7 @@ export default function DiaryForm() {
           errorMessage={errors.codeSnippet?.message}
           isInvalid={!!errors.codeSnippet}
           isDisabled={isPending}
+          defaultValue={postToEdit?.diary?.codeSnippet || ""}
         />
         <Textarea
           labelPlacement="inside"
@@ -72,6 +85,7 @@ export default function DiaryForm() {
           errorMessage={errors.description?.message}
           isInvalid={!!errors.description}
           isDisabled={isPending}
+          defaultValue={postToEdit?.diary?.description || ""}
         />
         <Textarea
           labelPlacement="inside"
@@ -88,6 +102,7 @@ export default function DiaryForm() {
           errorMessage={errors.solution?.message}
           isInvalid={!!errors.solution}
           isDisabled={isPending}
+          defaultValue={postToEdit?.diary?.solution || ""}
         />
         <Button
           type="submit" 
@@ -97,7 +112,7 @@ export default function DiaryForm() {
           isDisabled={isButtonDisabled}
           isLoading={isPending}
         >
-          Create
+          {!postToEdit ? isPending ? "Creating" : "Create" : isPending ? "Saving changes" : "Save changes"}
         </Button>
       </form>
     </div>
