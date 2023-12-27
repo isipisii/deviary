@@ -1,6 +1,4 @@
 /* eslint-disable @next/next/no-img-element */
-import { Button } from "@nextui-org/react";
-import { FiFilter } from "react-icons/fi";
 import FeedContainer from "./components/feed-container";
 import { dehydrate, HydrationBoundary, QueryClient } from "@tanstack/react-query";
 import { getFeedPosts } from "@/lib/services/post.api";
