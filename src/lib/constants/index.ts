@@ -8,8 +8,13 @@ import {
     LuBookmark, 
     LuHistory,
     LuSettings,
-    LuPencilLine
+    LuPencilLine,
+    LuTrash
 } from "react-icons/lu"
+
+import { FaRegBookmark, FaBookmark } from "react-icons/fa6";
+import { FiCopy } from "react-icons/fi";
+import { FaRegEdit } from "react-icons/fa";
 
 export const githubLinkRegex = /^(https?:\/\/)?(www\.)?github\.com\/[\w-]+/
 export const facebookLinkRegex = /^(https?:\/\/)?(www\.)?facebook\.com\/[\w-]+/
@@ -56,30 +61,6 @@ export const sideBarNavs: ISideBarNavs[] = [
                 href: "/new-guild",
                 icon: LuPlus
             },
-            // {
-            //     title: "ReactJS",
-            //     href: "/guild",
-            //     type: "guild",
-            //     imageUrl: "https://avatars.githubusercontent.com/u/6412038?s=200&v=4"
-            // },
-            // {
-            //     title: "Libre Minds",   
-            //     href: "/guild",
-            //     type: "guild",
-            //     imageUrl: "https://avatars.githubusercontent.com/u/148235334?s=200&v=4"
-            // },  
-            // {
-            //     title: "Libre Minds",   
-            //     href: "/guild",
-            //     type: "guild",
-            //     imageUrl: "https://avatars.githubusercontent.com/u/148235334?s=200&v=4"
-            // },  
-            // {
-            //     title: "ReactJS",
-            //     href: "/guild",
-            //     type: "guild",
-            //     imageUrl: "https://avatars.githubusercontent.com/u/6412038?s=200&v=4"
-            // },
         ]
     },
 
@@ -109,19 +90,23 @@ export const sideBarNavs: ISideBarNavs[] = [
 export const postContextMenuItems = [
     {
         label: "Bookmark",
-        key: "bookmark"
+        key: "bookmark",
+        icon: LuBookmark
     },
     {
         label: "Copy link",
-        key: "copy-link"
+        key: "copy-link",
+        icon: FiCopy
     },
     {
         label: "Edit",
-        key: "edit"
+        key: "edit",
+        icon: FaRegEdit
     },
     {
         label: "Delete",
-        key: "delete"
+        key: "delete",
+        icon: LuTrash
     },
 
   ]
