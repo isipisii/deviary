@@ -14,20 +14,22 @@ import useLoadImageFile from "@/lib/hooks/useLoadImageFile"
 import { UploadButton } from "@/utils/uploadthing";
 import { toast } from "sonner";
 import MarkdownEditor from "@/components/shared/markdown-editor";
-import { useCreateBlogPost } from "@/lib/services/post.api";
+import { useCreateBlogPost, useUpdateBlogPost } from "@/lib/services/post.api";
 import { useState } from "react";
 
 export type TBlogSchema = z.infer<typeof blogSchema>
 
-export default function BlogPostForm({ isEditing }: { isEditing?: boolean } ) {
+export default function BlogPostForm({ postToEdit }: { postToEdit?: TPost } ) {
   const { tags, removeAllTags } = useTags(state => state)
-  const [content, setContent] = useState("")
-  const { handleFileChange, selectedImage, selectedImageFile, handleRemoveImage } = useLoadImageFile()
+  const [content, setContent] = useState(postToEdit?.blog?.content || "")
+  const { handleFileChange, selectedImage, selectedImageFile, handleRemoveImage } = useLoadImageFile(postToEdit?.blog?.thumbnail?.imageUrl)
   const { watch, register, formState: { errors }, handleSubmit, reset } = useForm<TBlogSchema>({
-    resolver: zodResolver(blogSchema)
+    resolver: zodResolver(blogSchema),
   })
-  const { mutate: createBlogPostMutation, isPending } = useCreateBlogPost(clearForm)
-  const isButtonDisabled = !(!!watch("title") && content && selectedImage) || isPending
+  const { mutate: createBlogPostMutation, isPending: isCreating } = useCreateBlogPost(clearForm)
+  const { mutate: updateBlogPostMutation, isPending: isUpdating } = useUpdateBlogPost()
+  const isButtonDisabled = !(!!watch("title") && content && selectedImage) || isCreating || isUpdating
+  const isPending = isCreating || isUpdating
   
   function handleCreateBlogPost(formValue: TBlogSchema) {
     const form = new FormData()
@@ -37,7 +39,21 @@ export default function BlogPostForm({ isEditing }: { isEditing?: boolean } ) {
     form.append("tags", tags.join(","))
     form.append("content", content)
 
-    createBlogPostMutation(form)
+    if(postToEdit) {
+      updateBlogPostMutation({ blogPostData: form, postId: postToEdit.id})
+      console.log(form)
+    } else createBlogPostMutation(form)
+  }
+
+  function handleUpdateBlogPost(formValue: TBlogSchema) {
+    const form = new FormData()
+
+    if(selectedImageFile) form.append("thumbnail", selectedImageFile)
+    form.append("title", formValue.title)
+    form.append("tags", tags.join(","))
+    form.append("content", content)
+
+    updateBlogPostMutation({ blogPostData: form, postId: postToEdit?.id as string})
   }
 
   function clearForm() {
@@ -54,8 +70,8 @@ export default function BlogPostForm({ isEditing }: { isEditing?: boolean } ) {
         selectedImage={selectedImage}
         handleRemoveImage={handleRemoveImage}
       />
-      <Tags />
-      <form onSubmit={handleSubmit(handleCreateBlogPost)} className="flex flex-col gap-4">
+      <Tags initialTags={postToEdit?.tags}/>
+      <form onSubmit={handleSubmit(postToEdit ? handleUpdateBlogPost : handleCreateBlogPost)} className="flex flex-col gap-4">
           <Input
             labelPlacement="inside"
             isRequired
@@ -63,6 +79,7 @@ export default function BlogPostForm({ isEditing }: { isEditing?: boolean } ) {
             radius="lg"
             size="sm"
             variant="bordered"
+            defaultValue={postToEdit?.blog?.title || ""}
             classNames={{
                 label: "font-semibold", 
                 inputWrapper:" border-borderColor border-2 rounded-xl",
@@ -115,7 +132,7 @@ export default function BlogPostForm({ isEditing }: { isEditing?: boolean } ) {
               className="rounded-xl text-white max-w-[200px] w-full font-semibold"
               isDisabled={isButtonDisabled}
             >
-              Create
+              {!postToEdit ? isPending ? "Creating" : "Create" : isPending ? "Saving changes" : "Save changes"}
             </Button>
           </div>
       </form>
