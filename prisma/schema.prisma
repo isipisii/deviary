@@ -137,6 +137,9 @@ model Bookmark {
   user          User @relation(fields: [userId], references: [id], onDelete: Cascade)
   postId        String @db.ObjectId
   post          Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+  
+  createdAt     DateTime  @default(now()) @map(name: "created_at")
+  updatedAt     DateTime  @default(now()) @map(name: "updated_at")
 }
 
 
