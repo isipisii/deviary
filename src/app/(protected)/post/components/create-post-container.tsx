@@ -7,7 +7,6 @@ import DiaryForm from "./diary-form"
 
 export default function CreatePostContainer() {
   const [selectedTabItem, setSelectedTabItem] = useState("blog-post")
-
   return (
     <div className="space-y-6">
         <PostTypeTab selectedTabItem={selectedTabItem} setSelectedTabItem={setSelectedTabItem} />
