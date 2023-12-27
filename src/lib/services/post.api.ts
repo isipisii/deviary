@@ -68,6 +68,34 @@ export function useCreateBlogPost(clearForm: () => void) {
   });
 }
 
+export function useUpdateBlogPost() {
+  const router = useRouter();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({
+      blogPostData,
+      postId,
+    }: {
+      blogPostData: FormData
+      postId: string;
+    }) => {
+      const response = await axios.patch(`/api/blog/${postId}`, blogPostData);
+      return response.data.data as TPost;
+    },
+    onSuccess: async (data) => {
+      await queryClient.invalidateQueries({ queryKey: ["posts"] });
+      console.log(data)
+      toast.success("Blog post updated sucessfully");
+      router.push("/feed");
+    },
+    onError: (error: AxiosError<ErrorResponse>) => {
+      toast.error(error.response?.data?.message);
+    },
+  });
+}
+
+
 export function useCreateDiary(formReturn: UseFormReturn) {
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -112,42 +140,73 @@ export function useCreateDiary(formReturn: UseFormReturn) {
   });
 }
 
-export function useDeletePost() {
+export function useUpdateDiary() {
+  const router = useRouter();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({
+      diaryData,
+      postId,
+    }: {
+      diaryData: TDiarySchema & { tags: string };
+      postId: string;
+    }) => {
+      const response = await axios.patch(`/api/diary/${postId}`, diaryData);
+      return response.data.data;
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["posts"] });
+      toast.success("Diary updated sucessfully");
+      router.push("/feed");
+    },
+    onError: (error: AxiosError<ErrorResponse>) => {
+      toast.error(error.response?.data?.message);
+    },
+  });
+}
+
+export function useDeletePost(closeModal?: () => void) {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (postId: string) => {
-      const response = await axios.delete(`/api/post/${postId}`)
-      return response.data
+      const response = await axios.delete(`/api/post/${postId}`);
+      return response.data;
     },
-    onSuccess: async (data) => {  
+    onSuccess: (data) => {
       // await queryClient.invalidateQueries({queryKey: ["posts"]})
       queryClient.setQueryData<InfiniteData<TFeedPostsPage>>(
         ["posts"],
         (oldData) => {
-          console.log(oldData, "old")
           const newData = oldData
             ? {
                 ...oldData,
                 pages: oldData.pages.map((page) => {
-                    //checks if the page has a value
-                    if(page) {
-                      return {
-                        ...page,
-                        posts: page.posts ? page.posts.filter((post) => post.id !== data.deletedPost.id) : []
-                      };
-                    }
-                    return page
+                  //checks if the page has a value
+                  if (page) {
+                    return {
+                      ...page,
+                      posts: page.posts
+                        ? page.posts.filter(
+                            (post) => post.id !== data.deletedPost.id
+                          )
+                        : [],
+                    };
+                  }
+                  return page;
                 }),
               }
             : oldData;
-          console.log(newData, "new")
           return newData;
         }
       );
+      if (closeModal) closeModal();
+      toast.success("Post deleted successfully");
     },
     onError: (error: AxiosError<ErrorResponse>) => {
+      if (closeModal) closeModal();
       toast.error(error.response?.data.message);
-    }
-  })
+    },
+  });
 }
