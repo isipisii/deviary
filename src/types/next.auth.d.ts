@@ -11,7 +11,8 @@ declare module "next-auth" {
     interface Session {
       user: User & {
         id?: string
-        onboarded?: boolean
+        onboarded?: boolean,
+        bookmarks?: { id?: string, postId?: string }[]
       };
     }
   }
