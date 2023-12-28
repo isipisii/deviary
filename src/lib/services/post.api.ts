@@ -6,25 +6,75 @@ import {
   useMutation,
   useQueryClient,
 } from "@tanstack/react-query";
+import { QueryClient } from '@tanstack/query-core';
 import { useRouter } from "next-nprogress-bar";
 import { toast } from "sonner";
 import { UseFormReturn } from "react-hook-form";
+import { QueryKeys } from "@/types/enums";
 
 export async function getFeedPosts(take: number, lastCursor: string) {
   const response = await axios.get("/api/post", {
     params: { take, lastCursor },
   });
-  return response.data.data as TFeedPostsPage;
+  return response.data.data as TPage<TPost[]>
 }
 
 export function useFeedPosts() {
   return useInfiniteQuery({
-    queryKey: ["posts"],
+    queryKey: [QueryKeys.Post],
     initialPageParam: "",
     queryFn: ({ pageParam: lastCursor }) => getFeedPosts(5, lastCursor),
     getNextPageParam: (lastPage) =>
       lastPage.metaData ? lastPage?.metaData.lastCursor : null,
   });
+}
+
+function createPostOptimisticUpdate(queryClient: QueryClient, newPost: TPost) {
+  return queryClient.setQueryData<InfiniteData<TPage<TPost[]>>>(
+    [QueryKeys.Post],
+    (oldData) => {
+      const newData = oldData
+        ? {
+            ...oldData,
+            pages: oldData.pages.map((page, index) => {
+              if (index === 0) {
+                return {
+                  ...page,
+                  posts: [newPost, ...(page.data ? page.data : new Array())],
+                };
+              }
+              return page;
+            }),
+          }
+        : oldData;
+
+      return newData;
+    }
+  );
+}
+
+function updatePostOptimisticUpdate(queryClient: QueryClient, updatedPost: TPost) {
+  return queryClient.setQueryData<InfiniteData<TPage<TPost[]>>>(
+    [QueryKeys.Post],
+    (oldData) => {
+      const newData = oldData
+        ? {
+            ...oldData,
+            pages: oldData.pages.map((page) => {
+              if (page) {
+                return {
+                  ...page,
+                  posts: page.data ? page.data.map(post => post.id === updatedPost.id ? updatedPost : post) : []
+                };
+              }
+              return page;
+            }),
+          }
+        : oldData;
+
+      return newData;
+    }
+  );
 }
 
 export function useCreateBlogPost(clearForm: () => void) {
@@ -37,28 +87,9 @@ export function useCreateBlogPost(clearForm: () => void) {
       return response.data.data as TPost;
     },
     onSuccess: (data) => {
-      queryClient.setQueryData<InfiniteData<TFeedPostsPage>>(
-        ["posts"],
-        (oldData) => {
-          const newData = oldData
-            ? {
-                ...oldData,
-                pages: oldData.pages.map((page, index) => {
-                  if (index === 0) {
-                    return {
-                      ...page,
-                      posts: [data, ...(page.posts ? page.posts : new Array())],
-                    };
-                  }
-                  return page;
-                }),
-              }
-            : oldData;
-
-          return newData;
-        }
-      );
-      toast.success("Blog posted sucessfully");
+      //for optimistic update of the ui 
+      createPostOptimisticUpdate(queryClient, data)
+      toast.success("Blog posted sucessfully", { className: "bg-cardBg" });
       clearForm();
       router.push("/feed");
     },
@@ -83,9 +114,9 @@ export function useUpdateBlogPost() {
       const response = await axios.patch(`/api/blog/${postId}`, blogPostData);
       return response.data.data as TPost;
     },
-    onSuccess: async (data) => {
-      await queryClient.invalidateQueries({ queryKey: ["posts"] });
-      console.log(data)
+    onSuccess: (data) => {
+      //for optimistic update of the ui 
+      updatePostOptimisticUpdate(queryClient, data)
       toast.success("Blog post updated sucessfully");
       router.push("/feed");
     },
@@ -103,33 +134,11 @@ export function useCreateDiary(formReturn: UseFormReturn) {
   return useMutation({
     mutationFn: async (diaryData: TDiarySchema & { tags: string }) => {
       const response = await axios.post("/api/diary", diaryData);
-      return response.data.data;
+      return response.data.data as TPost;
     },
-    onSuccess: (data: TPost) => {
+    onSuccess: (data) => {
       //for optimistic update of the ui
-      queryClient.setQueryData<InfiniteData<TFeedPostsPage>>(
-        ["posts"],
-        (oldData) => {
-          const newData = oldData
-            ? {
-                ...oldData,
-                pages: oldData.pages.map((page, index) => {
-                  if (index === 0) {
-                    return {
-                      ...page,
-                      posts: [data, ...(page.posts ? page.posts : new Array())],
-                    };
-                  }
-                  return page;
-                }),
-              }
-            : oldData;
-
-          return newData;
-        }
-      );
-
-      // await queryClient.invalidateQueries({ queryKey: ["posts"] });
+      createPostOptimisticUpdate(queryClient, data)
       toast.success("Diary posted sucessfully");
       formReturn.reset();
       router.push("/feed");
@@ -153,10 +162,10 @@ export function useUpdateDiary() {
       postId: string;
     }) => {
       const response = await axios.patch(`/api/diary/${postId}`, diaryData);
-      return response.data.data;
+      return response.data.data as TPost;
     },
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ["posts"] });
+    onSuccess: (data) => {
+      updatePostOptimisticUpdate(queryClient, data)
       toast.success("Diary updated sucessfully");
       router.push("/feed");
     },
@@ -175,9 +184,9 @@ export function useDeletePost(closeModal?: () => void) {
       return response.data;
     },
     onSuccess: (data) => {
-      // await queryClient.invalidateQueries({queryKey: ["posts"]})
-      queryClient.setQueryData<InfiniteData<TFeedPostsPage>>(
-        ["posts"],
+      const deletedPostId = data.deletedPost.id
+      queryClient.setQueryData<InfiniteData<TPage<TPost[]>>>(
+        [QueryKeys.Post],
         (oldData) => {
           const newData = oldData
             ? {
@@ -187,9 +196,9 @@ export function useDeletePost(closeModal?: () => void) {
                   if (page) {
                     return {
                       ...page,
-                      posts: page.posts
-                        ? page.posts.filter(
-                            (post) => post.id !== data.deletedPost.id
+                      posts: page.data
+                        ? page.data.filter(
+                            (post) => post.id !== deletedPostId
                           )
                         : [],
                     };
