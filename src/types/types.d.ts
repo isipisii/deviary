@@ -11,12 +11,12 @@ type TUser = {
     image: string
 }
 
-type TFeedPostsPage = {
+type TPage <TData> = {
     metaData: {
         hasNextPage: boolean
         lastCursor: string
     }
-    posts: TPost[] 
+    data: TData
 }
 
 type TPost = {
@@ -39,6 +39,14 @@ type TBlog = {
     title: string
 }
 
+type TBookmark = {
+    id: readonly string
+    postId: string
+    post: TPost
+    userId: string
+    user: TUser
+}
+
 type TDiary = {
     title: string
     codeSnippet?: string
@@ -46,7 +54,3 @@ type TDiary = {
     solution: string
 }
 
-enum PostType {
-    DIARY = "CODE_DIARY",
-    BLOG = "BLOG_POST"
-}
