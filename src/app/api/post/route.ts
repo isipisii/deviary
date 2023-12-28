@@ -70,7 +70,7 @@ export const GET = async (request: NextRequest) => {
     });
 
     const data = {
-      posts,
+      data: posts,
       metaData: {
         lastCursor: cursor,
         hasNextPage: nextPage.length > 0,
