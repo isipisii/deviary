@@ -31,7 +31,7 @@ export default function BlogPostForm({ postToEdit }: { postToEdit?: TPost } ) {
   const isButtonDisabled = !(!!watch("title") && content && selectedImage) || isCreating || isUpdating
   const isPending = isCreating || isUpdating
   
-  function handleCreateBlogPost(formValue: TBlogSchema) {
+  function handleCreateOrUpdateBlogPost(formValue: TBlogSchema) {
     const form = new FormData()
 
     if(selectedImageFile) form.append("thumbnail", selectedImageFile)
@@ -43,17 +43,6 @@ export default function BlogPostForm({ postToEdit }: { postToEdit?: TPost } ) {
       updateBlogPostMutation({ blogPostData: form, postId: postToEdit.id})
       console.log(form)
     } else createBlogPostMutation(form)
-  }
-
-  function handleUpdateBlogPost(formValue: TBlogSchema) {
-    const form = new FormData()
-
-    if(selectedImageFile) form.append("thumbnail", selectedImageFile)
-    form.append("title", formValue.title)
-    form.append("tags", tags.join(","))
-    form.append("content", content)
-
-    updateBlogPostMutation({ blogPostData: form, postId: postToEdit?.id as string})
   }
 
   function clearForm() {
@@ -71,7 +60,7 @@ export default function BlogPostForm({ postToEdit }: { postToEdit?: TPost } ) {
         handleRemoveImage={handleRemoveImage}
       />
       <Tags initialTags={postToEdit?.tags}/>
-      <form onSubmit={handleSubmit(postToEdit ? handleUpdateBlogPost : handleCreateBlogPost)} className="flex flex-col gap-4">
+      <form onSubmit={handleSubmit(handleCreateOrUpdateBlogPost)} className="flex flex-col gap-4">
           <Input
             labelPlacement="inside"
             isRequired
