@@ -1,5 +1,6 @@
 "use client"
 
+import { memo } from "react";
 import { Button } from "@nextui-org/react";
 import { ChangeEvent } from "react";
 import { FaImage } from "react-icons/fa";
@@ -9,10 +10,9 @@ interface ILoadThumbnail {
     selectedImage: string;
     handleRemoveImage: () => void;
     handleFileChange: (e: ChangeEvent<HTMLInputElement>) => void;
-    currentThumbnail?: string;
 }
   
-export default function LoadThumbnail({ selectedImage, handleFileChange, handleRemoveImage, currentThumbnail }: ILoadThumbnail) {
+function LoadThumbnail({ selectedImage, handleFileChange, handleRemoveImage }: ILoadThumbnail) {
   return (
     <div 
         className="flex flex-col items-center gap-2 relative 
@@ -29,12 +29,12 @@ export default function LoadThumbnail({ selectedImage, handleFileChange, handleR
             <IoClose />
         </Button>
         )}
-        <label htmlFor="file-input" className="cursor-pointer w-full h-full">
-            {selectedImage || currentThumbnail ? (
+        <label htmlFor="file-input" className=" w-full h-full">
+            {selectedImage ? (
                 //eslint-disable-next-line @next/next/no-img-element
-                <img className="w-full h-full rounded-2xl object-cover" src={selectedImage || currentThumbnail} alt="NextUI Fruit Image with Zoom" />
+                <img className="w-full h-full rounded-2xl object-cover cursor-pointer" src={selectedImage} alt="Thumbnail" />
             ) : (
-                <div className="flex items-center justify-center w-full h-full hover:bg-light transition-all ease-in-out duration-1000 rounded-xl">
+                <div className="flex items-center justify-center cursor-pointer w-full h-full hover:bg-light transition-all ease-in-out duration-1000 rounded-xl">
                     <div className="flex items-center gap-2">
                         <FaImage />
                         <p className="font-semibold text-sm">Thumbnail</p>
@@ -51,3 +51,5 @@ export default function LoadThumbnail({ selectedImage, handleFileChange, handleR
     </div>
   )
 }
+
+export default memo(LoadThumbnail)
