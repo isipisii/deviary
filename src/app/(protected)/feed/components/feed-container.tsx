@@ -20,13 +20,12 @@ export default function FeedContainer() {
   }, [hasNextPage, inView, fetchNextPage]);
 
   return (
-    <div className="w-full flex items-center flex-col justify-center">    
-      {/* <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 mt-8 w-full"> */}
+    <div className="w-full flex items-center flex-col justify-center">
       <div className="flex gap-12 items-center justify-center flex-wrap mt-8 w-full">
         {data?.pages.map((page) =>
-          page.posts?.map((post, index) => {
+          page.data?.map((post, index) => {
             // this is for the last element in order to put the ref for infinite scrolling
-            if (page.posts.length === index + 1) {
+            if (page.data.length === index + 1) {
               if(post.type === "BLOG_POST") {
                 return (
                   <div ref={ref} key={index}>
