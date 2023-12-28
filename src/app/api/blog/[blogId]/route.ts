@@ -72,7 +72,15 @@ export const PATCH = async (request: NextRequest, { params }: TParams) => {
             },
             include: {
                 blog: true,
-            }
+                author: {
+                    select: {
+                        id: true,
+                        name: true,
+                        email: true,
+                        image: true
+                    }
+                }
+            },
         })
 
 
