@@ -71,7 +71,7 @@ export const GET = async (request: NextRequest) => {
         });
 
         const data = {
-            bookmarks,
+            data: bookmarks,
             metaData: {
                 lastCursor: cursor,
                 hasNextPage: nextPage.length > 0,
