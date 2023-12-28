@@ -24,14 +24,14 @@ export const POST = async (request: NextRequest, { params }: TParams) => {
             data: {
                 postId,
                 userId: session?.user.id as string
-            }
+            },
         })
 
         return NextResponse.json({
             data: createdBookmark,
             message: "Bookmark created",
             success: true
-        }, { status: 500 })
+        }, { status: 200 })
 
     } catch (error) {
         return NextResponse.json({
