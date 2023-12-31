@@ -10,18 +10,20 @@ import { QueryClient } from '@tanstack/query-core';
 import { useRouter } from "next-nprogress-bar";
 import { toast } from "sonner";
 import { UseFormReturn } from "react-hook-form";
-import { QueryKeys } from "@/types/enums";
+import { QueryKeys } from "../constants";
+import { updateRoute } from "../actions";
 
-export async function getFeedPosts(take: number, lastCursor: string) {
+export async function getFeedPosts(take: number, lastCursor: string, filter?: string[]) {
   const response = await axios.get("/api/post", {
-    params: { take, lastCursor },
+    //the filter will only attach to the params if its truthy value
+    params: { take, lastCursor, ...(filter && { filter: filter?.join(",") }) },
   });
   return response.data.data as TPage<TPost[]>
 }
 
-export function useFeedPosts() {
+export function useGetFeedPosts(filter?: string[]) {
   return useInfiniteQuery({
-    queryKey: [QueryKeys.Post],
+    queryKey: ["posts"],
     initialPageParam: "",
     queryFn: ({ pageParam: lastCursor }) => getFeedPosts(5, lastCursor),
     getNextPageParam: (lastPage) =>
@@ -31,7 +33,7 @@ export function useFeedPosts() {
 
 function createPostOptimisticUpdate(queryClient: QueryClient, newPost: TPost) {
   return queryClient.setQueryData<InfiniteData<TPage<TPost[]>>>(
-    [QueryKeys.Post],
+    [QueryKeys.Posts],
     (oldData) => {
       const newData = oldData
         ? {
@@ -54,8 +56,10 @@ function createPostOptimisticUpdate(queryClient: QueryClient, newPost: TPost) {
 }
 
 function updatePostOptimisticUpdate(queryClient: QueryClient, updatedPost: TPost) {
+  updateRoute(`/post/edit/${updatedPost.id}`)
+
   return queryClient.setQueryData<InfiniteData<TPage<TPost[]>>>(
-    [QueryKeys.Post],
+    [QueryKeys.Posts],
     (oldData) => {
       const newData = oldData
         ? {
@@ -89,7 +93,7 @@ export function useCreateBlogPost(clearForm: () => void) {
     onSuccess: (data) => {
       //for optimistic update of the ui 
       createPostOptimisticUpdate(queryClient, data)
-      toast.success("Blog posted sucessfully", { className: "bg-cardBg" });
+      toast.success("Blog posted sucessfully");
       clearForm();
       router.push("/feed");
     },
@@ -114,18 +118,19 @@ export function useUpdateBlogPost() {
       const response = await axios.patch(`/api/blog/${postId}`, blogPostData);
       return response.data.data as TPost;
     },
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
+      await queryClient.invalidateQueries({queryKey: [QueryKeys.Bookmarks]})
       //for optimistic update of the ui 
       updatePostOptimisticUpdate(queryClient, data)
-      toast.success("Blog post updated sucessfully");
       router.push("/feed");
+      toast.success("Blog post updated sucessfully");
     },
     onError: (error: AxiosError<ErrorResponse>) => {
+      console.log(error)
       toast.error(error.response?.data?.message);
     },
   });
 }
-
 
 export function useCreateDiary(formReturn: UseFormReturn) {
   const router = useRouter();
@@ -139,9 +144,9 @@ export function useCreateDiary(formReturn: UseFormReturn) {
     onSuccess: (data) => {
       //for optimistic update of the ui
       createPostOptimisticUpdate(queryClient, data)
-      toast.success("Diary posted sucessfully");
       formReturn.reset();
       router.push("/feed");
+      toast.success("Diary posted sucessfully");
     },
     onError: (error: AxiosError<ErrorResponse>) => {
       toast.error(error.response?.data?.message);
@@ -164,12 +169,14 @@ export function useUpdateDiary() {
       const response = await axios.patch(`/api/diary/${postId}`, diaryData);
       return response.data.data as TPost;
     },
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
+      await queryClient.invalidateQueries({queryKey: [QueryKeys.Bookmarks]})
       updatePostOptimisticUpdate(queryClient, data)
       toast.success("Diary updated sucessfully");
       router.push("/feed");
     },
     onError: (error: AxiosError<ErrorResponse>) => {
+      console.log(error)
       toast.error(error.response?.data?.message);
     },
   });
@@ -183,35 +190,10 @@ export function useDeletePost(closeModal?: () => void) {
       const response = await axios.delete(`/api/post/${postId}`);
       return response.data;
     },
-    onSuccess: (data) => {
-      const deletedPostId = data.deletedPost.id
-      queryClient.setQueryData<InfiniteData<TPage<TPost[]>>>(
-        [QueryKeys.Post],
-        (oldData) => {
-          const newData = oldData
-            ? {
-                ...oldData,
-                pages: oldData.pages.map((page) => {
-                  //checks if the page has a value
-                  if (page) {
-                    return {
-                      ...page,
-                      posts: page.data
-                        ? page.data.filter(
-                            (post) => post.id !== deletedPostId
-                          )
-                        : [],
-                    };
-                  }
-                  return page;
-                }),
-              }
-            : oldData;
-          return newData;
-        }
-      );
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({queryKey: [QueryKeys.Posts]})
       if (closeModal) closeModal();
-      toast.success("Post deleted successfully");
+      toast.success("Posts deleted successfully");
     },
     onError: (error: AxiosError<ErrorResponse>) => {
       if (closeModal) closeModal();
