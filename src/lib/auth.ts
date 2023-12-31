@@ -24,6 +24,14 @@ export const authOptions: NextAuthOptions = {
                 where: {
                   email
                 },
+                include: {
+                  bookmarks:{
+                    select: {
+                      id: true,
+                      postId: true
+                    }
+                  }
+                }
               })
               
               if (!user) throw Error("Invalid credentials");
@@ -37,7 +45,8 @@ export const authOptions: NextAuthOptions = {
                   email: user.email,
                   id: user.id,
                   picture: user.image,
-                  onboarded: user.onboarded
+                  onboarded: user.onboarded,
+                  bookmarks: user.bookmarks
               }
           } catch (error) {
               console.log(error);
@@ -57,6 +66,14 @@ export const authOptions: NextAuthOptions = {
         where: {
           email: token.email,
         },
+        include: {
+          bookmarks:{
+            select: {
+              id: true,
+              postId: true
+            }
+          }
+        }
       })
 
       if (!existingUser) {
@@ -74,12 +91,19 @@ export const authOptions: NextAuthOptions = {
         return token
       }
 
+      if (trigger === "update" && session?.bookmarks) {
+        token.bookmarks = session?.bookmarks 
+
+        return token
+      }
+
       return {
         id: existingUser.id,
         name: existingUser.name,
         email: existingUser.email,
         picture: existingUser.image,
-        onboarded: existingUser.onboarded
+        onboarded: existingUser.onboarded,
+        bookmarks: existingUser.bookmarks
       }
     },
 
@@ -91,6 +115,7 @@ export const authOptions: NextAuthOptions = {
         session.user.email = token.email;
         session.user.image = token.picture;
         session.user.onboarded = token.onboarded as boolean
+        session.user.bookmarks = token.bookmarks as { postId?: string, id?: string }[]
       }
 
       return session;
