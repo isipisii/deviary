@@ -6,6 +6,7 @@ import {
     LuBoxes, 
     LuPlus, 
     LuBookmark, 
+    LuBookMarked,
     LuHistory,
     LuSettings,
     LuPencilLine,
@@ -20,6 +21,11 @@ export const githubLinkRegex = /^(https?:\/\/)?(www\.)?github\.com\/[\w-]+/
 export const facebookLinkRegex = /^(https?:\/\/)?(www\.)?facebook\.com\/[\w-]+/
 export const linkedinLinkRegex = /^(https?:\/\/)?(www\.)?linkedin\.com\/[\w-]+/
 export const validEmailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
+
+export const QueryKeys = {
+    Posts: "posts",
+    Bookmarks: "bookmarks"
+}
 
 export const sideBarNavs: ISideBarNavs[] = [
     {
@@ -91,7 +97,8 @@ export const postContextMenuItems = [
     {
         label: "Bookmark",
         key: "bookmark",
-        icon: LuBookmark
+        activeIcon: FaBookmark,
+        icon: FaRegBookmark
     },
     {
         label: "Copy link",
