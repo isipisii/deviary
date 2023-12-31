@@ -27,8 +27,8 @@ export const DELETE = async (request: NextRequest, { params }: TParams) => {
         })
 
         return NextResponse.json({
-            message: "Internal Server Error",
-            success: false
+            message: "Bookmark removed",
+            success: true
         }, { status: 200 })
 
     } catch (error) {
