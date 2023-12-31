@@ -20,6 +20,21 @@ export const POST = async (request: NextRequest, { params }: TParams) => {
             }, { status: 400 })
         }
 
+        //checks if the post has been bookmarked by the user
+        const existingBookmark = await db.bookmark.findFirst({
+            where: {
+                postId,
+                userId: session?.user.id as string
+            }
+        })
+
+        if(existingBookmark){
+            return NextResponse.json({
+                message: "Post has already been bookmarked",
+                success: false
+            }, { status: 409 })
+        }
+
         const createdBookmark = await db.bookmark.create({
             data: {
                 postId,
