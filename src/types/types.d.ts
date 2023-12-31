@@ -27,7 +27,7 @@ type TPost = {
     blog?: TBlog 
     diary?: TDiary
     authorId?: string
-    created_at?: Date
+    createdAt: Date
 }
 
 type TBlog = {
