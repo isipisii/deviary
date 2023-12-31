@@ -33,7 +33,7 @@ export function SideBar() {
         >
           <Button
             className="min-w-0 w-[40px] h-[40px] p-0 rounded-full 
-              bg-white border-2 border-borderColor text-[1.3rem] text-black"
+             bg-white border-2 border-borderColor text-[1.3rem] text-black"
             onClick={handleToggleMinimize}
           >
             <LuChevronLeft 
