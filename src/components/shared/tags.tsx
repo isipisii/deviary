@@ -2,7 +2,7 @@
 
 import { Chip, Input, Button } from "@nextui-org/react"
 import { FormEvent, useState } from "react"
-import { useEffect } from "react"
+import { useLayoutEffect } from "react"
 import { useTags } from "@/lib/store/useTags"
 import { IoClose } from "react-icons/io5";
 
@@ -11,7 +11,7 @@ export default function Tags({ initialTags }: { initialTags?: string[] }) {
     const showRemoveAll = tags.length > 1
     const [tag, setTag] = useState("")
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         if(initialTags && initialTags.length > 0) {
             setInitialTags(initialTags)
         } else setInitialTags([])
