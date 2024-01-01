@@ -3,13 +3,14 @@
 import BlogPostCard from "@/components/shared/blog-post-card";
 import { useInView } from "react-intersection-observer";
 import { useEffect } from "react";
-import { useFeedPosts } from "@/lib/services/post.api";
+import { useGetFeedPosts } from "@/lib/services/post.api";
 import DiaryCard from "@/components/shared/diary-card";
 import PostsSkeletonLoader from "@/components/shared/skeleton-loaders/posts-skeleton-loader";
+import CardContainer from "@/components/layout/card-container";
 
 export default function FeedContainer() {
   const { ref, inView } = useInView();
-  const { fetchNextPage, hasNextPage, isFetchingNextPage, data, isLoading } = useFeedPosts()
+  const { fetchNextPage, hasNextPage, isFetchingNextPage, data, isLoading } = useGetFeedPosts()
 
   useEffect(() => {
     //checks if the last element that has the ref and if theres next page in order to 
@@ -21,7 +22,7 @@ export default function FeedContainer() {
 
   return (
     <div className="w-full flex items-center flex-col justify-center">
-      <div className="flex gap-12 items-center justify-center flex-wrap mt-8 w-full">
+      <CardContainer>
         {data?.pages.map((page) =>
           page.data?.map((post, index) => {
             // this is for the last element in order to put the ref for infinite scrolling
@@ -38,20 +39,20 @@ export default function FeedContainer() {
                   <DiaryCard post={post}/>
                 </div>
               );
-            } else {
-              if(post.type === "BLOG_POST") {
-                return (
-                  <BlogPostCard post={post} key={index} />
-                )
-              }
+            } 
+
+            if(post.type === "BLOG_POST") {
               return (
-                <DiaryCard post={post} key={index} />
-              );
+                <BlogPostCard post={post} key={index} />
+              )
             }
+            return (
+              <DiaryCard post={post} key={index} />
+            );   
           })
         )}
        {(isLoading || isFetchingNextPage) && ( <PostsSkeletonLoader />)}
-      </div>
+      </CardContainer>
     </div>
   );
 }

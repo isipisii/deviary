@@ -1,7 +1,7 @@
-import { SideBar } from "@/components/sidebar-nav";
-import TopNav from "@/components/top-nav";
+import { SideBar } from "@/components/layout/sidebar-nav";
+import TopNav from "@/components/layout/top-nav";
 import { getServerSideSession } from "@/lib/auth";
-import LayoutWrapper from "@/components/layout-wrapper";
+import LayoutWrapper from "@/components/layout/layout-wrapper";
 import { ReactNode } from "react";
 
 export default async function Layout({ children }: { children: ReactNode }) {

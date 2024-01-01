@@ -1,5 +1,5 @@
 "use client";
-import CardContainer from "@/components/ui/card-container";
+import CardContainer from "@/components/layout/card-container";
 import { useGetBookmarks } from "@/lib/services/bookmark.api";
 import { useEffect } from "react";
 import { useInView } from "react-intersection-observer";

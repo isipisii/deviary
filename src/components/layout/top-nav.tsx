@@ -1,17 +1,16 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
-import Image from "next/image";
-import AccountDropdown from "./ui/account-dropdown";
+import AccountDropdown from "../ui/account-dropdown";
 import { FiBell } from "react-icons/fi";
 import {
   Button,
   Tooltip,
 } from "@nextui-org/react";
-import ThemeToggler from "./ui/theme-toggler";
+import ThemeToggler from "../ui/theme-toggler";
 import { Skeleton } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
-import Logo from "./ui/logo";
+import Logo from "../ui/logo";
 
 export default function TopNav() {
   const { data } = useSession();

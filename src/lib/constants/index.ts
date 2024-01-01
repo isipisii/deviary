@@ -1,4 +1,4 @@
-import { ISideBarNavs } from "@/components/sidebar-nav"
+import { ISideBarNavs } from "@/components/layout/sidebar-nav"
 import { 
     LuNewspaper, 
     LuSearch, 
