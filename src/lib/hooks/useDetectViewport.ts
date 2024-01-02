@@ -22,7 +22,7 @@ function getWidth() {
 
 export default function useDetectViewport(screenSize: TScreenSize) {
     const [currentScreenWidth, setCurrentScreenWidth] =  useState(getWidth)
-    const isInViewport = currentScreenWidth <= SCREEN_SIZES[screenSize] 
+    const isInRange = currentScreenWidth <= SCREEN_SIZES[screenSize] 
 
     useEffect(() => {
         const handleResize = () => {
@@ -35,5 +35,5 @@ export default function useDetectViewport(screenSize: TScreenSize) {
         }
     },[])
 
-    return { isInViewport, currentScreenWidth }
+    return { isInRange, currentScreenWidth }
 } 

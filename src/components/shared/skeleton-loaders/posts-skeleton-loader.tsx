@@ -5,8 +5,8 @@ import PostSkeleton from "./post-skeleton";
 import { useState } from "react";
 
 export default function PostsSkeletonLoader({ isInInfinite = true }: {isInInfinite?: boolean}) {
-  const { isInViewport } = useDetectViewport('sm')
-  const [arraySize] = useState(isInInfinite ? 4 : isInViewport ? 4 : 8)
+  const { isInRange } = useDetectViewport('sm')
+  const [arraySize] = useState(isInInfinite ? 4 : isInRange ? 4 : 8)
 
   return (
     <>
