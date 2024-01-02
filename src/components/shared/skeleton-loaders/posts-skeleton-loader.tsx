@@ -1,34 +1,19 @@
-import { Skeleton } from "@nextui-org/react";
+"use client"
 
-export default function PostsSkeletonLoader() {
+import useDetectViewport from "@/lib/hooks/useDetectViewport";
+import PostSkeleton from "./post-skeleton";
+import { useState } from "react";
+
+export default function PostsSkeletonLoader({ isInInfinite = true }: {isInInfinite?: boolean}) {
+  const { isInViewport } = useDetectViewport('sm')
+  const [arraySize] = useState(isInInfinite ? 4 : isInViewport ? 4 : 8)
+
   return (
     <>
-      {[...new Array(4)].map((_, index) => {
-        // if (index % 2 === 0) {
+      {[...new Array(arraySize)].map((_, index) => {
           return (
-            <div
-              className="border-2 p-4 border-borderColor h-[400px] w-[330px] rounded-3xl shadow-xl bg-cardBg grid gap-3"
-              key={"key" + index}
-            >
-              <div className="grid gap-3">
-                <div className="flex gap-2 items-center">
-                  <Skeleton className="h-[40px] w-[40px] rounded-full" />
-                  <div className="space-y-1">
-                    <Skeleton className="h-[0.875rem] w-[90px] rounded-md" />
-                    <Skeleton className="h-[0.75rem] w-[70px] rounded-md" />
-                  </div>
-                </div>
-                <Skeleton className="h-[1.25rem] w-[90%] rounded-lg" />
-              </div>
-
-              <div className="grid">
-                <Skeleton className="h-[220px] w-full rounded-[.75rem]" />
-                {/* <PostActions /> */}
-                <Skeleton className="h-[2rem] w-full rounded-lg" />
-              </div>
-            </div>
+            <PostSkeleton key={"key" + index}/>
           );
-        // }
       })}
     </>
   );
