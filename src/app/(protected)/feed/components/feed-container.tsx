@@ -13,8 +13,8 @@ export default function FeedContainer() {
   const { fetchNextPage, hasNextPage, isFetchingNextPage, data, isLoading } = useGetFeedPosts()
 
   useEffect(() => {
-    //checks if the last element that has the ref and if theres next page in order to 
-    //fetch the next page
+    // checks if the last element that has the ref and if theres next page in order to 
+    // fetch the next page
     if (inView && hasNextPage) {
       fetchNextPage();
     }
@@ -51,7 +51,8 @@ export default function FeedContainer() {
             );   
           })
         )}
-       {(isLoading || isFetchingNextPage) && ( <PostsSkeletonLoader />)}
+       {isLoading && <PostsSkeletonLoader />}
+       {isFetchingNextPage && <PostsSkeletonLoader isInInfinite />}
       </CardContainer>
     </div>
   );

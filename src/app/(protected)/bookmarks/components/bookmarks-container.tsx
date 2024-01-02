@@ -52,7 +52,8 @@ export default function BookmarksContainer() {
             return <DiaryCard post={bookmark.post} key={bookmark.id} />;
           })
         )}
-        {(isLoading || isFetchingNextPage) && <PostsSkeletonLoader />}
+        {isLoading && <PostsSkeletonLoader />}
+        {isFetchingNextPage && <PostsSkeletonLoader isInInfinite />}
       </CardContainer>
     </div>
   );
