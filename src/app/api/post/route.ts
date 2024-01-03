@@ -1,7 +1,9 @@
 import { db } from "@/lib/prisma";
 import { NextResponse, NextRequest } from "next/server";
+import { getServerSideSession } from "@/lib/auth";
 
 export const GET = async (request: NextRequest) => {
+  const session = await getServerSideSession()
 
   try {
     // get page and lastCursor from query
@@ -10,6 +12,16 @@ export const GET = async (request: NextRequest) => {
     const take = Number(url.searchParams.get("take"));
     const lastCursor = url.searchParams.get("lastCursor") as string;
     const filter = url.searchParams.get("filter")?.toString().split(",")
+
+    if(!session) {
+      return NextResponse.json(
+        {
+          message: "Unauthenticard, please log in first",
+          success: false
+        },
+        { status: 400 }
+      );
+    }
 
     const posts = await db.post.findMany({
         //puts the where clause if there's a filter from the search params
@@ -42,7 +54,7 @@ export const GET = async (request: NextRequest) => {
               email: true,
               image: true
             }
-          }
+          },
         }
     });
 
@@ -69,8 +81,35 @@ export const GET = async (request: NextRequest) => {
       },
     });
 
+
+    //appends an isBookmarked field to easily distinguish if a certain post is being bookrmarked by the user
+    const postsWithisBookmarkedField = await Promise.all(
+      posts.map(async (post) => {
+        const userId = session.user.id 
+    
+        const isBookmarked = userId ? await db.bookmark.count({
+          where: {
+            postId: post.id,
+            userId: userId
+          }
+        }) > 0 : false
+
+        const bookmark = await db.bookmark.findFirst({
+          where: {
+            postId: post.id,
+            userId: userId
+          },
+          select: {
+            id: true
+          }
+        })
+
+        return {...post, isBookmarked, bookmarkId: bookmark?.id}
+      })
+    )
+
     const data = {
-      data: posts,
+      data: postsWithisBookmarkedField,
       metaData: {
         lastCursor: cursor,
         hasNextPage: nextPage.length > 0,
