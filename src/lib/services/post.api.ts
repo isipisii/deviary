@@ -42,7 +42,7 @@ function createPostOptimisticUpdate(queryClient: QueryClient, newPost: TPost) {
               if (index === 0) {
                 return {
                   ...page,
-                  posts: [newPost, ...(page.data ? page.data : new Array())],
+                  data: [newPost, ...(page.data ? page.data : new Array())],
                 };
               }
               return page;
@@ -68,7 +68,7 @@ function updatePostOptimisticUpdate(queryClient: QueryClient, updatedPost: TPost
               if (page) {
                 return {
                   ...page,
-                  posts: page.data ? page.data.map(post => post.id === updatedPost.id ? updatedPost : post) : []
+                  data: page.data ? page.data.map(data => data.id === updatedPost.id ? updatedPost : data) : []
                 };
               }
               return page;
