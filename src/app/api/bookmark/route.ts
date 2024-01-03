@@ -53,8 +53,8 @@ export const GET = async (request: NextRequest) => {
             return NextResponse.json({
                 data: [],
                 metaData: {
-                lastCursor: null,
-                hasNextPage: false,
+                    lastCursor: null,
+                    hasNextPage: false,
                 },
             }, { status: 200 })
         }
@@ -70,8 +70,12 @@ export const GET = async (request: NextRequest) => {
             },
         });
 
+        const bookmarksWithIsBookmarkedField = bookmarks.map(bookmark => (
+            {...bookmark, post: {...bookmark.post, isBookmarked: true, bookmarkId: bookmark.id}}
+        ))
+
         const data = {
-            data: bookmarks,
+            data: bookmarksWithIsBookmarkedField,
             metaData: {
                 lastCursor: cursor,
                 hasNextPage: nextPage.length > 0,
