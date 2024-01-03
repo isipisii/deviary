@@ -26,7 +26,9 @@ type TPost = {
     author?: TUser
     blog?: TBlog 
     diary?: TDiary
-    authorId?: string
+    isBookmarked: boolean
+    bookmarkId?: readonly string 
+    authorId?:  readonly string
     createdAt: Date
 }
 
