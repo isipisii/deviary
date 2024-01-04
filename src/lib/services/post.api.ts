@@ -6,19 +6,23 @@ import {
   useMutation,
   useQueryClient,
 } from "@tanstack/react-query";
-import { QueryClient } from '@tanstack/query-core';
+import { QueryClient } from "@tanstack/query-core";
 import { useRouter } from "next-nprogress-bar";
 import { toast } from "sonner";
 import { UseFormReturn } from "react-hook-form";
 import { QueryKeys } from "../constants";
 import { updateRoute } from "../actions";
 
-export async function getFeedPosts(take: number, lastCursor: string, filter?: string[]) {
+export async function getFeedPosts(
+  take: number,
+  lastCursor: string,
+  filter?: string[],
+) {
   const response = await axios.get("/api/post", {
     //the filter will only attach to the params if its truthy value
     params: { take, lastCursor, ...(filter && { filter: filter?.join(",") }) },
   });
-  return response.data.data as TPage<TPost[]>
+  return response.data.data as TPage<TPost[]>;
 }
 
 export function useGetFeedPosts(filter?: string[]) {
@@ -51,12 +55,16 @@ function createPostOptimisticUpdate(queryClient: QueryClient, newPost: TPost) {
         : oldData;
 
       return newData;
-    }
+    },
   );
 }
 
-function updatePostOptimisticUpdate(queryClient: QueryClient, updatedPost: TPost) {
-  updateRoute(`/post/edit/${updatedPost.id}`)
+function updatePostOptimisticUpdate(
+  queryClient: QueryClient,
+  updatedPost: TPost,
+) {
+  //to keep the data updated in edit post page for specific post
+  updateRoute(`/post/edit/${updatedPost.id}`);
 
   return queryClient.setQueryData<InfiniteData<TPage<TPost[]>>>(
     [QueryKeys.Posts],
@@ -68,7 +76,11 @@ function updatePostOptimisticUpdate(queryClient: QueryClient, updatedPost: TPost
               if (page) {
                 return {
                   ...page,
-                  data: page.data ? page.data.map(data => data.id === updatedPost.id ? updatedPost : data) : []
+                  data: page.data
+                    ? page.data.map((data) =>
+                        data.id === updatedPost.id ? updatedPost : data,
+                      )
+                    : [],
                 };
               }
               return page;
@@ -77,7 +89,7 @@ function updatePostOptimisticUpdate(queryClient: QueryClient, updatedPost: TPost
         : oldData;
 
       return newData;
-    }
+    },
   );
 }
 
@@ -91,8 +103,8 @@ export function useCreateBlogPost(clearForm: () => void) {
       return response.data.data as TPost;
     },
     onSuccess: (data) => {
-      //for optimistic update of the ui 
-      createPostOptimisticUpdate(queryClient, data)
+      //for optimistic update of the ui
+      createPostOptimisticUpdate(queryClient, data);
       toast.success("Blog posted sucessfully");
       clearForm();
       router.push("/feed");
@@ -112,21 +124,21 @@ export function useUpdateBlogPost() {
       blogPostData,
       postId,
     }: {
-      blogPostData: FormData
+      blogPostData: FormData;
       postId: string;
     }) => {
       const response = await axios.patch(`/api/blog/${postId}`, blogPostData);
       return response.data.data as TPost;
     },
     onSuccess: async (data) => {
-      await queryClient.invalidateQueries({queryKey: [QueryKeys.Bookmarks]})
-      //for optimistic update of the ui 
-      updatePostOptimisticUpdate(queryClient, data)
+      await queryClient.invalidateQueries({ queryKey: [QueryKeys.Bookmarks] });
+      //for optimistic update of the ui
+      updatePostOptimisticUpdate(queryClient, data);
       router.push("/feed");
       toast.success("Blog post updated sucessfully");
     },
     onError: (error: AxiosError<ErrorResponse>) => {
-      console.log(error)
+      console.log(error);
       toast.error(error.response?.data?.message);
     },
   });
@@ -143,7 +155,7 @@ export function useCreateDiary(formReturn: UseFormReturn) {
     },
     onSuccess: (data) => {
       //for optimistic update of the ui
-      createPostOptimisticUpdate(queryClient, data)
+      createPostOptimisticUpdate(queryClient, data);
       formReturn.reset();
       router.push("/feed");
       toast.success("Diary posted sucessfully");
@@ -170,13 +182,13 @@ export function useUpdateDiary() {
       return response.data.data as TPost;
     },
     onSuccess: async (data) => {
-      await queryClient.invalidateQueries({queryKey: [QueryKeys.Bookmarks]})
-      updatePostOptimisticUpdate(queryClient, data)
+      await queryClient.invalidateQueries({ queryKey: [QueryKeys.Bookmarks] });
+      updatePostOptimisticUpdate(queryClient, data);
       toast.success("Diary updated sucessfully");
       router.push("/feed");
     },
     onError: (error: AxiosError<ErrorResponse>) => {
-      console.log(error)
+      console.log(error);
       toast.error(error.response?.data?.message);
     },
   });
@@ -191,7 +203,7 @@ export function useDeletePost(closeModal?: () => void) {
       return response.data;
     },
     onSuccess: async () => {
-      await queryClient.invalidateQueries({queryKey: [QueryKeys.Posts]})
+      await queryClient.invalidateQueries({ queryKey: [QueryKeys.Posts] });
       if (closeModal) closeModal();
       toast.success("Posts deleted successfully");
     },
