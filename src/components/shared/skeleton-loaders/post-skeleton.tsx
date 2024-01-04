@@ -2,9 +2,9 @@ import { Skeleton } from "@nextui-org/react";
 
 export default function PostSkeleton() {
   return (
-    <div className="border-2 p-4 border-borderColor h-[400px] w-[350px] rounded-3xl shadow-xl bg-cardBg grid gap-3">
+    <div className="grid h-[400px] w-full max-w-[350px] gap-3 rounded-3xl border-2 border-borderColor bg-cardBg p-4 shadow-xl">
       <div className="grid gap-3">
-        <div className="flex gap-2 items-center">
+        <div className="flex items-center gap-2">
           <Skeleton className="h-[40px] w-[40px] rounded-full" />
           <div className="space-y-1">
             <Skeleton className="h-[0.875rem] w-[90px] rounded-md" />
