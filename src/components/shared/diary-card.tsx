@@ -12,26 +12,30 @@ interface IDiaryCard {
 
 export default function DiaryCard({ post }: IDiaryCard) {
   return (
-    <div 
-      className="border-2 p-4 border-borderColor 
-      h-[400px] w-[350px] rounded-3xl shadow-xl bg-cardBg 
-      flex flex-col gap-2 justify-between"
+    <div
+      className="flex h-[400px] w-full max-w-[350px]
+      flex-col justify-between gap-2 rounded-3xl border-2 
+      border-borderColor bg-cardBg p-4 shadow-xl"
     >
       <div className="grid gap-2">
         <div className="flex justify-between">
-          <div className="flex gap-2 items-center">
+          <div className="flex items-center gap-2">
             <Avatar
-                src={post.author?.image as string}
-                className="h-[40px] w-[40px]"
+              src={post.author?.image as string}
+              className="h-[40px] w-[40px]"
             />
             <div>
               <p className="text-sm font-semibold">{post.author?.name}</p>
-              <p className="text-[.7rem] text-[#878080]">Yesterday</p>
+              <p className="text-[.7rem] text-[#878080]">
+                {new Date(post.createdAt).toLocaleDateString()}
+              </p>
             </div>
           </div>
           <PostContextMenu post={post} />
         </div>
-        <h1 className="font-bold text-sm">{truncateString(post.diary?.title ?? "", 100)}</h1> 
+        <h1 className="text-sm font-bold">
+          {truncateString(post.diary?.title ?? "", 100)}
+        </h1>
       </div>
 
       <div className="grid gap-1">
@@ -39,11 +43,16 @@ export default function DiaryCard({ post }: IDiaryCard) {
           language="jsx"
           style={dracula}
           showLineNumbers
-          customStyle={{ fontSize: ".6rem", overflow: "auto", borderRadius: ".75rem", height: "200px"}}
+          customStyle={{
+            fontSize: ".6rem",
+            overflow: "auto",
+            borderRadius: ".75rem",
+            height: "200px",
+          }}
         >
           {post.diary?.codeSnippet as string}
         </SyntaxHighlighter>
-        <PostActions />
+        <PostActions postId={post.id} />
       </div>
     </div>
   );
