@@ -13,39 +13,44 @@ import { Button, Tooltip, CircularProgress } from "@nextui-org/react";
 import { cn } from "@/utils/cn";
 
 export function SideBar() {
-  const { isSideBarMinimized, minimizeSideBar, maximizeSideBar } = useSideBarNavStore(state => state)
+  const { isSideBarMinimized, minimizeSideBar, maximizeSideBar } =
+    useSideBarNavStore((state) => state);
 
   function handleToggleMinimize() {
-    if(isSideBarMinimized) {
-      maximizeSideBar()
-    } else minimizeSideBar()
+    if (isSideBarMinimized) {
+      maximizeSideBar();
+    } else minimizeSideBar();
   }
 
   return (
     <div
-      className={`flex-none border-r-1 border-borderColor hidden transition-all ease-in-out duration-1000
-      md:block shadow-lg pt-[90px] fixed h-screen ${isSideBarMinimized ? "w-[90px]" : "w-[290px]"}`}
-    > 
+      className={`fixed z-10 hidden h-screen flex-none border-r-1 border-borderColor bg-background
+      pt-[90px] shadow-lg transition-all duration-1000 ease-in-out md:block ${
+        isSideBarMinimized ? "w-[90px]" : "w-[290px]"
+      }`}
+    >
       <div className="absolute -right-5  top-[5.5rem] z-20">
-        <Tooltip  
+        <Tooltip
           content={isSideBarMinimized ? "Maximize" : "Minimize"}
-          className="bg-background z-40"
+          className="z-40 bg-background"
         >
           <Button
-            className="min-w-0 w-[40px] h-[40px] p-0 rounded-full 
-             bg-white border-2 border-borderColor text-[1.3rem] text-black"
+            className="h-[40px] w-[40px] min-w-0 rounded-full border-2 
+             border-borderColor bg-white p-0 text-[1.3rem] text-black"
             onClick={handleToggleMinimize}
           >
-            <LuChevronLeft 
-              className={`${isSideBarMinimized ? "-rotate-180" : "-rotate-0"} transition-all 
-              ease-in-out duration-1000 delay-150`} 
+            <LuChevronLeft
+              className={`${
+                isSideBarMinimized ? "-rotate-180" : "-rotate-0"
+              } transition-all 
+              delay-150 duration-1000 ease-in-out`}
             />
           </Button>
         </Tooltip>
       </div>
-      
-      <div className="w-full h-full overflow-y-auto">
-        <div className="flex flex-col gap-8 my-4 p-4">
+
+      <div className="h-full w-full  overflow-y-auto">
+        <div className="my-4 flex flex-col gap-8 p-4">
           {sideBarNavs.map((nav, index) => (
             <SideBarNav key={index} title={nav.title} items={nav.items} />
           ))}
@@ -61,7 +66,7 @@ export interface ISideBarNavs {
 }
 
 export function SideBarNav({ title, items }: ISideBarNavs) {
-  const { isSideBarMinimized } = useSideBarNavStore(state => state)
+  const { isSideBarMinimized } = useSideBarNavStore((state) => state);
   const [guilds, setGuilds] = useState<ISideBarNavItem[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const isOverflowing = guilds.length > 2;
@@ -114,7 +119,7 @@ export function SideBarNav({ title, items }: ISideBarNavs) {
   }, []);
 
   return (
-    <div className="flex flex-col gap-2 relative">
+    <div className="relative flex flex-col gap-2">
       {!isSideBarMinimized && <p className="font-semibold">{title}</p>}
       <div className="flex flex-col gap-2">
         {items.map((item, index) => (
@@ -129,7 +134,7 @@ export function SideBarNav({ title, items }: ISideBarNavs) {
 
         {isLoading
           ? title === "Guild" && (
-              <div className="w-full flex items-center justify-center mt-4">
+              <div className="mt-4 flex w-full items-center justify-center">
                 <CircularProgress color="secondary" aria-label="Loading..." />
               </div>
             )
@@ -150,10 +155,10 @@ export function SideBarNav({ title, items }: ISideBarNavs) {
       {title === "Guild" && isOverflowing && (
         <div
           className={cn(
-            `w-full left-0 absolute h-12 bg-gradient-to-t 
-          from-background via-background to-transparent flex 
-          items-center justify-center -bottom-4`,
-            { "-bottom-7": seeMore }
+            `absolute -bottom-4 left-0 flex h-12 
+          w-full items-center justify-center bg-gradient-to-t 
+          from-background via-background to-transparent`,
+            { "-bottom-7": seeMore },
           )}
         >
           <Tooltip
@@ -161,11 +166,15 @@ export function SideBarNav({ title, items }: ISideBarNavs) {
             className="bg-background"
           >
             <Button
-              className="min-w-0 w-[35px] h-[35px] p-0 rounded-full 
-              bg-white border-2 border-borderColor text-[1.2rem] text-black"
+              className="h-[35px] w-[35px] min-w-0 rounded-full border-2 
+              border-borderColor bg-white p-0 text-[1.2rem] text-black"
               onClick={() => setSeeMore((prevState) => !prevState)}
             >
-              <LuChevronDown className={`${seeMore ? "-rotate-180" : "-rotate-0"} transition-all ease-in-out duration-1000 delay-150`}  />
+              <LuChevronDown
+                className={`${
+                  seeMore ? "-rotate-180" : "-rotate-0"
+                } transition-all delay-150 duration-1000 ease-in-out`}
+              />
             </Button>
           </Tooltip>
         </div>
@@ -191,7 +200,7 @@ export function SideBarNavItem({
 }: ISideBarNavItem) {
   const pathname = usePathname();
   const isActive = (href: string) => pathname === href;
-  const { isSideBarMinimized } = useSideBarNavStore(state => state)
+  const { isSideBarMinimized } = useSideBarNavStore((state) => state);
 
   return (
     <Link
@@ -200,24 +209,28 @@ export function SideBarNavItem({
       //   "bg-light hover:bg-lightHover  flex items-center gap-4 p-2 rounded-[1.2rem] transition-all ease-in-out duration-1000 font-[500] text-navTextColor",
       //   { "bg-lightHover font-[600] text-activeNavTextColor": isActive(href) }
       // )}
-      className={`bg-light hover:bg-lightHover  
-      flex items-center gap-4 p-2 rounded-[1.2rem] text-[.9rem] transition-all ease-in-out duration-1000 
-      font-[500] ${isActive(href) ? "bg-lightHover font-[600] text-activeNavTextColor" : "text-navTextColor"}`}
+      className={`flex items-center  
+      gap-4 rounded-[1.2rem] bg-light p-2 text-[.9rem] font-[500] transition-all duration-1000 ease-in-out 
+      hover:bg-lightHover ${
+        isActive(href)
+          ? "bg-lightHover font-[600] text-activeNavTextColor"
+          : "text-navTextColor"
+      }`}
     >
       {Icon && !imageUrl ? (
         <p
           className={cn(
-            "text-secondary bg-background text-[1.5rem] p-2 rounded-2xl",
-            {"text-red-700": title === "Popular"}
+            "rounded-2xl bg-background p-2 text-[1.5rem] text-secondary",
+            { "text-red-700": title === "Popular" },
           )}
         >
           <Icon />
         </p>
       ) : (
-        <div className="bg-background p-2 rounded-2xl">
+        <div className="rounded-2xl bg-background p-2">
           <img
             src={imageUrl}
-            className="rounded-full h-[23px] w-[23px]"
+            className="h-[23px] w-[23px] rounded-full"
             alt="guild logo"
           />
         </div>
