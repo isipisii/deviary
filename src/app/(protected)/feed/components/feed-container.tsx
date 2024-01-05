@@ -31,13 +31,17 @@ export default function FeedContainer() {
               if (page.data.length === index + 1) {
                 if (post.type === "BLOG_POST") {
                   return (
-                    <div ref={ref} key={post.id} className="w-full">
+                    <div
+                      ref={ref}
+                      key={post.id}
+                      className="w-full max-w-[350px]"
+                    >
                       <BlogPostCard post={post} />
                     </div>
                   );
                 }
                 return (
-                  <div ref={ref} key={post.id} className="w-full">
+                  <div ref={ref} key={post.id} className="w-full max-w-[350px]">
                     <DiaryCard post={post} />
                   </div>
                 );
