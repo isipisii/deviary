@@ -9,14 +9,6 @@ export default withUt({
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
     "./node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}",
   ],
-  // theme: {
-  //   extend: {
-  //     fontFamily: {
-  //       sans: ['var(--font-geist-sans)'],
-  //       mono: ['var(--font-geist-mono)'],
-  //     },
-  //   },
-  // },
   plugins: [
     nextui({
       themes: {
@@ -73,7 +65,7 @@ export default withUt({
             secondary: "#DD0DB9",
             light: "#c7c7c72c",
             lightHover: "#c7c7c75e",
-            cardBg: "#FFFFFF"
+            cardBg: "#FFFFFF",
           },
           layout: {
             disabledOpacity: "0.3",
@@ -91,7 +83,7 @@ export default withUt({
         },
       },
     }),
-    require('@tailwindcss/typography'),
+    // require('@tailwindcss/typography'),
   ],
   darkMode: "class",
 });
