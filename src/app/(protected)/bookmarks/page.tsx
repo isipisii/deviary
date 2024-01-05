@@ -9,21 +9,22 @@ import {
 } from "@tanstack/react-query";
 
 export default async function BookMarkpage() {
-  const queryClient = new QueryClient()
+  const queryClient = new QueryClient();
 
   await queryClient.prefetchInfiniteQuery({
     queryKey: [QueryKeys.Bookmarks],
     initialPageParam: "",
     queryFn: ({ pageParam: lastCursor }) => getBookmarks(5, lastCursor),
-    getNextPageParam: (lastPage: TPage<TBookmark[]>) => lastPage.metaData ? lastPage?.metaData.lastCursor : null,
-  })
+    getNextPageParam: (lastPage: TPage<TBookmark[]>) =>
+      lastPage.metaData ? lastPage?.metaData.lastCursor : null,
+  });
 
   return (
     <div className="p-12">
       <PageTitle>Bookmarks</PageTitle>
       <HydrationBoundary state={dehydrate(queryClient)}>
-          <BookmarksContainer />
+        <BookmarksContainer />
       </HydrationBoundary>
     </div>
-  )
+  );
 }
