@@ -63,7 +63,7 @@ function updatePostOptimisticUpdate(
   queryClient: QueryClient,
   updatedPost: TPost,
 ) {
-  //to keep the data updated in edit post page for specific post
+  //to keep the data updated in specific post in edit page
   updateRoute(`/post/edit/${updatedPost.id}`);
 
   return queryClient.setQueryData<InfiniteData<TPage<TPost[]>>>(
@@ -203,7 +203,12 @@ export function useDeletePost(closeModal?: () => void) {
       return response.data;
     },
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: [QueryKeys.Posts] });
+      await queryClient.invalidateQueries({
+        queryKey: [QueryKeys.Posts],
+      });
+      await queryClient.invalidateQueries({
+        queryKey: [QueryKeys.Bookmarks],
+      });
       if (closeModal) closeModal();
       toast.success("Posts deleted successfully");
     },
