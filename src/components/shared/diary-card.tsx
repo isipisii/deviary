@@ -3,7 +3,6 @@ import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { dracula } from "react-syntax-highlighter/dist/esm/styles/prism";
 import PostActions from "../ui/post-actions";
 import { Avatar } from "@nextui-org/react";
-import truncateString from "@/utils/truncateString";
 import PostContextMenu from "../ui/post-context-menu";
 
 interface IDiaryCard {
@@ -33,9 +32,7 @@ export default function DiaryCard({ post }: IDiaryCard) {
           </div>
           <PostContextMenu post={post} />
         </div>
-        <h1 className="text-sm font-bold">
-          {truncateString(post.diary?.title ?? "", 100)}
-        </h1>
+        <h1 className="line-clamp-3 text-sm font-bold">{post.diary?.title}</h1>
       </div>
 
       <div className="grid gap-1">
