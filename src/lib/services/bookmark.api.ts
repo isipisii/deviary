@@ -26,45 +26,6 @@ export function useGetBookmarks() {
   });
 }
 
-function optimisticUpdatePostBookmarkStatus(
-  queryClient: QueryClient,
-  status: boolean,
-  postId: string,
-  bookmarkId?: string,
-) {
-  queryClient.setQueryData<InfiniteData<TPage<TPost[]>>>(
-    [QueryKeys.Posts],
-    (oldData) => {
-      const newData = oldData
-        ? {
-            ...oldData,
-            pages: oldData.pages.map((page) => {
-              if (page) {
-                return {
-                  ...page,
-                  data: page.data
-                    ? page.data.map((data) =>
-                        data.id === postId
-                          ? {
-                              ...data,
-                              isBookmarked: status,
-                              bookmarkId,
-                            }
-                          : data,
-                      )
-                    : [],
-                };
-              }
-              return page;
-            }),
-          }
-        : oldData;
-
-      return newData;
-    },
-  );
-}
-
 export function useCreateBookmark() {
   const queryClient = useQueryClient();
   const controller = new AbortController();
@@ -93,9 +54,7 @@ export function useCreateBookmark() {
     },
     onSuccess: async (data, postId) => {
       optimisticUpdatePostBookmarkStatus(queryClient, true, postId, data.id);
-      await queryClient.invalidateQueries({
-        queryKey: [QueryKeys.Bookmarks, QueryKeys.Posts],
-      });
+      addBookmarkOptimisticUpdate(queryClient, data);
     },
     onError: (error, postId, context) => {
       queryClient.setQueryData([QueryKeys.Posts], context?.previousPosts);
@@ -103,11 +62,13 @@ export function useCreateBookmark() {
         [QueryKeys.Bookmarks],
         context?.previousBookmarks,
       );
-      // toast.error("An error occured while adding to bookmark");
     },
     onSettled: async () => {
       await queryClient.invalidateQueries({
-        queryKey: [QueryKeys.Posts, QueryKeys.Bookmarks],
+        queryKey: [QueryKeys.Posts],
+      });
+      await queryClient.invalidateQueries({
+        queryKey: [QueryKeys.Bookmarks],
       });
     },
   });
@@ -153,9 +114,6 @@ export function useRemoveBookmark() {
         variables.postId,
         undefined,
       );
-      await queryClient.invalidateQueries({
-        queryKey: [QueryKeys.Bookmarks, QueryKeys.Posts],
-      });
     },
     onError: (error, bookmark, context) => {
       queryClient.setQueryData([QueryKeys.Posts], context?.previousPosts);
@@ -165,10 +123,79 @@ export function useRemoveBookmark() {
       );
       // toast.error("An error occured while removing from bookmark");
     },
-    onSettled: () => {
-      queryClient.invalidateQueries({
-        queryKey: [QueryKeys.Posts, QueryKeys.Bookmarks],
+    onSettled: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: [QueryKeys.Posts],
+      });
+      await queryClient.invalidateQueries({
+        queryKey: [QueryKeys.Bookmarks],
       });
     },
   });
+}
+
+function optimisticUpdatePostBookmarkStatus(
+  queryClient: QueryClient,
+  status: boolean,
+  postId: string,
+  bookmarkId?: string,
+) {
+  queryClient.setQueryData<InfiniteData<TPage<TPost[]>>>(
+    [QueryKeys.Posts],
+    (oldData) => {
+      const newData = oldData
+        ? {
+            ...oldData,
+            pages: oldData.pages.map((page) => {
+              if (page) {
+                return {
+                  ...page,
+                  data: page.data
+                    ? page.data.map((data) =>
+                        data.id === postId
+                          ? {
+                              ...data,
+                              isBookmarked: status,
+                              bookmarkId,
+                            }
+                          : data,
+                      )
+                    : [],
+                };
+              }
+              return page;
+            }),
+          }
+        : oldData;
+
+      return newData;
+    },
+  );
+}
+
+function addBookmarkOptimisticUpdate(
+  queryClient: QueryClient,
+  newBookmark: TBookmark,
+) {
+  return queryClient.setQueryData<InfiniteData<TPage<TBookmark[]>>>(
+    [QueryKeys.Bookmarks],
+    (oldData) => {
+      const newData = oldData
+        ? {
+            ...oldData,
+            pages: oldData.pages.map((page, index) => {
+              if (index === 0) {
+                return {
+                  ...page,
+                  data: [newBookmark, ...(page.data ? page.data : new Array())],
+                };
+              }
+              return page;
+            }),
+          }
+        : oldData;
+
+      return newData;
+    },
+  );
 }
