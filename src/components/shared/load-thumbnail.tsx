@@ -45,6 +45,7 @@ function LoadThumbnail({ selectedImage, handleFileChange, handleRemoveImage }: I
         <input
             id="file-input"
             type="file"
+            accept="image/*"
             onChange={handleFileChange}
             className="hidden"
         />

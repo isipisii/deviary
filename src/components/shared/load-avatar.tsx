@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { Avatar, Button } from "@nextui-org/react";
 import React, { ChangeEvent } from "react";
@@ -17,37 +17,37 @@ export default function LoadAvatar({
   handleRemoveImage,
   userCurrentImage,
 }: ILoadAvatar) {
-    
   return (
-    <div 
-        className="flex flex-col items-center gap-2 relative 
-        h-[150px] w-[150px] self-center"
+    <div
+      className="relative flex h-[150px] w-[150px] flex-col 
+        items-center gap-2 self-center"
     >
-        {selectedImage && (
+      {selectedImage && (
         <Button
-            variant="flat"
-            isIconOnly
-            radius="full"
-            className="absolute top-0 -right-3 z-20 text-[1.3rem]"
-            onClick={handleRemoveImage}
+          variant="flat"
+          isIconOnly
+          radius="full"
+          className="absolute -right-3 top-0 z-20 text-[1.3rem]"
+          onClick={handleRemoveImage}
         >
-            <IoClose />
+          <IoClose />
         </Button>
-        )}
-        <label htmlFor="file-input" className="cursor-pointer">
+      )}
+      <label htmlFor="file-input" className="cursor-pointer">
         <Avatar
-            radius="full"
-            className="h-[150px] w-[150px]"
-            src={selectedImage || userCurrentImage}
-            classNames={{ base: "border-borderColor border" }}
+          radius="full"
+          className="h-[150px] w-[150px]"
+          src={selectedImage || userCurrentImage}
+          classNames={{ base: "border-borderColor border" }}
         />
-        </label>
-        <input
-            id="file-input"
-            type="file"
-            onChange={handleFileChange}
-            className="hidden"
-        />
+      </label>
+      <input
+        id="file-input"
+        type="file"
+        accept="image/*"
+        onChange={handleFileChange}
+        className="hidden"
+      />
     </div>
   );
 }
