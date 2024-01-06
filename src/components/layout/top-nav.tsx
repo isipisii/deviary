@@ -3,10 +3,7 @@
 
 import AccountDropdown from "../ui/account-dropdown";
 import { FiBell } from "react-icons/fi";
-import {
-  Button,
-  Tooltip,
-} from "@nextui-org/react";
+import { Button, Tooltip } from "@nextui-org/react";
 import ThemeToggler from "../ui/theme-toggler";
 import { Skeleton } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
@@ -16,17 +13,17 @@ export default function TopNav() {
   const { data } = useSession();
 
   return (
-    <nav className="border-b border-borderColor shadow-sm fixed w-full bg-background z-[20] top-0">
-      <div className="flex px-6 py-4 justify-between items-center w-full">
+    <nav className="fixed top-0 z-[10] w-full border-b border-borderColor bg-background shadow-sm">
+      <div className="flex w-full items-center justify-between px-6 py-4">
         {/* logo */}
         <Logo />
-        <div className="flex gap-4 items-center">
+        <div className="flex items-center gap-4">
           <ThemeToggler />
           <Tooltip content="Notifications" className="bg-background">
             <Button
               variant="bordered"
               isIconOnly
-              className="border-borderColor border-1 rounded-xl text-[1.3rem]"
+              className="rounded-xl border-1 border-borderColor text-[1.3rem]"
             >
               <FiBell />
             </Button>
@@ -35,11 +32,11 @@ export default function TopNav() {
           {data ? (
             <AccountDropdown />
           ) : (
-            <div className="w-[200px] flex items-center gap-3">
+            <div className="flex w-[200px] items-center gap-3">
               <div>
-                <Skeleton className="flex rounded-full w-10 h-10" />
+                <Skeleton className="flex h-10 w-10 rounded-full" />
               </div>
-              <div className="w-full flex flex-col gap-1">
+              <div className="flex w-full flex-col gap-1">
                 <Skeleton className="h-3 w-full rounded-lg" />
                 <Skeleton className="h-3 w-[60%] rounded-lg" />
               </div>
@@ -47,7 +44,7 @@ export default function TopNav() {
           )}
         </div>
       </div>
-    {/* </Navbar> */}
+      {/* </Navbar> */}
     </nav>
   );
 }

@@ -3,7 +3,7 @@ import { NextResponse, NextRequest } from "next/server";
 import { getServerSideSession } from "@/lib/auth";
 
 export const GET = async (request: NextRequest) => {
-  const session = await getServerSideSession()
+  const session = await getServerSideSession();
 
   try {
     // get page and lastCursor from query
@@ -11,62 +11,65 @@ export const GET = async (request: NextRequest) => {
 
     const take = Number(url.searchParams.get("take"));
     const lastCursor = url.searchParams.get("lastCursor") as string;
-    const filter = url.searchParams.get("filter")?.toString().split(",")
+    const filter = url.searchParams.get("filter")?.toString().split(",");
 
-    if(!session) {
+    if (!session) {
       return NextResponse.json(
         {
           message: "Unauthenticard, please log in first",
-          success: false
+          success: false,
         },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     const posts = await db.post.findMany({
-        //puts the where clause if there's a filter from the search params
-        ...(filter && {
-          where: {
-            tags: {
-              hasSome: filter   
-            }
-          }
-        }),
-        take: take ?? 10,
-        //same as with the filter
-        ...(lastCursor && {
-          skip: 1,
-          cursor: {
-            id: lastCursor,
+      //puts the where clause if there's a filter from the search params
+      ...(filter && {
+        where: {
+          tags: {
+            hasSome: filter,
           },
-        }),
-        orderBy: {
-          createdAt: "desc",
         },
-      
-        include: {
-          blog: true,
-          diary: true,
-          author: {
-            select: {
-              id: true,
-              name: true,
-              email: true,
-              image: true
-            }
+      }),
+      take: take ?? 10,
+      //same as with the filter
+      ...(lastCursor && {
+        skip: 1,
+        cursor: {
+          id: lastCursor,
+        },
+      }),
+      orderBy: {
+        createdAt: "desc",
+      },
+
+      include: {
+        blog: true,
+        diary: true,
+        author: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            image: true,
           },
-        }
+        },
+      },
     });
 
     //if no data remaining
     if (posts.length === 0) {
-      return NextResponse.json({
+      return NextResponse.json(
+        {
           data: [],
           metaData: {
             lastCursor: null,
             hasNextPage: false,
           },
-      }, { status: 200 })
+        },
+        { status: 200 },
+      );
     }
 
     //gets the last post's id to use in getting the next page
@@ -81,32 +84,33 @@ export const GET = async (request: NextRequest) => {
       },
     });
 
-
-    //appends an isBookmarked field to easily distinguish if a certain post is being bookrmarked by the user
+    //appends an isBookmarked field to easily distinguish if a certain post is being bookmarked by the user
     const postsWithisBookmarkedField = await Promise.all(
       posts.map(async (post) => {
-        const userId = session.user.id 
-    
-        const isBookmarked = userId ? await db.bookmark.count({
-          where: {
-            postId: post.id,
-            userId: userId
-          }
-        }) > 0 : false
+        const userId = session.user.id;
+
+        const isBookmarked = userId
+          ? (await db.bookmark.count({
+              where: {
+                postId: post.id,
+                userId: userId,
+              },
+            })) > 0
+          : false;
 
         const bookmark = await db.bookmark.findFirst({
           where: {
             postId: post.id,
-            userId: userId
+            userId: userId,
           },
           select: {
-            id: true
-          }
-        })
+            id: true,
+          },
+        });
 
-        return {...post, isBookmarked, bookmarkId: bookmark?.id}
-      })
-    )
+        return { ...post, isBookmarked, bookmarkId: bookmark?.id };
+      }),
+    );
 
     const data = {
       data: postsWithisBookmarkedField,
@@ -123,7 +127,7 @@ export const GET = async (request: NextRequest) => {
         error,
         message: "Internal Server Error",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 };
