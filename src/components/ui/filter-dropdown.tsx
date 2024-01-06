@@ -29,28 +29,28 @@ export default function FilterDropdown() {
   ];
 
   return (
-    <Dropdown className="bg-background" placement="bottom-end">
-        <DropdownTrigger>
-            <Button
-                variant="bordered"
-                size="md"
-                className="border-borderColor border-1 rounded-xl text-[1rem]"
-                startContent={<FiFilter />}
-            >
-                Filter
-            </Button>
-        </DropdownTrigger>
-        <DropdownMenu aria-label="Dynamic Actions" items={items} variant="flat">
-            {(item) => (
-                <DropdownItem
-                    key={item.key}
-                    color={item.key === "delete" ? "danger" : "default"}
-                    className={item.key === "delete" ? "text-danger" : ""}
-                >
-                    {item.label}
-                </DropdownItem>
-            )}
-        </DropdownMenu>
+    <Dropdown className=" bg-background" placement="bottom-end">
+      <DropdownTrigger>
+        <Button
+          variant="bordered"
+          size="md"
+          className="z-[5] rounded-xl border-1 border-borderColor text-[1rem]"
+          startContent={<FiFilter />}
+        >
+          Filter
+        </Button>
+      </DropdownTrigger>
+      <DropdownMenu aria-label="Dynamic Actions" items={items} variant="flat">
+        {(item) => (
+          <DropdownItem
+            key={item.key}
+            color={item.key === "delete" ? "danger" : "default"}
+            className={item.key === "delete" ? "text-danger" : ""}
+          >
+            {item.label}
+          </DropdownItem>
+        )}
+      </DropdownMenu>
     </Dropdown>
   );
 }
