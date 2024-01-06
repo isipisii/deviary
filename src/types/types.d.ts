@@ -23,7 +23,7 @@ type TPost = {
   type: "BLOG_POST" | "CODE_DIARY";
   tags: string[];
   id: readonly string;
-  author?: TUser;
+  author: TUser;
   blog?: TBlog;
   diary?: TDiary;
   isBookmarked?: boolean;
