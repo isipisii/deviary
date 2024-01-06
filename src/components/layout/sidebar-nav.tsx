@@ -24,12 +24,12 @@ export function SideBar() {
 
   return (
     <div
-      className={`fixed z-10 hidden h-screen flex-none border-r-1 border-borderColor bg-background
-      pt-[90px] shadow-lg transition-all duration-1000 ease-in-out md:block ${
+      className={`group fixed z-[5] hidden h-screen flex-none border-r-1 border-borderColor
+      shadow-lg transition-all duration-1000 ease-in-out md:block ${
         isSideBarMinimized ? "w-[90px]" : "w-[290px]"
       }`}
     >
-      <div className="absolute -right-5  top-[5.5rem] z-20">
+      <div className="absolute -right-5 top-[5.5rem] z-20 hidden group-hover:block">
         <Tooltip
           content={isSideBarMinimized ? "Maximize" : "Minimize"}
           className="z-40 bg-background"
@@ -49,7 +49,7 @@ export function SideBar() {
         </Tooltip>
       </div>
 
-      <div className="h-full w-full  overflow-y-auto">
+      <div className="h-full w-full overflow-y-auto bg-background pt-[90px]">
         <div className="my-4 flex flex-col gap-8 p-4">
           {sideBarNavs.map((nav, index) => (
             <SideBarNav key={index} title={nav.title} items={nav.items} />
