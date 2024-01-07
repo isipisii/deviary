@@ -1,13 +1,42 @@
+"use client";
+
 import { Tooltip, Button } from "@nextui-org/react";
 import { useRouter } from "next-nprogress-bar";
 import { FaRegComments } from "react-icons/fa";
 import { TbArrowBigUp, TbShare3 } from "react-icons/tb";
+import { cn } from "@/utils/cn";
 
-export default function PostActions({ postId }: { postId: string }) {
+type TOrientation = "vertical" | "horizontal";
+
+const orientationTypes: Record<string, string> = {
+  vertical: "gap-4 flex-col",
+  horizontal: "justify-between",
+};
+
+export default function PostActions({
+  post,
+  orientation,
+}: {
+  post: TPost;
+  orientation?: TOrientation;
+}) {
   const router = useRouter();
+  const href = `/@${post.author.name.split(" ").join(".")}/${
+    post.blog
+      ? formatTitle(post.blog?.title, post.id)
+      : formatTitle(post.diary?.title as string, post.id)
+  }`;
+  const selectedOrientation = orientationTypes[orientation ?? "horizontal"];
+
+  function formatTitle(title: string, postId: string) {
+    const titleArrayWithPostId = [...title.split(" "), postId];
+    const formattedTitleWithDash = titleArrayWithPostId.join("-");
+
+    return formattedTitleWithDash;
+  }
 
   return (
-    <div className="flex items-center justify-between">
+    <div className={cn("flex items-center", selectedOrientation)}>
       <Tooltip
         placement="bottom"
         content="Upvote"
@@ -45,7 +74,7 @@ export default function PostActions({ postId }: { postId: string }) {
           isIconOnly
           className="rounded-xl bg-[#fff0] text-2xl text-[#A1A1AA] 
                 hover:bg-[#003db647] hover:text-[#639cff]"
-          onClick={() => router.push(`/post/${postId}`)}
+          onClick={() => router.push(href)}
         >
           <FaRegComments />
         </Button>
