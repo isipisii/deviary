@@ -24,14 +24,6 @@ export const authOptions: NextAuthOptions = {
                 where: {
                   email
                 },
-                include: {
-                  bookmarks:{
-                    select: {
-                      id: true,
-                      postId: true
-                    }
-                  }
-                }
               })
               
               if (!user) throw Error("Invalid credentials");
@@ -46,7 +38,6 @@ export const authOptions: NextAuthOptions = {
                   id: user.id,
                   picture: user.image,
                   onboarded: user.onboarded,
-                  bookmarks: user.bookmarks
               }
           } catch (error) {
               console.log(error);
@@ -103,7 +94,6 @@ export const authOptions: NextAuthOptions = {
         email: existingUser.email,
         picture: existingUser.image,
         onboarded: existingUser.onboarded,
-        bookmarks: existingUser.bookmarks
       }
     },
 
@@ -115,7 +105,6 @@ export const authOptions: NextAuthOptions = {
         session.user.email = token.email;
         session.user.image = token.picture;
         session.user.onboarded = token.onboarded as boolean
-        session.user.bookmarks = token.bookmarks as { postId?: string, id?: string }[]
       }
 
       return session;
