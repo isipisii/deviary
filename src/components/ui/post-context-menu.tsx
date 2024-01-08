@@ -34,7 +34,7 @@ export default function PostContextMenu({
   const [isBookmarked, setIsBookmarked] = useState(post.isBookmarked);
   const { data } = useSession();
   const router = useRouter();
-  const items =
+  const contextMenuItems =
     data?.user.id === post.authorId
       ? postContextMenuItems
       : postContextMenuItems.filter(
@@ -85,7 +85,7 @@ export default function PostContextMenu({
             variant="light"
             size="sm"
             isIconOnly
-            className={cn("rounded-lg text-[1.2rem]", {
+            className={cn("rounded-lg text-[1.2rem] z-[5]", {
               "text-white": postType === "BLOG_POST",
             })}
             startContent={<GoKebabHorizontal />}
@@ -93,7 +93,7 @@ export default function PostContextMenu({
         </DropdownTrigger>
         <DropdownMenu
           aria-label="Dynamic Actions"
-          items={items}
+          items={contextMenuItems}
           variant="flat"
           disabledKeys={
             isAddingBookmark || isRemovingBookmark ? ["bookmark"] : undefined
