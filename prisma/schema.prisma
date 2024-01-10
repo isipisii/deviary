@@ -29,6 +29,7 @@ model Account {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
+  @@map("accounts")
 }
 
 model Session {
@@ -37,6 +38,8 @@ model Session {
   userId       String  @db.ObjectId
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
 }
 
 model Social {
@@ -45,6 +48,8 @@ model Social {
   facebook     String?
   userId       String @db.ObjectId @unique
   user         User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("socials")
 }
 
 model User {
@@ -63,6 +68,7 @@ model User {
   bookmarks       Bookmark[]
   // GuildMember     GuildMember[]
   comments        Comment[]
+  replies         Reply[]
 
   guildsBelongId  String[] @db.ObjectId
   guildsBelong     Guild[]  @relation("GuildMembers", fields: [guildsBelongId], references: [id])
@@ -73,7 +79,7 @@ model User {
   createdAt       DateTime  @default(now()) @map(name: "created_at")
   updatedAt       DateTime  @updatedAt @map(name: "updated_at")
 
-
+  @@map("users")
 }
 
 model Guild {
@@ -90,6 +96,8 @@ model Guild {
   updatedAt       DateTime  @default(now()) @map(name: "updated_at")
 
   // GuildMember     GuildMember[]
+
+  @@map("guilds")
 }
 
 // model GuildMember {
@@ -105,6 +113,8 @@ model Blog {
   title         String
   content       String
   thumbnail     Image
+
+  @@map("blogs")
 }
 
 model Post {
@@ -121,6 +131,8 @@ model Post {
   updatedAt     DateTime  @default(now()) @map(name: "updated_at")
   bookmarks      Bookmark[]
   comments       Comment[]
+
+  @@map("posts")
 }
 
 model Diary {
@@ -131,6 +143,8 @@ model Diary {
   codeSnippet    String?
   description    String
   solution       String
+
+  @@map("diaries")
 }
 
 model Bookmark {
@@ -142,19 +156,48 @@ model Bookmark {
   
   createdAt     DateTime  @default(now()) @map(name: "created_at")
   updatedAt     DateTime  @default(now()) @map(name: "updated_at")
+
+  @@map("bookmarks")
 }
 
 
+model Reply {
+  id             String   @id @default(auto()) @map("_id") @db.ObjectId
+  content        String 
+
+  commentId      String   @db.ObjectId
+  comment        Comment  @relation(fields: [commentId], references: [id], onDelete: Cascade)
+
+  userId         String   @db.ObjectId
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  parentReplyId  String?  @db.ObjectId
+  parentReply    Reply?   @relation("ParentReply", fields: [parentReplyId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  childReplies   Reply[]  @relation("ParentReply")
+
+  createdAt      DateTime @default(now()) @map(name: "created_at")
+  updatedAt      DateTime @default(now()) @map(name: "updated_at")
+
+  @@map("replies")
+}
+
 model Comment {
   id           String @id @default(auto()) @map("_id") @db.ObjectId
+  content      String     
+  
   userId       String @db.ObjectId
-  user          User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  content      String 
+  user         User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   postId       String @db.ObjectId
   post         Post @relation(fields: [postId], references: [id], onDelete: Cascade)
 
-  createdAt     DateTime  @default(now()) @map(name: "created_at")
-  updatedAt     DateTime  @default(now()) @map(name: "updated_at")
+  createdAt    DateTime  @default(now()) @map(name: "created_at")
+  updatedAt    DateTime  @default(now()) @map(name: "updated_at")
+
+  replies      Reply[]
+
+  @@map("comments")
 }
 
 enum PostType  {
