@@ -52,8 +52,9 @@ export const PATCH = async (request: NextRequest, { params }: TParams) => {
       },
       { status: 200 },
     );
+
   } catch (error) {
-    NextResponse.json(
+    return NextResponse.json(
       {
         error,
         message: "Internal Server Error",
@@ -93,7 +94,7 @@ export const DELETE = async (request: NextRequest, { params }: TParams) => {
       { status: 200 },
     );
   } catch (error) {
-    NextResponse.json(
+    return NextResponse.json(
       {
         error,
         message: "Internal Server Error",

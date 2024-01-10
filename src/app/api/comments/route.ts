@@ -83,7 +83,7 @@ export const GET = async (request: NextRequest) => {
       { status: 200 },
     );
   } catch (error) {
-    NextResponse.json(
+    return NextResponse.json(
       {
         error,
         message: "Internal Server Error",
@@ -149,7 +149,7 @@ export const POST = async (request: NextRequest) => {
     );
 
   } catch (error) {
-    NextResponse.json(
+    return NextResponse.json(
       {
         error,
         message: "Internal Server Error",
