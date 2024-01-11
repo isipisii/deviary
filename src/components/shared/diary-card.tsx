@@ -1,4 +1,5 @@
 "use client";
+
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { dracula } from "react-syntax-highlighter/dist/esm/styles/prism";
 import PostActions from "../ui/post-actions";
@@ -49,7 +50,7 @@ export default function DiaryCard({ post }: IDiaryCard) {
         >
           {post.diary?.codeSnippet as string}
         </SyntaxHighlighter>
-        <PostActions postId={post.id} />
+        <PostActions post={post} />
       </div>
     </div>
   );
