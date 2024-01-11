@@ -12,6 +12,7 @@ import { toast } from "sonner";
 import { UseFormReturn } from "react-hook-form";
 import { QueryKeys } from "../constants";
 import { updateRoute } from "../actions";
+import { formatTitleWithId } from "@/utils/fornatTitleWithId";
 
 export async function getFeedPosts(
   take: number,
@@ -33,64 +34,6 @@ export function useGetFeedPosts(filter?: string[]) {
     getNextPageParam: (lastPage) =>
       lastPage.metaData ? lastPage?.metaData.lastCursor : null,
   });
-}
-
-function createPostOptimisticUpdate(queryClient: QueryClient, newPost: TPost) {
-  return queryClient.setQueryData<InfiniteData<TPage<TPost[]>>>(
-    [QueryKeys.Posts],
-    (oldData) => {
-      const newData = oldData
-        ? {
-            ...oldData,
-            pages: oldData.pages.map((page, index) => {
-              if (index === 0) {
-                return {
-                  ...page,
-                  data: [newPost, ...(page.data ? page.data : new Array())],
-                };
-              }
-              return page;
-            }),
-          }
-        : oldData;
-
-      return newData;
-    },
-  );
-}
-
-function updatePostOptimisticUpdate(
-  queryClient: QueryClient,
-  updatedPost: TPost,
-) {
-  //to keep the data updated in specific post in edit page
-  updateRoute(`/post/edit/${updatedPost.id}`);
-
-  return queryClient.setQueryData<InfiniteData<TPage<TPost[]>>>(
-    [QueryKeys.Posts],
-    (oldData) => {
-      const newData = oldData
-        ? {
-            ...oldData,
-            pages: oldData.pages.map((page) => {
-              if (page) {
-                return {
-                  ...page,
-                  data: page.data
-                    ? page.data.map((data) =>
-                        data.id === updatedPost.id ? updatedPost : data,
-                      )
-                    : [],
-                };
-              }
-              return page;
-            }),
-          }
-        : oldData;
-
-      return newData;
-    },
-  );
 }
 
 export function useCreateBlogPost(clearForm: () => void) {
@@ -138,7 +81,6 @@ export function useUpdateBlogPost() {
       toast.success("Blog post updated sucessfully");
     },
     onError: (error: AxiosError<ErrorResponse>) => {
-      console.log(error);
       toast.error(error.response?.data?.message);
     },
   });
@@ -188,7 +130,6 @@ export function useUpdateDiary() {
       router.push("/feed");
     },
     onError: (error: AxiosError<ErrorResponse>) => {
-      console.log(error);
       toast.error(error.response?.data?.message);
     },
   });
@@ -217,4 +158,81 @@ export function useDeletePost(closeModal?: () => void) {
       toast.error(error.response?.data.message);
     },
   });
+}
+
+
+function createPostOptimisticUpdate(queryClient: QueryClient, newPost: TPost) {
+  return queryClient.setQueryData<InfiniteData<TPage<TPost[]>>>(
+    [QueryKeys.Posts],
+    (oldData) => {
+      const newData = oldData
+        ? {
+            ...oldData,
+            pages: oldData.pages.map((page, index) => {
+              if (index === 0) {
+                return {
+                  ...page,
+                  data: [newPost, ...(page.data ? page.data : new Array())],
+                };
+              }
+              return page;
+            }),
+          }
+        : oldData;
+
+      return newData;
+    },
+  );
+}
+
+function updatePostOptimisticUpdate(
+  queryClient: QueryClient,
+  updatedPost: TPost,
+) {
+  //to keep the data updated in specific post in edit page
+  updateRoute(`/post/edit/${updatedPost.id}`);
+
+  if (updatedPost.type === "BLOG_POST") {
+    updateRoute(
+      `/@${updatedPost.author.name.split(" ").join(".")}/${formatTitleWithId(
+        updatedPost.blog?.title as string,
+        updatedPost.id,
+      )}`,
+    );
+  }
+
+  if (updatedPost.type === "CODE_DIARY") {
+    updateRoute(
+      `/@${updatedPost.author.name.split(" ").join(".")}/${formatTitleWithId(
+        updatedPost.diary?.title as string,
+        updatedPost.id,
+      )}`,
+    );
+  }
+
+  return queryClient.setQueryData<InfiniteData<TPage<TPost[]>>>(
+    [QueryKeys.Posts],
+    (oldData) => {
+      const newData = oldData
+        ? {
+            ...oldData,
+            pages: oldData.pages.map((page) => {
+              if (page) {
+                return {
+                  ...page,
+                  data: page.data
+                    ? page.data.map((data) =>
+                        data.id === updatedPost.id ? updatedPost : data,
+                      )
+                    : [],
+                };
+              }
+              return page;
+            }),
+          }
+        : oldData;
+
+      return newData;
+    },
+  );
 }
