@@ -94,7 +94,7 @@ export function useRemoveBookmark() {
       return response.data.data;
     },
     onMutate: ({ postId, bookmarkId }) => {
-      optimisticUpdatePostBookmarkStatus(queryClient, false, postId);
+      optimisticUpdatePostBookmarkStatus(queryClient, false, postId, undefined);
 
       // await queryClient.cancelQueries({
       //   queryKey: [QueryKeys.Bookmarks, bookmarkId],
@@ -110,7 +110,7 @@ export function useRemoveBookmark() {
     onSuccess: async (data, variables) => {
       optimisticUpdatePostBookmarkStatus(
         queryClient,
-        true,
+        false,
         variables.postId,
         undefined,
       );
