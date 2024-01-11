@@ -50,7 +50,7 @@ export default function BlogPostCard({ post }: IBlogPostCard) {
             </p>
           </div>
           {/* blog actions */}
-          <PostActions postId={post.id} />
+          <PostActions post={post} />
         </div>
       </div>
     </div>
