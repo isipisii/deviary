@@ -20,7 +20,7 @@ export default function ThemeToggler() {
     <div>
       <Switch
         isSelected={theme === "dark"}
-        onValueChange={() => setTheme(theme === "dark" ? "light ": "dark")}
+        onValueChange={() => setTheme(theme === "dark" ? "light": "dark")}
         thumbIcon={({ isSelected, className }) =>
         isSelected ? (
           <IoSunny className={className} />
