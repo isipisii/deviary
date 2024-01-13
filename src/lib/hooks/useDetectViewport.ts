@@ -2,11 +2,11 @@ import { useEffect } from "react";
 import { useState } from "react";
 
 const SCREEN_SIZES: Record<string, number> = {
-    "xs": 375,
-    "sm": 576,
-    "md": 768,
-    "lg": 992,
-    "xl": 1200,
+    xs: 375,
+    sm: 576,
+    md: 768,
+    lg: 992,
+    xl: 1200,
 };
 
 type TScreenSize = "xs" | "sm" | "md" | "lg" | "xl"
