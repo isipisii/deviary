@@ -1,10 +1,11 @@
 "use client";
 
-import { Button, Chip } from "@nextui-org/react";
+import { Button, Chip, User } from "@nextui-org/react";
 import MarkdownPreview from "./markdown-preview";
 import { useRouter } from "next-nprogress-bar";
-import { LuChevronLeft } from "react-icons/lu";
+import { HiMiniArrowLongLeft } from "react-icons/hi2";
 import PostActions from "@/components/ui/post-actions";
+import PostContextMenu from "@/components/ui/post-context-menu";
 
 export default function BlogPost({ post }: { post: TPost }) {
   const router = useRouter();
@@ -15,54 +16,81 @@ export default function BlogPost({ post }: { post: TPost }) {
         variant="light"
         size="md"
         onClick={() => router.push("/feed")}
-        className="absolute left-5 top-5 text-sm md:text-base font-semibold rounded-xl"
+        className="absolute left-5 top-5 rounded-xl text-sm font-semibold md:text-base"
         isIconOnly
       >
-        <LuChevronLeft className="md:text-[1.7rem] text-[1.5rem]" />
+        <HiMiniArrowLongLeft className="text-[1.5rem] md:text-[2rem]" />
       </Button>
-      
-      <div className="mt-20 md:mt-10 flex gap-4 w-full items-center justify-center">
-        {/* <PostActions post={post} orientation="vertical" /> */}
-        <div className="flex w-full max-w-[900px] flex-col gap-4">
-          <img
-            src={post.blog?.thumbnail?.imageUrl as string}
-            alt="thumbnail"
-            className="h-[180px] w-full rounded-tl-2xl rounded-tr-2xl object-cover md:h-[300px] px-[20px]"
-          />
 
-          <div className="w-full">
-            <div className="flex flex-col gap-4 px-[20px]">
-              <div>
-                <h1 className="text-[2rem] font-bold md:text-[2.5rem]">
-                  {post.blog?.title}
-                </h1>
-                <p className="text-navTextColor text-sm">{post.author.name}</p>
+      <div className="mt-20 flex w-full items-center justify-center sm:mt-[3.5rem] ">
+        <div 
+          className="flex w-full max-w-[1500px] flex-col-reverse 
+          justify-center gap-4 p-0 lg:flex-row md:p-4"
+        >
+          
+          {/* RIGHT */}
+          <div className="flex w-full lg:max-w-[700px] flex-col gap-4 lg:order-none order-1">
+            <img
+              src={post.blog?.thumbnail?.imageUrl as string}
+              alt="thumbnail"
+              className="h-[200px] w-full object-cover px-[20px] md:h-[400px]"
+            />
+
+            <div className="w-full">
+              <div className="flex flex-col gap-4 px-[20px]">
+                <div>
+                  <h1 className="text-[2rem] font-bold md:text-[2.5rem]">
+                    {post.blog?.title}
+                  </h1>
+                  <p className="text-sm text-navTextColor">
+                    {post.author.name}
+                  </p>
+                </div>
+                <div className="flex gap-2">
+                  {post.tags.map((tag, index) => (
+                    <Chip
+                      radius="full"
+                      size="md"
+                      color="secondary"
+                      variant="flat"
+                      classNames={{
+                        base: "border-none",
+                      }}
+                      key={index}
+                    >
+                      #{tag}
+                    </Chip>
+                  ))}
+                </div>
               </div>
-              <div className="flex gap-2">
-                {post.tags.map((tag, index) => (
-                  <Chip
-                    radius="full"
-                    size="md"
-                    color="secondary"
-                    variant="flat"
-                    classNames={{
-                      base: "border-none",
-                    }}
-                    key={index}
-                  >
-                    #{tag}
-                  </Chip>
-                ))}
-              </div>
+              <MarkdownPreview modelValue={post.blog?.content as string} />
             </div>
-            <MarkdownPreview modelValue={post.blog?.content as string} />
           </div>
+          
+          {/* LEFT */}
+          <div className="p-[20px] md:p-0 w-full lg:max-w-[400px] ">
+            <div
+              className=" flex h-[150px] 
+              w-full flex-col justify-between rounded-2xl
+              border border-borderColor p-4 md:sticky md:top-[5.5rem] md:m-0 order-last"
+            > 
+              <div className="flex justify-between">
+                <User
+                  as="button"
+                  avatarProps={{
+                    src: post.author.image ?? "",
+                  }}
+                  className="self-start transition-transform"
+                  description={post.author.email}
+                  name={post.author.name}
+                />
+                <PostContextMenu post={post} postType="BLOG_POST" />
+              </div>
+              <PostActions post={post} />
+            </div>
+          </div>
+          
         </div>
-        
-        {/* <div className="border h-[200px] w-[200px]">
-            
-        </div> */}
-
       </div>
     </>
   );
