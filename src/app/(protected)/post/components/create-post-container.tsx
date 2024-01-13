@@ -9,9 +9,9 @@ export default function CreatePostContainer() {
   const [selectedTabItem, setSelectedTabItem] = useState("blog-post")
   return (
     <div className="space-y-6">
-        <PostTypeTab selectedTabItem={selectedTabItem} setSelectedTabItem={setSelectedTabItem} />
-        {selectedTabItem === "blog-post" && <BlogPostForm />}
-        {selectedTabItem === "diary" && <DiaryForm />}
+      <PostTypeTab selectedTabItem={selectedTabItem} setSelectedTabItem={setSelectedTabItem} />
+      {selectedTabItem === "blog-post" && <BlogPostForm />}
+      {selectedTabItem === "diary" && <DiaryForm />}
     </div>
   )
 }
