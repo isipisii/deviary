@@ -19,7 +19,7 @@ import { useState } from "react";
 
 export type TBlogSchema = z.infer<typeof blogSchema>
 
-export default function BlogPostForm({ postToEdit }: { postToEdit?: TPost } ) {
+export default function BlogPostForm({ postToEdit }: { postToEdit?: Partial<TPost> } ) {
   const { tags, removeAllTags } = useTags(state => state)
   const [content, setContent] = useState(postToEdit?.blog?.content || "")
   const { handleFileChange, selectedImage, selectedImageFile, handleRemoveImage } = useLoadImageFile(postToEdit?.blog?.thumbnail?.imageUrl)
@@ -40,8 +40,7 @@ export default function BlogPostForm({ postToEdit }: { postToEdit?: TPost } ) {
     form.append("content", content)
 
     if(postToEdit) {
-      updateBlogPostMutation({ blogPostData: form, postId: postToEdit.id})
-      console.log(form)
+      updateBlogPostMutation({ blogPostData: form, postId: postToEdit.id as string})
     } else createBlogPostMutation(form)
   }
 

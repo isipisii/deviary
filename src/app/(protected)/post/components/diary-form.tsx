@@ -9,7 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useTags } from "@/lib/store/useTags"
 import { useCreateDiary, useUpdateDiary } from "@/lib/services/post.api"
 
-export default function DiaryForm({ postToEdit }: { postToEdit?: TPost }) {
+export default function DiaryForm({ postToEdit }: { postToEdit?: Partial<TPost> }) {
   const { tags } = useTags(state => state)
   const { watch, register, formState: { errors }, handleSubmit } = useForm<TDiarySchema>({
     resolver: zodResolver(diarySchema),
