@@ -5,7 +5,7 @@ import {
   InfiniteData,
   QueryClient,
 } from "@tanstack/react-query";
-import axios, { AxiosError } from "axios";
+import axios from "axios";
 import { toast } from "sonner";
 import { QueryKeys } from "../constants";
 
