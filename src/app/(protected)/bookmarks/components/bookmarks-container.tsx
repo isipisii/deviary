@@ -32,7 +32,7 @@ export default function BookmarksContainer() {
           <p className="text-[5rem] text-navTextColor">
             <LuBookmark />
           </p>
-          <p className="font-medium text-navTextColor">
+          <p className="font-medium text-sm md:text-base text-navTextColor text-center">
             It seems like you haven&apos;t bookmarked any posts yet.
           </p>
           <Button
@@ -48,8 +48,6 @@ export default function BookmarksContainer() {
       </div>
     );
   }
-
-  console.log(data);
 
   return (
     <CardContainer>
