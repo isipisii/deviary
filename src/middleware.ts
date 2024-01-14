@@ -1,6 +1,6 @@
 import { getToken } from "next-auth/jwt"
 import { withAuth } from "next-auth/middleware"
-import { NextResponse, NextRequest } from "next/server"
+import { NextResponse } from "next/server"
 
 // using with auth from next auth
 export default withAuth(
