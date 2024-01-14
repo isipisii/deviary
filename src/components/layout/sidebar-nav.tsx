@@ -3,14 +3,15 @@
 
 import { sideBarNavs } from "@/lib/constants";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import { LuChevronDown, LuChevronLeft } from "react-icons/lu";
 import type { IconType } from "react-icons";
 import { useSideBarNavStore } from "@/lib/store/useSideBarNavStore";
-import { Button, Tooltip, CircularProgress } from "@nextui-org/react";
+import { Button, CircularProgress } from "@nextui-org/react";
 import { cn } from "@/utils/cn";
+import CustomTooltip from "../ui/custom-tooltip";
+import { useIsActive } from "@/lib/hooks/useIsActive";
 
 export function SideBar() {
   const { isSideBarMinimized, minimizeSideBar, maximizeSideBar } =
@@ -23,16 +24,15 @@ export function SideBar() {
   }
 
   return (
-    <div
+    <aside
       className={`group fixed z-[5] hidden h-screen flex-none border-r-1 border-borderColor
       shadow-lg transition-all duration-1000 ease-in-out md:block ${
         isSideBarMinimized ? "w-[90px]" : "w-[290px]"
       }`}
     >
       <div className="absolute -right-5 top-[5.5rem] z-20 hidden group-hover:block">
-        <Tooltip
+        <CustomTooltip
           content={isSideBarMinimized ? "Maximize" : "Minimize"}
-          className="z-40 bg-background"
         >
           <Button
             className="h-[40px] w-[40px] min-w-0 rounded-full border-2 
@@ -46,7 +46,7 @@ export function SideBar() {
               delay-150 duration-1000 ease-in-out`}
             />
           </Button>
-        </Tooltip>
+        </CustomTooltip>
       </div>
 
       <div className="h-full w-full overflow-y-auto bg-background pt-[90px]">
@@ -56,16 +56,16 @@ export function SideBar() {
           ))}
         </div>
       </div>
-    </div>
+    </aside>
   );
 }
 
-export interface ISideBarNavs {
+export interface ISideBarNav {
   title: string;
   items: ISideBarNavItem[];
 }
 
-export function SideBarNav({ title, items }: ISideBarNavs) {
+export function SideBarNav({ title, items }: ISideBarNav) {
   const { isSideBarMinimized } = useSideBarNavStore((state) => state);
   const [guilds, setGuilds] = useState<ISideBarNavItem[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -161,9 +161,8 @@ export function SideBarNav({ title, items }: ISideBarNavs) {
             { "-bottom-7": seeMore },
           )}
         >
-          <Tooltip
+          <CustomTooltip
             content={seeMore ? "See less" : "See more"}
-            className="bg-background"
           >
             <Button
               className="h-[35px] w-[35px] min-w-0 rounded-full border-2 
@@ -176,14 +175,14 @@ export function SideBarNav({ title, items }: ISideBarNavs) {
                 } transition-all delay-150 duration-1000 ease-in-out`}
               />
             </Button>
-          </Tooltip>
+          </CustomTooltip>
         </div>
       )}
     </div>
   );
 }
 
-interface ISideBarNavItem {
+export interface ISideBarNavItem {
   title: string;
   href: string;
   icon?: IconType;
@@ -198,17 +197,12 @@ export function SideBarNavItem({
   type,
   imageUrl,
 }: ISideBarNavItem) {
-  const pathname = usePathname();
-  const isActive = (href: string) => pathname === href;
+  const isActive = useIsActive()
   const { isSideBarMinimized } = useSideBarNavStore((state) => state);
 
   return (
     <Link
       href={href}
-      // className={clsx(
-      //   "bg-light hover:bg-lightHover  flex items-center gap-4 p-2 rounded-[1.2rem] transition-all ease-in-out duration-1000 font-[500] text-navTextColor",
-      //   { "bg-lightHover font-[600] text-activeNavTextColor": isActive(href) }
-      // )}
       className={`flex items-center  
       gap-4 rounded-[1.2rem] bg-light p-2 text-[.9rem] font-[500] transition-all duration-1000 ease-in-out 
       hover:bg-lightHover ${

@@ -6,6 +6,7 @@ import { FaRegComments } from "react-icons/fa";
 import { TbArrowBigUp, TbShare3 } from "react-icons/tb";
 import { cn } from "@/utils/cn";
 import { formatTitleWithId } from "@/utils/fornatTitleWithId";
+import CustomTooltip from "./custom-tooltip";
 
 type TOrientation = "vertical" | "horizontal";
 
@@ -32,17 +33,9 @@ export default function PostActions({
 
   return (
     <div className={cn("flex items-center", selectedOrientation)}>
-      <Tooltip
+      <CustomTooltip
         placement="bottom"
         content="Upvote"
-        className="z-10 bg-background"
-        showArrow
-        classNames={{
-          base: [
-            // arrow color
-            "before:bg-background dark:before:bg-background",
-          ],
-        }}
       >
         <Button
           isIconOnly
@@ -51,19 +44,11 @@ export default function PostActions({
         >
           <TbArrowBigUp />
         </Button>
-      </Tooltip>
+      </CustomTooltip>
 
-      <Tooltip
+      <CustomTooltip
         placement="bottom"
         content="Comments"
-        className="z-10 bg-background"
-        showArrow
-        classNames={{
-          base: [
-            // arrow color
-            "before:bg-background dark:before:bg-background",
-          ],
-        }}
       >
         <Button
           isIconOnly
@@ -73,19 +58,12 @@ export default function PostActions({
         >
           <FaRegComments />
         </Button>
-      </Tooltip>
+      </CustomTooltip>
 
-      <Tooltip
+      
+      <CustomTooltip
         placement="bottom"
         content="Share"
-        className="z-10 bg-background"
-        showArrow
-        classNames={{
-          base: [
-            // arrow color
-            "before:bg-background dark:before:bg-background",
-          ],
-        }}
       >
         <Button
           isIconOnly
@@ -94,7 +72,7 @@ export default function PostActions({
         >
           <TbShare3 />
         </Button>
-      </Tooltip>
+      </CustomTooltip>
     </div>
   );
 }
