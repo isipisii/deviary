@@ -3,11 +3,13 @@
 
 import AccountDropdown from "../ui/account-dropdown";
 import { FiBell } from "react-icons/fi";
-import { Button, Tooltip } from "@nextui-org/react";
+import { Button } from "@nextui-org/react";
 import ThemeToggler from "../ui/theme-toggler";
-import { Skeleton } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 import Logo from "../ui/logo";
+import AccountSkeleton from "../shared/skeleton-loaders/account-skeleton";
+import CustomTooltip from "../ui/custom-tooltip";
+import MobileSidebar from "./mobile-sidebar";
 
 export default function TopNav() {
   const { data } = useSession();
@@ -16,10 +18,13 @@ export default function TopNav() {
     <nav className="fixed top-0 z-[10] w-full border-b border-borderColor bg-background shadow-sm">
       <div className="flex w-full items-center justify-between px-6 py-4">
         {/* logo */}
-        <Logo />
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
+          <MobileSidebar />
+          <Logo />
+        </div>
+        <div className="hidden items-center gap-4 md:flex">
           <ThemeToggler />
-          <Tooltip content="Notifications" className="bg-background">
+          <CustomTooltip content="Notifications">
             <Button
               variant="bordered"
               isIconOnly
@@ -27,24 +32,11 @@ export default function TopNav() {
             >
               <FiBell />
             </Button>
-          </Tooltip>
+          </CustomTooltip>
 
-          {data ? (
-            <AccountDropdown />
-          ) : (
-            <div className="flex w-[200px] items-center gap-3">
-              <div>
-                <Skeleton className="flex h-10 w-10 rounded-full" />
-              </div>
-              <div className="flex w-full flex-col gap-1">
-                <Skeleton className="h-3 w-full rounded-lg" />
-                <Skeleton className="h-3 w-[60%] rounded-lg" />
-              </div>
-            </div>
-          )}
+          {data ? <AccountDropdown /> : <AccountSkeleton />}
         </div>
       </div>
-      {/* </Navbar> */}
     </nav>
   );
 }
