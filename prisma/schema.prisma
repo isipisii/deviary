@@ -200,6 +200,14 @@ model Comment {
   @@map("comments")
 }
 
+
+model Tag {
+  id         String @id @default(auto()) @map("_id") @db.ObjectId
+  tagName    String
+
+  @@map("tags")
+}
+
 enum PostType  {
   BLOG_POST 
   CODE_DIARY
