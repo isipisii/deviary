@@ -3,13 +3,14 @@ import { NextRequest, NextResponse } from "next/server";
 import { utapi } from "@/utils/uploadthingapi";
 import { getServerSideSession } from "@/lib/auth";
 import { blogSchemaServer } from "@/lib/validators/post-validator";
+import createNonExistentTags from "@/utils/createNonExistentTags";
 
 export const POST = async (request: NextRequest) => {
     const session = await getServerSideSession()
     const body = await request.formData()
 
     const title = body.get("title")
-    const tags =  body.get("tags")?.toString().split(",")
+    const tags =  body.get("tags")?.toString().split(",") as string[]
     const thumbnail = body.get("thumbnail")
     const content = body.get("content")
 
@@ -33,6 +34,7 @@ export const POST = async (request: NextRequest) => {
             }, { status: 400 })   
         }
 
+        await createNonExistentTags(tags)
         const uploadedImage =  await utapi.uploadFiles(thumbnail)
        
         const createdPost = await db.post.create({
@@ -63,6 +65,8 @@ export const POST = async (request: NextRequest) => {
                 }
             }
         })
+
+        
         
         return NextResponse.json({
             data: createdPost,

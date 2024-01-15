@@ -3,11 +3,13 @@ import { NextRequest, NextResponse } from "next/server";
 import { diarySchema } from "@/lib/validators/post-validator";
 import { getServerSideSession } from "@/lib/auth";
 import { TDiarySchema } from "@/lib/validators/post-validator";
+import createNonExistentTags from "@/utils/createNonExistentTags";
 
 export const POST = async (request: NextRequest) => {
     const session = await getServerSideSession()
     const body = await request.json()
     const  { title, description, solution, codeSnippet, tags } = body as TDiarySchema & { tags: string }
+    const tagsArr = tags.split(",")
     const parsedDiaryData = diarySchema.safeParse({
         title,
         description,
@@ -28,9 +30,11 @@ export const POST = async (request: NextRequest) => {
             message: "Unauthenticated, please log in first"
         }, { status: 400 })
 
+        await createNonExistentTags(tagsArr)
+       
         const newDiary = await db.post.create({
             data: {
-                tags: tags.split(","),
+                tags: tagsArr,
                 type: "CODE_DIARY",
                 authorId: session.user.id,
                 diary: {
