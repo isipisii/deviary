@@ -14,7 +14,7 @@ export default async function createNonExistentTags(tags: string[]) {
 
     if(existingTags.length === 0) {
         await db.tag.createMany({
-            data: tags.map((tag) => ({ tagName: tag  })) 
+            data: tags.map((tag) => ({ tagName: tag })) 
         })
     }
 
