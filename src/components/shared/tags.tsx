@@ -45,8 +45,11 @@ export default function Tags({ initialTags }: { initialTags?: string[] }) {
   }
 
   function handleInsertSearchedTag(selectedTag: string) {
+    const tagInput = document.getElementById("tag-input")
+    
     insertTag(selectedTag);
     setTag("");
+    tagInput?.focus()
   }
 
   return (
@@ -89,6 +92,7 @@ export default function Tags({ initialTags }: { initialTags?: string[] }) {
           labelPlacement="inside"
           label="Tag (optional)"
           radius="lg"
+          id="tag-input"
           variant="bordered"
           size="sm"
           className="max-w-md"

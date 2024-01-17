@@ -1,4 +1,4 @@
-import { ISideBarNavs } from "@/components/layout/sidebar-nav"
+import { ISideBarNav } from "@/components/layout/sidebar-nav"
 import { 
     LuNewspaper, 
     LuSearch, 
@@ -27,7 +27,7 @@ export const QueryKeys = {
     Bookmarks: "bookmarks"
 }
 
-export const sideBarNavs: ISideBarNavs[] = [
+export const sideBarNavs: ISideBarNav[]  = [
     {
         title: "Discover",
         items: [
@@ -93,6 +93,15 @@ export const sideBarNavs: ISideBarNavs[] = [
 
 ]
 
+export const mobileBottomNavItems = [
+    ...sideBarNavs[0].items, {
+        title: "Bookmarks",
+        href: "/bookmarks",
+        icon: LuBookmark
+    },
+]
+export const mobileSideNavItems = sideBarNavs.filter((nav) => nav.title !==  "Discover")
+
 export const postContextMenuItems = [
     {
         label: "Bookmark",
@@ -115,5 +124,4 @@ export const postContextMenuItems = [
         key: "delete",
         icon: LuTrash
     },
-
   ]
