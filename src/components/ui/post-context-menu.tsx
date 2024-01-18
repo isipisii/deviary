@@ -62,7 +62,9 @@ export default function PostContextMenu({
         setIsBookmarked(false);
         return;
       }
-    } else {
+    }
+    
+    if(!isBookmarked){
       createBookmarkMutation(post.id);
       setIsBookmarked(true);
     }
