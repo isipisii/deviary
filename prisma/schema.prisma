@@ -69,6 +69,7 @@ model User {
   // GuildMember     GuildMember[]
   comments        Comment[]
   replies         Reply[]
+  upvotes         Upvote[]
 
   guildsBelongId  String[] @db.ObjectId
   guildsBelong     Guild[]  @relation("GuildMembers", fields: [guildsBelongId], references: [id])
@@ -131,6 +132,7 @@ model Post {
   updatedAt     DateTime  @default(now()) @map(name: "updated_at")
   bookmarks      Bookmark[]
   comments       Comment[]
+  upvotes        Upvote[]
 
   @@map("posts")
 }
@@ -159,7 +161,6 @@ model Bookmark {
 
   @@map("bookmarks")
 }
-
 
 model Reply {
   id             String   @id @default(auto()) @map("_id") @db.ObjectId
@@ -198,6 +199,20 @@ model Comment {
   replies      Reply[]
 
   @@map("comments")
+}
+
+model Upvote {
+  id            String @id @default(auto()) @map("_id") @db.ObjectId
+  userId        String @db.ObjectId
+  user          User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  postId        String @db.ObjectId
+  post          Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+  
+  createdAt     DateTime  @default(now()) @map(name: "created_at")
+  updatedAt     DateTime  @default(now()) @map(name: "updated_at")
+
+  @@map("upvotes")
 }
 
 
