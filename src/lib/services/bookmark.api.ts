@@ -8,6 +8,8 @@ import {
 import axios from "axios";
 import { toast } from "sonner";
 import { QueryKeys } from "../constants";
+import { updateRoute } from "../actions";
+import { usePathname } from "next/navigation";
 
 export async function getBookmarks(take: number, lastCursor: string) {
   const response = await axios.get("/api/bookmark", {
@@ -29,6 +31,7 @@ export function useGetBookmarks() {
 export function useCreateBookmark() {
   const queryClient = useQueryClient();
   const controller = new AbortController();
+  const path = usePathname()
 
   return useMutation({
     mutationKey: ["addBookmark"],
@@ -41,19 +44,14 @@ export function useCreateBookmark() {
     onMutate: (postId) => {
       optimisticUpdatePostBookmarkStatus(queryClient, true, postId, "");
 
-      // await queryClient.cancelQueries({
-      //   queryKey: [QueryKeys.Bookmarks],
-      // });
-      // await queryClient.cancelQueries({ queryKey: [QueryKeys.Posts] });
-
       const previousPosts = queryClient.getQueryData([QueryKeys.Posts]);
       const previousBookmarks = queryClient.getQueryData([QueryKeys.Bookmarks]);
 
       toast.success("Added to bookmarks");
       return { previousPosts, previousBookmarks };
     },
-    onSuccess: async (data, postId) => {
-      optimisticUpdatePostBookmarkStatus(queryClient, true, postId, data.id);
+    onSuccess: (data, postId) => {
+      optimisticUpdatePostBookmarkStatus(queryClient, true, postId, data.id, path);
       addBookmarkOptimisticUpdate(queryClient, data);
     },
     onError: (error, postId, context) => {
@@ -77,6 +75,7 @@ export function useCreateBookmark() {
 export function useRemoveBookmark() {
   const queryClient = useQueryClient();
   const controller = new AbortController();
+  const path = usePathname()
 
   return useMutation({
     mutationKey: ["removeBookmark"],
@@ -96,23 +95,19 @@ export function useRemoveBookmark() {
     onMutate: ({ postId, bookmarkId }) => {
       optimisticUpdatePostBookmarkStatus(queryClient, false, postId, undefined);
 
-      // await queryClient.cancelQueries({
-      //   queryKey: [QueryKeys.Bookmarks, bookmarkId],
-      // });
-      // await queryClient.cancelQueries({ queryKey: [QueryKeys.Posts, postId] });
-
       const previousPosts = queryClient.getQueryData([QueryKeys.Posts]);
       const previousBookmarks = queryClient.getQueryData([QueryKeys.Bookmarks]);
 
       toast.success("Removed from bookmarks");
       return { previousPosts, previousBookmarks };
     },
-    onSuccess: async (data, variables) => {
+    onSuccess: (data, variables) => {
       optimisticUpdatePostBookmarkStatus(
         queryClient,
         false,
         variables.postId,
         undefined,
+        path
       );
     },
     onError: (error, bookmark, context) => {
@@ -121,7 +116,6 @@ export function useRemoveBookmark() {
         [QueryKeys.Bookmarks],
         context?.previousBookmarks,
       );
-      // toast.error("An error occured while removing from bookmark");
     },
     onSettled: async () => {
       await queryClient.invalidateQueries({
@@ -139,7 +133,11 @@ function optimisticUpdatePostBookmarkStatus(
   status: boolean,
   postId: string,
   bookmarkId?: string,
+  path?: string
 ) {
+
+  if(path) updateRoute(path);
+
   queryClient.setQueryData<InfiniteData<TPage<TPost[]>>>(
     [QueryKeys.Posts],
     (oldData) => {
