@@ -8,7 +8,7 @@ import {
   dehydrate,
 } from "@tanstack/react-query";
 
-export default async function BookMarkpage() {
+export default async function BookMarkPage() {
   const queryClient = new QueryClient();
 
   await queryClient.prefetchInfiniteQuery({
