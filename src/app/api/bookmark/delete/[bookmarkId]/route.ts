@@ -19,7 +19,23 @@ export const DELETE = async (request: NextRequest, { params }: TParams) => {
                 success: false
             }, { status: 400 })
         }
-        
+
+        const existingBookmark = await db.bookmark.findUnique({
+            where: {
+                id: bookmarkId
+            },
+        });
+
+        if (!existingBookmark) {
+            return NextResponse.json(
+                {
+                message: "Post has already been unbookmarked",
+                success: false,
+                },
+                { status: 409 },
+            );
+        }
+
         await db.bookmark.delete({
             where: {
                 id: bookmarkId
