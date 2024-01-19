@@ -124,15 +124,16 @@ model Post {
   author        User   @relation(fields: [authorId], references: [id], onDelete: Cascade)
   type          PostType
   tags          String[]
+  upvoteCount   Int?
 
   diary         Diary? 
   blog          Blog?
        
   createdAt     DateTime  @default(now()) @map(name: "created_at")
   updatedAt     DateTime  @default(now()) @map(name: "updated_at")
-  bookmarks      Bookmark[]
-  comments       Comment[]
-  upvotes        Upvote[]
+  bookmarks     Bookmark[]
+  comments      Comment[]
+  upvotes       Upvote[]
 
   @@map("posts")
 }
