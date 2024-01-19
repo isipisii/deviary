@@ -28,6 +28,8 @@ type TPost = {
   diary?: TDiary;
   isBookmarked?: boolean;
   bookmarkId?: readonly string;
+  isUpvoted: boolean
+  upvoteCount: number
   authorId?: readonly string;
   createdAt: Date;
 };
