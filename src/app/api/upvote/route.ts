@@ -6,6 +6,7 @@ export const POST = async (request: NextRequest) => {
     const url = new URL(request.url)
     const postId = url.searchParams.get("postId")
     const session = await getServerSideSession()
+    const userId = session?.user.id as string
 
     try {
         if(!session) {
@@ -21,10 +22,36 @@ export const POST = async (request: NextRequest) => {
             }, { status: 201 })
         }
 
+        const existingUpvote = await db.upvote.findFirst({
+            where: {
+                userId: userId,
+                postId 
+            }
+        })
+
+        if(existingUpvote) {
+            return NextResponse.json({
+                message: "You have an existing upvote, for this specific post",
+                success: false
+            }, { status: 400 })
+        }
+
         await db.upvote.create({
             data: {
-                userId: session?.user.id,
+                userId: userId,
                 postId
+            }
+        })
+
+        //increase the upvote count by 1
+        await db.post.update({
+            where:{
+                id: postId
+            },
+            data: {
+                upvoteCount: {
+                    increment: 1
+                }
             }
         })
 
@@ -44,6 +71,7 @@ export const DELETE = async (request: NextRequest) => {
     const url = new URL(request.url)
     const postId = url.searchParams.get("postId")
     const session = await getServerSideSession()
+    const userId = session?.user.id as string
 
     try {
         if(!session) {
@@ -53,25 +81,44 @@ export const DELETE = async (request: NextRequest) => {
             }, { status: 400 })
         }
         
-
         if(!postId) {
             return NextResponse.json({
                 message: "Missing post id"
             }, { status: 201 })
         }
 
-        const upvote =  await db.upvote.findFirst({
+        const existingUpvote =  await db.upvote.findFirst({
             where: {
-                userId: session.user.id,
+                userId,
                 postId
             }
         })
 
+        if(!existingUpvote) {
+            return NextResponse.json({
+                message: "You did not upvote this post",
+                success: false
+            }, { status: 400 })
+        }
+
         await db.upvote.delete({
             where: {
-                id: upvote?.id
+                id: existingUpvote?.id
             }
         })
+
+        //decrease the upvote count by 1
+        await db.post.update({
+            where: {
+                id: postId
+            },
+            data: {
+                upvoteCount: {
+                    decrement: 1
+                }
+            }
+        })
+
 
         return NextResponse.json({
             message: "Upvote removed"
