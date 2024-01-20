@@ -4,7 +4,8 @@ import { getServerSideSession } from "@/lib/auth";
 
 export const GET = async (request: NextRequest) => {
     const session = await getServerSideSession()
-
+    const userId = session?.user.id as string
+    
     try {
         const url = new URL(request.url)
         const take = Number(url.searchParams.get("take"));
@@ -43,6 +44,16 @@ export const GET = async (request: NextRequest) => {
                                 email: true,
                                 image: true
                             }
+                        },
+                        _count: {
+                            select: {
+                                upvotes: {
+                                    where: { userId },
+                                  },
+                                  bookmarks: {
+                                    where: { userId },
+                                  },
+                            }
                         }
                     },
                 },
@@ -70,12 +81,52 @@ export const GET = async (request: NextRequest) => {
             },
         });
 
-        const bookmarksWithIsBookmarkedField = bookmarks.map(bookmark => (
-            {...bookmark, post: {...bookmark.post, isBookmarked: true, bookmarkId: bookmark.id}}
-        ))
+        // const bookmarksWithIsBookmarkedAndIsUpvotedField = bookmarks.map(bookmark => (
+        //     {...bookmark, post: {...bookmark.post, isBookmarked: true, bookmarkId: bookmark.id}}
+        // ))
 
+
+        // const bookmarksWithIsBookmarkedAndIsUpvotedField = await Promise.all(
+        //     bookmarks.map(async (bookmark) => {
+        //         const userId = session.user.id;
+
+        //         const isUpvoted = userId
+        //         ? (await db.upvote.count({
+        //             where: {
+        //               postId: bookmark.post.id,
+        //               userId: userId,
+        //             },
+        //           })) > 0
+        //         : false;
+      
+        //         return {
+        //             ...bookmark, 
+        //             post: {
+        //                 ...bookmark.post, 
+        //                 isBookmarked: true, 
+        //                 bookmarkId: bookmark.id, 
+        //                 isUpvoted
+        //             }
+        //         }
+        //     })
+        // )
+        
+        bookmarks.forEach((bookmark) => {
+            (bookmark as any).post.isUpvoted = bookmark.post._count.upvotes > 0;
+            (bookmark as any).post.isBookmarked =  bookmark.post._count.bookmarks > 0;
+            (bookmark as any).post.bookmarkId =  bookmark.id;
+        })
+    
+        const bookmarksWithoutAggregateField = bookmarks.map((bookmark) => {
+            const { post: {_count, ...restPost }, ...restBookmark } = bookmark
+            // const {_count, ...rest} = post
+      
+            return {...restBookmark, post: {...restPost}}
+          })
+      
+        
         const data = {
-            data: bookmarksWithIsBookmarkedField,
+            data: bookmarksWithoutAggregateField,
             metaData: {
                 lastCursor: cursor,
                 hasNextPage: nextPage.length > 0,
