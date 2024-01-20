@@ -21,7 +21,7 @@ export default function DeletePostModal({ isOpen, onOpenChange, handleDelete, is
         onOpenChange={onOpenChange}
         isDismissable={!isDeleting}
         classNames={{ 
-            backdrop: "bg-[#292f46]/50 backdrop-opacity-30 backdrop-blur-md",
+            backdrop: "bg-[#292f46]/50 backdrop-opacity-30",
             base: "border-[#292f46] bg-cardBg rounded-2xl ",
         }}
     >

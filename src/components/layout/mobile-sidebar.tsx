@@ -59,7 +59,7 @@ export default function MobileSidebar() {
       {/* backdrop */}
       {isMenuOpen && (
         <div
-          className="fixed inset-0 z-[15] h-screen w-screen bg-[#292f46]/50 backdrop-blur-md 
+          className="fixed inset-0 z-[15] h-screen w-screen bg-[#292f46]/50
           backdrop-opacity-30 transition-all duration-1000 ease-in-out md:hidden"
           onClick={closeMenu}
         />
