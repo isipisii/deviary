@@ -151,7 +151,7 @@ export function useDeletePost(closeModal?: () => void) {
         queryKey: [QueryKeys.Bookmarks],
       });
       if (closeModal) closeModal();
-      toast.success("Posts deleted successfully");
+      toast.success("Post deleted successfully");
     },
     onError: (error: AxiosError<ErrorResponse>) => {
       if (closeModal) closeModal();
