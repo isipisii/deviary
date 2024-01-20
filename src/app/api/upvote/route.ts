@@ -19,12 +19,12 @@ export const POST = async (request: NextRequest) => {
         if(!postId) {
             return NextResponse.json({
                 message: "Missing post id"
-            }, { status: 201 })
+            }, { status: 400 })
         }
 
         const existingUpvote = await db.upvote.findFirst({
             where: {
-                userId: userId,
+                userId,
                 postId 
             }
         })
@@ -38,7 +38,7 @@ export const POST = async (request: NextRequest) => {
 
         await db.upvote.create({
             data: {
-                userId: userId,
+                userId,
                 postId
             }
         })
