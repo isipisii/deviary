@@ -124,7 +124,7 @@ model Post {
   author        User   @relation(fields: [authorId], references: [id], onDelete: Cascade)
   type          PostType
   tags          String[]
-  upvoteCount   Int?
+  upvoteCount   Int @default(0)
 
   diary         Diary? 
   blog          Blog?
