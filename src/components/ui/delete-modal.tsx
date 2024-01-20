@@ -33,7 +33,7 @@ export default function DeletePostModal({ isOpen, onOpenChange, handleDelete, is
                     <p className="text-sm">This action cannot be undone. Are you sure you want to delete this post?</p>
                 </ModalBody>
                 <ModalFooter>
-                    <Button variant="light" size="md" onPress={onClose} className="rounded-xl">
+                    <Button variant="light" size="md" onPress={onClose} isDisabled={isDeleting} className="rounded-xl">
                         Cancel
                     </Button>
                     <Button 
