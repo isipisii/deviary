@@ -138,7 +138,7 @@ function optimisticUpdatePostBookmarkStatus(
 
   if(path) updateRoute(path);
 
-  queryClient.setQueryData<InfiniteData<TPage<TPost[]>>>(
+  return queryClient.setQueryData<InfiniteData<TPage<TPost[]>>>(
     [QueryKeys.Posts],
     (oldData) => {
       const newData = oldData
