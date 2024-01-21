@@ -47,5 +47,5 @@ export default withAuth(
  
 export const config = {
   // these are the paths where the middleware will run
-  matcher: ["/", "/sign-in", "/sign-up", "/guild", "/onboarding", "/feed", "/post/:path*"]
+  matcher: ["/", "/sign-in", "/sign-up", "/guild", "/onboarding", "/feed", "/post/:path*", "/search"]
 }
