@@ -42,16 +42,16 @@ export function useCreateBookmark() {
       return response.data.data as TBookmark;
     },
     onMutate: (postId) => {
-      optimisticUpdatePostBookmarkStatus(queryClient, true, postId, "");
-
       const previousPosts = queryClient.getQueryData([QueryKeys.Posts]);
       const previousBookmarks = queryClient.getQueryData([QueryKeys.Bookmarks]);
+
+      optimisticUpdatePostBookmarkStatus(queryClient, true, postId, "");
 
       toast.success("Added to bookmarks");
       return { previousPosts, previousBookmarks };
     },
     onSuccess: (data, postId) => {
-      optimisticUpdatePostBookmarkStatus(queryClient, true, postId, data.id, path);
+      optimisticUpdatePostBookmarkStatus(queryClient, true, postId, path);
       addBookmarkOptimisticUpdate(queryClient, data);
     },
     onError: (error, postId, context) => {
@@ -79,34 +79,27 @@ export function useRemoveBookmark() {
 
   return useMutation({
     mutationKey: ["removeBookmark"],
-    mutationFn: async ({
-      bookmarkId,
-      postId,
-    }: {
-      bookmarkId: string;
-      postId: string;
-    }) => {
+    mutationFn: async (postId: string) => {
       const response = await axios.delete(
-        `/api/bookmark/delete/${bookmarkId}`,
+        `/api/bookmark/delete/${postId}`,
         { signal: controller.signal },
       );
       return response.data.data;
     },
-    onMutate: ({ postId, bookmarkId }) => {
-      optimisticUpdatePostBookmarkStatus(queryClient, false, postId, undefined);
-
+    onMutate: (postId) => {
       const previousPosts = queryClient.getQueryData([QueryKeys.Posts]);
       const previousBookmarks = queryClient.getQueryData([QueryKeys.Bookmarks]);
+
+      optimisticUpdatePostBookmarkStatus(queryClient, false, postId, undefined);
 
       toast.success("Removed from bookmarks");
       return { previousPosts, previousBookmarks };
     },
-    onSuccess: (data, variables) => {
+    onSuccess: (data, postId) => {
       optimisticUpdatePostBookmarkStatus(
         queryClient,
         false,
-        variables.postId,
-        undefined,
+        postId,
         path
       );
     },
@@ -132,7 +125,6 @@ function optimisticUpdatePostBookmarkStatus(
   queryClient: QueryClient,
   status: boolean,
   postId: string,
-  bookmarkId?: string,
   path?: string
 ) {
 
@@ -154,7 +146,6 @@ function optimisticUpdatePostBookmarkStatus(
                           ? {
                               ...data,
                               isBookmarked: status,
-                              bookmarkId,
                             }
                           : data,
                       )
