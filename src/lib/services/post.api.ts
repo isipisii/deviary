@@ -150,13 +150,14 @@ export function useDeletePost(closeModal?: () => void) {
       await queryClient.invalidateQueries({
         queryKey: [QueryKeys.Bookmarks],
       });
-      if (closeModal) closeModal();
       toast.success("Post deleted successfully");
     },
     onError: (error: AxiosError<ErrorResponse>) => {
-      if (closeModal) closeModal();
       toast.error(error.response?.data.message);
     },
+    onSettled: () => {
+      if (closeModal) closeModal();
+    }
   });
 }
 
