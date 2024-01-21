@@ -27,7 +27,6 @@ type TPost = {
   blog?: TBlog;
   diary?: TDiary;
   isBookmarked?: boolean;
-  bookmarkId?: readonly string;
   isUpvoted: boolean
   upvoteCount: number
   authorId?: readonly string;
