@@ -114,7 +114,6 @@ export const GET = async (request: NextRequest) => {
         bookmarks.forEach((bookmark) => {
             (bookmark as any).post.isUpvoted = bookmark.post._count.upvotes > 0;
             (bookmark as any).post.isBookmarked =  bookmark.post._count.bookmarks > 0;
-            (bookmark as any).post.bookmarkId =  bookmark.id;
         })
     
         const bookmarksWithoutAggregateField = bookmarks.map((bookmark) => {
