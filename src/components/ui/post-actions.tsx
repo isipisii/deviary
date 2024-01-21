@@ -7,7 +7,7 @@ import { TbArrowBigUp, TbArrowBigUpFilled, TbShare3 } from "react-icons/tb";
 import { cn } from "@/utils/cn";
 import { formatTitleWithId } from "@/utils/fornatTitleWithId";
 import CustomTooltip from "./custom-tooltip";
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { useUpvote, useRemoveUpvote } from "@/lib/services/upvote.api";
 
 type TOrientation = "vertical" | "horizontal";
@@ -34,17 +34,22 @@ export default function PostActions({
 
   const { mutate: upvoteMutation, isPending } = useUpvote();
   const { mutate: removeUpvoteMutation } = useRemoveUpvote();
-  // const [upvoteCount, setUpvoteCount] = useState(post.upvoteCount ?? 0)
-  // const [isUpvoted, setIsUpvoted] = useState(post.isUpvoted);
 
-  function handleToggleUpvote() {
+  // const [isUpvoted, setIsUpvoted] = useState(post.isUpvoted)
+  // const [upvoteCount, setUpvoteCount] = useState(post.upvoteCount)
+  
+  const handleToggleUpvote = useCallback(() => {
     if (post.isUpvoted) {
       removeUpvoteMutation(post.id)
+      // setUpvoteCount(prevCount => prevCount - 1)
+      // setIsUpvoted(false)
       return 
     }
     upvoteMutation(post.id);
-  }
-
+    // setUpvoteCount(prevCount => prevCount + 1)
+    // setIsUpvoted(true)
+  }, [post.id, removeUpvoteMutation, upvoteMutation, post.isUpvoted])
+  
   return (
     <div className={cn("flex items-center", selectedOrientation)}>
       <div className="flex items-center gap-1">
