@@ -137,7 +137,7 @@ function SearchedTags({
   handleInsertSearchedTag,
 }: ISearchedTags) {
   return (
-    <div className="w-full max-w-md rounded-xl border-2 border-borderColor p-1 ">
+    <div className="w-full max-w-md max-h-[200px] overflow-auto rounded-xl border-2 border-borderColor p-1 ">
       <Listbox
         aria-label="Single selection"
         variant="flat"
