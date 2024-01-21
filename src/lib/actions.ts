@@ -7,7 +7,6 @@ export const updateRoute = async (path: string) => {
 };
 
 export async function getPostById(postId: string, authenticatedUserId: string) {
-
   const post = await db.post.findUnique({
     where: {
       id: postId,
@@ -23,29 +22,26 @@ export async function getPostById(postId: string, authenticatedUserId: string) {
           image: true,
         },
       },
+      _count: {
+        select: {
+          upvotes: {
+            where: { userId: authenticatedUserId },
+          },
+          bookmarks: {
+            where: { userId: authenticatedUserId },
+          },
+        },
+      },
     },
-  }) as TPost;
+  });
 
-  const bookmark = await db.bookmark.findFirst({
-    where: {
-      userId: authenticatedUserId,
-      postId: postId
-    },
-    select: {
-      id: true
-    }
-  })
+  if (post) {
+    const { _count, ...rest } = post;
 
-  const isBookmarked = authenticatedUserId ? await db.bookmark.count({
-    where: {
-      postId: post.id,
-      userId: authenticatedUserId
-    }
-  }) > 0 : false
-
-  return  {
-    ...post,
-    isBookmarked,
-    bookmarkId: bookmark?.id ?? undefined
+    return {
+      ...rest,
+      isUpvoted: post._count?.upvotes > 0,
+      isBookmarked: post._count.bookmarks > 0,
+    } as TPost;
   }
 }
