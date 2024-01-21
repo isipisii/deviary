@@ -6,7 +6,7 @@ import {
   DropdownItem,
   Button,
 } from "@nextui-org/react";
-import { useState } from "react";
+import { useState, useCallback} from "react";
 import { GoKebabHorizontal } from "react-icons/go";
 import { cn } from "@/utils/cn";
 import { postContextMenuItems } from "@/lib/constants";
@@ -17,8 +17,8 @@ import {
 } from "@/lib/services/bookmark.api";
 import { useRouter } from "next-nprogress-bar";
 import { useDisclosure } from "@nextui-org/react";
-import DeletePostModal from "./delete-modal";
 import { useSession } from "next-auth/react";
+import ConfirmationModal from "./confirmation-modal";
 
 interface IPostContextMenu {
   postType?: "BLOG_POST" | "CODE_DIARY";
@@ -52,31 +52,31 @@ export default function PostContextMenu({
     deletePostMutation(post.id);
   }
 
-  function handleToggleBookmark() {
+  const handleToggleBookmark = useCallback(()=> {
     if (isBookmarked) {
-      if (post.bookmarkId) {
-        removeBookmarkMutation({
-          bookmarkId: post.bookmarkId,
-          postId: post.id,
-        });
-        setIsBookmarked(false);
-        return;
-      }
+      removeBookmarkMutation(post.id);
+      setIsBookmarked(false);
+      return;
     }
     
     if(!isBookmarked){
       createBookmarkMutation(post.id);
       setIsBookmarked(true);
     }
-  }
+  },[createBookmarkMutation, isBookmarked, post.id, removeBookmarkMutation])
 
   return (
     <>
-      <DeletePostModal
+      <ConfirmationModal
         isOpen={isOpen}
         onOpenChange={onOpenChange}
-        handleDelete={handleDeletePost}
-        isDeleting={isPending}
+        action={handleDeletePost}
+        isPending={isPending}
+        modalTextContent={{
+          header: "Delete post?",
+          body: "This action cannot be undone. Are you sure you want to delete this post?"
+        }}
+        isDelete
       />
       <Dropdown
         className={cn("rounded-xl bg-cardBg", className)}
