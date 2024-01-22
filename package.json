@@ -34,6 +34,7 @@
     "react-icons": "^4.11.0",
     "react-intersection-observer": "^9.5.3",
     "react-syntax-highlighter": "^15.5.0",
+    "reading-time": "^1.5.0",
     "sonner": "^1.2.0",
     "tailwind-merge": "^2.2.0",
     "uploadthing": "^6.0.3",
