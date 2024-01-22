@@ -3,7 +3,7 @@ import { db } from "@/lib/prisma";
 
 export const GET = async (request: NextRequest) => {
   const url = new URL(request.url);
-  const query = url.searchParams.get("query") as string;
+  const query = url.searchParams.get("query")?.trim().replaceAll(" ", "-");
 
   try {
     const tags = await db.tag.findMany({
