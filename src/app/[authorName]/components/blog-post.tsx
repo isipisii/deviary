@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { Button, Chip, User } from "@nextui-org/react";
@@ -6,9 +7,12 @@ import { useRouter } from "next-nprogress-bar";
 import { HiMiniArrowLongLeft } from "react-icons/hi2";
 import PostActions from "@/components/ui/post-actions";
 import PostContextMenu from "@/components/ui/post-context-menu";
+import formatDate from "@/utils/formatDate";
+import readingTime from "reading-time";
 
 export default function BlogPost({ post }: { post: TPost }) {
   const router = useRouter();
+  const { text: estimatedReadingTime } = readingTime(post.blog?.content as string)
 
   return (
     <>
@@ -35,18 +39,18 @@ export default function BlogPost({ post }: { post: TPost }) {
               alt="thumbnail"
               className="h-[200px] w-full object-cover px-[20px] md:h-[400px]"
             />
-
+    
             <div className="w-full">
               <div className="flex flex-col gap-4 px-[20px]">
-                <div>
+                <div className="space-y-3">
                   <h1 className="text-[2rem] font-bold md:text-[2.5rem]">
                     {post.blog?.title}
-                  </h1>
+                  </h1>       
                   <p className="text-sm text-navTextColor">
-                    {post.author.name}
+                   {formatDate(post.createdAt)} • {estimatedReadingTime}
                   </p>
                 </div>
-                <div className="flex gap-2">
+                <div className="flex gap-2 flex-wrap">
                   {post.tags.map((tag, index) => (
                     <Chip
                       radius="full"
@@ -54,7 +58,7 @@ export default function BlogPost({ post }: { post: TPost }) {
                       color="secondary"
                       variant="flat"
                       classNames={{
-                        base: "border-none",
+                        base: "border-none font-semibold",
                       }}
                       key={index}
                     >
@@ -84,7 +88,10 @@ export default function BlogPost({ post }: { post: TPost }) {
                   description={post.author.email}
                   name={post.author.name}
                 />
-                <PostContextMenu post={post} postType="BLOG_POST" />
+                <PostContextMenu 
+                  post={post} 
+                  className="bg-background border-[1px] border-borderColor" 
+                />
               </div>
               <PostActions post={post} />
             </div>
