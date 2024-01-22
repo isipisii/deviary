@@ -5,6 +5,7 @@ import { dracula } from "react-syntax-highlighter/dist/esm/styles/prism";
 import PostActions from "../ui/post-actions";
 import { Avatar } from "@nextui-org/react";
 import PostContextMenu from "../ui/post-context-menu";
+import formatDate from "@/utils/formatDate";
 
 interface IDiaryCard {
   post: TPost;
@@ -27,7 +28,7 @@ export default function DiaryCard({ post }: IDiaryCard) {
             <div>
               <p className="text-sm font-semibold">{post.author?.name}</p>
               <p className="text-[.7rem] text-[#878080]">
-                {new Date(post.createdAt).toLocaleDateString()}
+                {formatDate(post.createdAt)}
               </p>
             </div>
           </div>
