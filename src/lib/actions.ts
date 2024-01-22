@@ -1,4 +1,5 @@
 "use server";
+
 import { revalidatePath } from "next/cache";
 import { db } from "./prisma";
 
@@ -40,8 +41,8 @@ export async function getPostById(postId: string, authenticatedUserId: string) {
 
     return {
       ...rest,
-      isUpvoted: post._count?.upvotes > 0,
-      isBookmarked: post._count.bookmarks > 0,
+      isUpvoted: _count?.upvotes > 0,
+      isBookmarked: _count.bookmarks > 0,
     } as TPost;
   }
 }
