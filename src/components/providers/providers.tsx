@@ -9,7 +9,14 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { AppProgressBar as ProgressBar } from 'next-nprogress-bar';
 
 export default function Providers({ children }: { children: ReactNode }) {
-  const [queryClient] = useState(() => new QueryClient())
+  const [queryClient] = useState(() => new QueryClient({
+    defaultOptions: {
+      queries: {
+        staleTime: 60 * 1000,
+        refetchInterval:  60 * 1000 , 
+      }
+    }
+  }))
 
   return (
     <SessionProvider>
