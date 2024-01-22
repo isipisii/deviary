@@ -23,19 +23,18 @@ export default function AccountDropdown() {
   const { data } = useSession();
   const router = useRouter();
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
-  const [isPending, setIsPending] = useState(false)
+  const [isPending, setIsPending] = useState(false);
 
-  async function handleLogout(){
+  async function handleLogout() {
     try {
-      setIsPending(true)
+      setIsPending(true);
       await signOut();
-      setIsPending(false)
-
+      setIsPending(false);
+      onClose();
       router.push("/sign-in");
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-  
   }
   return (
     <>
