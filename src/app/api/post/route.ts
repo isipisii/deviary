@@ -95,43 +95,6 @@ export const GET = async (request: NextRequest) => {
       },
     });
 
-    //appends an isBookmarked and  field to easily distinguish if a certain post is being bookmarked and upvoted by the user
-    // const postsWithisBookmarkedAndIsUpvotedField = await Promise.all(
-    //   posts.map(async (post) => {
-    //     const userId = session.user.id;
-
-    //     const isUpvoted = userId
-    //       ? (await db.upvote.count({
-    //           where: {
-    //             postId: post.id,
-    //             userId: userId,
-    //           },
-    //         })) > 0
-    //       : false;
-
-    //     const isBookmarked = userId
-    //       ? (await db.bookmark.count({
-    //           where: {
-    //             postId: post.id,
-    //             userId: userId,
-    //           },
-    //         })) > 0
-    //       : false;
-
-    //     const bookmark = await db.bookmark.findFirst({
-    //       where: {
-    //         postId: post.id,
-    //         userId: userId,
-    //       },
-    //       select: {
-    //         id: true,
-    //       },
-    //     });
-
-    //     return { ...post, isBookmarked, bookmarkId: bookmark?.id, isUpvoted };
-    //   }),
-    // );
-
     posts.forEach((post) => {
       (post as any).isUpvoted = post._count.upvotes > 0;
       (post as any).isBookmarked = post._count.bookmarks > 0;
