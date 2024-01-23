@@ -19,7 +19,7 @@ export default function BlogPost({ post }: { post: TPost }) {
       <Button
         variant="light"
         size="md"
-        onClick={() => router.push("/feed")}
+        onClick={() => router.back()}
         className="absolute left-5 top-5 rounded-xl text-sm font-semibold md:text-base"
         isIconOnly
       >
