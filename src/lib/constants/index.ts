@@ -24,7 +24,8 @@ export const validEmailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
 
 export const QueryKeys = {
     Posts: "posts",
-    Bookmarks: "bookmarks"
+    Bookmarks: "bookmarks",
+    SearchedPosts: "searchedPosts"
 }
 
 export const sideBarNavs: ISideBarNav[]  = [
