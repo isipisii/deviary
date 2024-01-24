@@ -1,10 +1,8 @@
-/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import AccountDropdown from "../ui/account-dropdown";
 import { FiBell } from "react-icons/fi";
 import { Button } from "@nextui-org/react";
-import ThemeToggler from "../ui/theme-toggler";
 import { useSession } from "next-auth/react";
 import Logo from "../ui/logo";
 import AccountSkeleton from "../shared/skeleton-loaders/account-skeleton";
@@ -23,7 +21,6 @@ export default function TopNav() {
           <Logo />
         </div>
         <div className="hidden items-center gap-4 md:flex">
-          <ThemeToggler />
           <CustomTooltip content="Notifications">
             <Button
               variant="bordered"
