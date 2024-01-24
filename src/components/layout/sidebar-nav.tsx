@@ -8,10 +8,11 @@ import { useEffect, useState } from "react";
 import { LuChevronDown, LuChevronLeft } from "react-icons/lu";
 import type { IconType } from "react-icons";
 import { useSideBarNavStore } from "@/lib/store/useSideBarNavStore";
-import { Button, CircularProgress } from "@nextui-org/react";
+import { Button, CircularProgress, useDisclosure } from "@nextui-org/react";
 import { cn } from "@/utils/cn";
 import CustomTooltip from "../ui/custom-tooltip";
 import { useIsActive } from "@/lib/hooks/useIsActive";
+import SettingsModal from "../ui/settings-modal";
 
 export function SideBar() {
   const { isSideBarMinimized, minimizeSideBar, maximizeSideBar } =
@@ -31,9 +32,7 @@ export function SideBar() {
       }`}
     >
       <div className="absolute -right-5 top-[5.5rem] z-20 hidden group-hover:block">
-        <CustomTooltip
-          content={isSideBarMinimized ? "Maximize" : "Minimize"}
-        >
+        <CustomTooltip content={isSideBarMinimized ? "Maximize" : "Minimize"}>
           <Button
             className="h-[40px] w-[40px] min-w-0 rounded-full border-2 
              border-borderColor bg-white p-0 text-[1.3rem] text-black"
@@ -161,9 +160,7 @@ export function SideBarNav({ title, items }: ISideBarNav) {
             { "-bottom-7": seeMore },
           )}
         >
-          <CustomTooltip
-            content={seeMore ? "See less" : "See more"}
-          >
+          <CustomTooltip content={seeMore ? "See less" : "See more"}>
             <Button
               className="h-[35px] w-[35px] min-w-0 rounded-full border-2 
               border-borderColor bg-white p-0 text-[1.2rem] text-black"
@@ -197,8 +194,42 @@ export function SideBarNavItem({
   type,
   imageUrl,
 }: ISideBarNavItem) {
-  const isActive = useIsActive()
+  const isActive = useIsActive();
   const { isSideBarMinimized } = useSideBarNavStore((state) => state);
+  const { onOpen, onOpenChange, isOpen } = useDisclosure();
+
+  if (title === "Settings") {
+    return (
+      <>
+        <SettingsModal isOpen={isOpen} onOpenChange={onOpenChange} />
+        <button
+          onClick={onOpen}
+          className={`flex items-center  
+          gap-4 rounded-[1.2rem] bg-light p-2 text-[.9rem] font-[500] transition-all duration-1000 ease-in-out 
+          hover:bg-lightHover ${
+            isActive(href)
+              ? "bg-lightHover font-[600] text-activeNavTextColor"
+              : "text-navTextColor"
+          }`}
+        >
+          {Icon && !imageUrl ? (
+            <p className="rounded-2xl bg-background p-2 text-[1.5rem] text-secondary">
+              <Icon />
+            </p>
+          ) : (
+            <div className="rounded-2xl bg-background p-2">
+              <img
+                src={imageUrl}
+                className="h-[23px] w-[23px] rounded-full"
+                alt="guild logo"
+              />
+            </div>
+          )}
+          {isSideBarMinimized ? null : title}
+        </button>
+      </>
+    );
+  }
 
   return (
     <Link
