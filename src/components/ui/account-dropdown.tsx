@@ -2,7 +2,6 @@
 "use client";
 
 import { useSession } from "next-auth/react";
-import { useState } from "react";
 import {
   Dropdown,
   DropdownTrigger,
@@ -12,30 +11,19 @@ import {
   DropdownSection,
   useDisclosure,
 } from "@nextui-org/react";
-import { signOut } from "next-auth/react";
-import { useRouter } from "next-nprogress-bar";
+
 
 import { PiSignOutBold } from "react-icons/pi";
 import { LuSettings, LuUser2 } from "react-icons/lu";
 import ConfirmationModal from "./confirmation-modal";
 
+import useLogout from "@/lib/hooks/useLogout";
+
 export default function AccountDropdown() {
   const { data } = useSession();
-  const router = useRouter();
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
-  const [isPending, setIsPending] = useState(false);
+  const {  handleLogout, isPending } = useLogout(onClose)
 
-  async function handleLogout() {
-    try {
-      setIsPending(true);
-      await signOut();
-      setIsPending(false);
-      onClose();
-      router.push("/sign-in");
-    } catch (error) {
-      console.log(error);
-    }
-  }
   return (
     <>
       <ConfirmationModal
