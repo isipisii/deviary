@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, User, image } from "@nextui-org/react";
+import { Button, User, useDisclosure } from "@nextui-org/react";
 import { HiMenuAlt2 } from "react-icons/hi";
 import { LuX } from "react-icons/lu";
 import { useEffect, useState } from "react";
@@ -12,11 +12,17 @@ import { mobileSideNavItems } from "@/lib/constants";
 import Link from "next/link";
 import { useIsActive } from "@/lib/hooks/useIsActive";
 import { ISideBarNav, ISideBarNavItem } from "./sidebar-nav";
+import { PiSignOutBold } from "react-icons/pi";
+import ConfirmationModal from "../ui/confirmation-modal";
+import useLogout from "@/lib/hooks/useLogout";
+import AccountSkeleton from "../shared/skeleton-loaders/account-skeleton";
 
 export default function MobileSidebar() {
   const { data } = useSession();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuElement = useRef<HTMLDivElement>(null);
+  const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
+  const { handleLogout, isPending } = useLogout(onClose);
 
   function openMenu() {
     setIsMenuOpen(true);
@@ -69,7 +75,7 @@ export default function MobileSidebar() {
       <aside
         ref={menuElement}
         className={cn(
-          `fixed left-0 top-0 z-[20] h-screen w-[300px] border-r border-borderColor bg-background transition-all
+          `fixed left-0 top-0 z-[20] h-screen w-[350px] border-r border-borderColor bg-background transition-all
            duration-1000 ease-in-out md:hidden`,
           {
             "transition-delay-300 translate-x-0": isMenuOpen,
@@ -111,19 +117,50 @@ export default function MobileSidebar() {
             </div>
           </div>
 
-          <User
-            as="button"
-            avatarProps={{
-              src: data?.user?.image ?? "",
-              size: "sm",
-            }}
-            description={data?.user.email}
-            name={data?.user.name}
-            classNames={{
-              name: "text-sm",
-              description: "text-xs",
-            }}
-          />
+          <div className="flex w-full items-center justify-between">
+            {data?.user ? (
+              <User
+                as="button"
+                avatarProps={{
+                  src: data?.user.image ?? "",
+                  size: "sm",
+                }}
+                description={data?.user.email}
+                name={data?.user.name}
+                classNames={{
+                  name: "text-[.75rem]",
+                  description: "text-[.7rem]",
+                }}
+              />
+            ) : (
+              <AccountSkeleton />
+            )}
+
+            <Button
+              isIconOnly
+              color="danger"
+              variant="light"
+              radius="lg"
+              onClick={() => {
+                closeMenu()
+                onOpen()
+              }}
+            >
+              <PiSignOutBold className="rotate-180 text-[1.3rem]" />
+            </Button>
+
+            <ConfirmationModal
+              isOpen={isOpen}
+              onOpenChange={onOpenChange}
+              action={handleLogout}
+              isPending={isPending}
+              modalTextContent={{
+                header: "Log out?",
+                body: "Are you sure you want to log out?",
+              }}
+              isDelete={false}
+            />
+          </div>
         </div>
       </aside>
     </>
