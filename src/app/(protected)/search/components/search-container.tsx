@@ -13,7 +13,7 @@ import { FaMagnifyingGlass } from "react-icons/fa6";
 
 export default function SearchContainer() {
   const searchParams = useSearchParams();
-  const searchQuery = searchParams.get("query") as string;
+  const searchQuery = searchParams?.get("query") as string;
   const [debouncedQuery] = useDebounce(searchQuery, 500);
   const { data: posts, refetch, isLoading } = useSearchPosts(debouncedQuery);
 
@@ -36,7 +36,7 @@ export default function SearchContainer() {
               <FaMagnifyingGlass />
             </p>
             <p className="text-center text-sm font-medium text-navTextColor md:text-base">
-              No results found.
+              No results found for &quot;{decodeURI(debouncedQuery)}&quot;.
             </p>
           </div>
         </div>
