@@ -4,7 +4,10 @@ import { useEffect, useState } from "react";
 
 export default function Logo() {
   const { theme } = useTheme();
-  const isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
+  const isDarkMode =
+    typeof window === "undefined"
+      ? null
+      : window.matchMedia("(prefers-color-scheme: dark)").matches;
   const [isSystemDark, setIsSystemDark] = useState(isDarkMode);
 
   useEffect(() => {
@@ -12,19 +15,23 @@ export default function Logo() {
   }, [theme, isDarkMode]);
 
   return (
-    <Image
-      src={
-        theme === "system"
-          ? isSystemDark
-            ? "/images/deviary-dark.png"
-            : "/images/deviary-light.png"
-          : theme === "dark" || theme === undefined
-            ? "/images/deviary-dark.png"
-            : "/images/deviary-light.png"
-      }
-      alt="logo"
-      width={90}
-      height={30}
-    />
+    <>
+      {typeof window !== "undefined" && (
+        <Image
+          src={
+            theme === "system"
+              ? isSystemDark
+                ? "/images/deviary-dark.png"
+                : "/images/deviary-light.png"
+              : theme === "dark" || theme === undefined
+                ? "/images/deviary-dark.png"
+                : "/images/deviary-light.png"
+          }
+          alt="logo"
+          width={90}
+          height={30}
+        />
+      )}
+    </>
   );
 }
