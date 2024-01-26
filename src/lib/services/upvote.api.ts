@@ -14,7 +14,7 @@ export function useUpvote() {
   const controller = new AbortController();
   const path = usePathname();
   const searchParams = useSearchParams()
-  const searchQuery = searchParams.get("query") as string
+  const searchQuery = searchParams?.get("query") as string
 
   return useMutation({
     mutationKey: ["upvote"],
@@ -53,7 +53,7 @@ export function useUpvote() {
       await queryClient.invalidateQueries({
         queryKey: [QueryKeys.SearchedPosts, searchQuery],
       });
-      updateRoute(path);
+      updateRoute(path as string);
     },
   });
 }
@@ -63,7 +63,7 @@ export function useRemoveUpvote() {
   const controller = new AbortController();
   const path = usePathname();
   const searchParams = useSearchParams()
-  const searchQuery = searchParams.get("query") as string
+  const searchQuery = searchParams?.get("query") as string
 
   return useMutation({
     mutationKey: ["removeUpvote"],
@@ -102,7 +102,7 @@ export function useRemoveUpvote() {
       await queryClient.invalidateQueries({
         queryKey: [QueryKeys.SearchedPosts, searchQuery],
       });
-      updateRoute(path);
+      updateRoute(path as string);
     },
   });
 }
