@@ -5,10 +5,6 @@ import Providers from "@/components/providers/providers";
 import { Toaster } from "sonner";
 import "@uploadthing/react/styles.css";
 
-// const inter = Noto_Sans({ weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"], subsets: ["latin"] });
-// const inter = Inter({ weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"], subsets: ["latin"] });
-// const inter = Roboto({ weight: ["100", "300", "400", "500", "700", "900"], style: ["normal"], subsets: ["cyrillic"] });
-
 export const metadata: Metadata = {
   title: "Deviary",
   description: `a developer's diary and community`,
