@@ -4,6 +4,9 @@ import { revalidatePath } from "next/cache";
 import { db } from "./prisma";
 
 export const updateRoute = async (path: string) => {
+  if(!path) {
+    return
+  }
   revalidatePath(path);
 };
 
