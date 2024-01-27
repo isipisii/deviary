@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/prisma";
 import { getServerSideSession } from "@/lib/auth";
+import { getPusherInstance } from "@/lib/pusher/server";
+
+const pusherServer = getPusherInstance();
 
 export const POST = async (request: NextRequest) => {
     const url = new URL(request.url)
@@ -20,6 +23,18 @@ export const POST = async (request: NextRequest) => {
             return NextResponse.json({
                 message: "Missing post id"
             }, { status: 400 })
+        }
+
+        const post = await db.post.findUnique({
+            where: {
+                id: postId
+            }
+        })
+
+        if(!post) {
+            return NextResponse.json({
+                message: "Post not found"
+            }, { status: 404 })
         }
 
         const existingUpvote = await db.upvote.findFirst({
@@ -53,6 +68,38 @@ export const POST = async (request: NextRequest) => {
                     increment: 1
                 }
             }
+        })
+
+        const notification = await db.notification.create({
+            data:{
+                recipientId: post.authorId,
+                senderId: userId,
+                postId,
+                type: "UPVOTE"
+            },
+            include: {
+                sender: {
+                    select: {
+                        id: true,
+                        name: true,
+                        email: true,
+                        image: true
+                    }
+                },
+                post: {
+                    include: {
+                        blog: true,
+                        diary: true,
+                    }
+                }
+            }
+        })
+
+        const channel = `channel_user_${notification.recipientId}`;
+        const event = "new-notification";
+
+        await pusherServer.trigger(channel, event, {
+           notification
         })
 
         return NextResponse.json({
@@ -117,8 +164,22 @@ export const DELETE = async (request: NextRequest) => {
                     decrement: 1
                 }
             }
+        }) 
+        
+        const existingNotification = await db.notification.findFirst({
+            where: {
+                senderId: userId,
+                postId
+            }
         })
 
+        if (existingNotification) {
+            await db.notification.delete({
+                where: {
+                    id: existingNotification.id
+                }
+             })
+        }
 
         return NextResponse.json({
             message: "Upvote removed"
