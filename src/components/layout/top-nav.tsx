@@ -1,12 +1,10 @@
 "use client";
 
 import AccountDropdown from "../ui/account-dropdown";
-import { FiBell } from "react-icons/fi";
-import { Button } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 import Logo from "../ui/logo";
 import AccountSkeleton from "../shared/skeleton-loaders/account-skeleton";
-import CustomTooltip from "../ui/custom-tooltip";
+import Notification from "../notification/notification";
 import MobileSidebar from "./mobile-sidebar";
 
 export default function TopNav() {
@@ -21,16 +19,7 @@ export default function TopNav() {
           <Logo />
         </div>
         <div className="hidden items-center gap-4 md:flex">
-          <CustomTooltip content="Notifications">
-            <Button
-              variant="bordered"
-              isIconOnly
-              className="rounded-xl border-1 border-borderColor text-[1.3rem]"
-            >
-              <FiBell />
-            </Button>
-          </CustomTooltip>
-
+          <Notification/>
           {data ? <AccountDropdown /> : <AccountSkeleton />}
         </div>
       </div>
