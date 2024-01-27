@@ -131,6 +131,7 @@ model Post {
 
   diary         Diary? 
   blog          Blog?
+  notifications Notification[]
        
   createdAt     DateTime  @default(now()) @map(name: "created_at")
   updatedAt     DateTime  @default(now()) @map(name: "updated_at")
@@ -221,9 +222,12 @@ model Upvote {
 
 model Notification {
   id            String @id @default(auto()) @map("_id") @db.ObjectId
-  viewed        Boolean
-  message       String
-     
+  viewed        Boolean @default(false)
+  type          NotificationType
+
+  postId        String? @db.ObjectId
+  post          Post? @relation(fields: [postId], references: [id], onDelete: Cascade)
+    
   senderId      String @db.ObjectId
   sender        User @relation("SentNotifications", fields: [senderId], references: [id], onDelete: Cascade)
 
@@ -241,6 +245,11 @@ model Tag {
   tagName    String
 
   @@map("tags")
+}
+
+enum NotificationType  {
+  UPVOTE
+  GUILD_JOIN
 }
 
 enum PostType  {
