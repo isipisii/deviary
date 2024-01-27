@@ -3,15 +3,14 @@
 import { Input } from "@nextui-org/react";
 import React from "react";
 import { FaMagnifyingGlass } from "react-icons/fa6";
-import { usePathname, useSearchParams, useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 export default function SearchField() {
-  const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
 
   function handleSearchTerm(term: string) {
-    const params = new URLSearchParams(searchParams);
+    const params = new URLSearchParams();
     const encodedSearchTerm = encodeURI(term);
 
     if (term) {
