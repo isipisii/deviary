@@ -2,7 +2,7 @@
 "use client";
 
 import { Avatar } from "@nextui-org/react";
-import PostActions from "../ui/post-actions";
+import PostActions from "./post-actions";
 import PostContextMenu from "../ui/post-context-menu";
 import Link from "next/link";
 import readingTime from "reading-time"
