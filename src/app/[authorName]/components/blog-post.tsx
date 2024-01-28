@@ -5,7 +5,7 @@ import { Button, Chip, User } from "@nextui-org/react";
 import MarkdownPreview from "./markdown-preview";
 import { useRouter } from "next-nprogress-bar";
 import { HiMiniArrowLongLeft } from "react-icons/hi2";
-import PostActions from "@/components/ui/post-actions";
+import PostActions from "@/components/shared/post-actions";
 import PostContextMenu from "@/components/ui/post-context-menu";
 import formatDate from "@/utils/formatDate";
 import readingTime from "reading-time";
