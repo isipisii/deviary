@@ -56,3 +56,14 @@ type TDiary = {
   description: string;
   solution: string;
 };
+
+type TNotification  = {
+  id: readonly string
+  sender: TUser
+  senderId: readonly string
+  recipientId: readonly string
+  post: TPost
+  viewed: boolean
+  postId: string
+  createdAt: Date;
+}
