@@ -2,7 +2,7 @@
 
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { dracula } from "react-syntax-highlighter/dist/esm/styles/prism";
-import PostActions from "../ui/post-actions";
+import PostActions from "./post-actions";
 import { Avatar } from "@nextui-org/react";
 import PostContextMenu from "../ui/post-context-menu";
 import formatDate from "@/utils/formatDate";
