@@ -6,7 +6,7 @@ import { useEffect } from "react";
 import { useInView } from "react-intersection-observer";
 import BlogPostCard from "@/components/shared/blog-post-card";
 import DiaryCard from "@/components/shared/diary-card";
-import PostsSkeletonLoader from "@/components/shared/skeleton-loaders/posts-skeleton-loader";
+import PostsSkeletonLoader from "@/components/skeleton-loaders/posts-skeleton-loader";
 import { LuBookmark } from "react-icons/lu";
 import { Button } from "@nextui-org/react";
 import { useRouter } from "next-nprogress-bar";
