@@ -3,13 +3,13 @@ import axios from "axios";
 import { QueryKeys } from "../constants";
 
 export function useGetNotifications() {
-    return useQuery({
-        queryKey: [QueryKeys.Notifications],
-        queryFn: async () => {
-            const res = await axios.get("/api/notifications")
+  return useQuery({
+    queryKey: [QueryKeys.Notifications],
+    queryFn: async () => {
+      const res = await axios.get("/api/notifications");
 
-            return res.data.notifications
-        },
-        staleTime: 60 * 1000,
-    })
+      return res.data.notifications as TNotification[];
+    },
+    staleTime: 60 * 1000,
+  });
 }
