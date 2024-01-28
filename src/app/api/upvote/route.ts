@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/prisma";
 import { getServerSideSession } from "@/lib/auth";
 import { getPusherInstance } from "@/lib/pusher/server";
+import { userSelectedFields } from "../notifications/route";
 
 const pusherServer = getPusherInstance();
 
@@ -80,16 +81,18 @@ export const POST = async (request: NextRequest) => {
             include: {
                 sender: {
                     select: {
-                        id: true,
-                        name: true,
-                        email: true,
-                        image: true
+                       ...userSelectedFields
                     }
                 },
                 post: {
                     include: {
                         blog: true,
                         diary: true,
+                        author: {
+                            select: {
+                                ...userSelectedFields
+                            }
+                        }
                     }
                 }
             }
