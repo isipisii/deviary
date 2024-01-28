@@ -5,7 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { useSearchPosts } from "@/lib/services/search.api";
 import { useDebounce } from "use-debounce";
 import { useEffect } from "react";
-import PostsSkeletonLoader from "@/components/shared/skeleton-loaders/posts-skeleton-loader";
+import PostsSkeletonLoader from "@/components/skeleton-loaders/posts-skeleton-loader";
 import CardContainer from "@/components/layout/card-container";
 import BlogPostCard from "@/components/shared/blog-post-card";
 import DiaryCard from "@/components/shared/diary-card";
