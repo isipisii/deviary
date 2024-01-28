@@ -3,7 +3,7 @@
 import AccountDropdown from "../ui/account-dropdown";
 import { useSession } from "next-auth/react";
 import Logo from "../ui/logo";
-import AccountSkeleton from "../shared/skeleton-loaders/account-skeleton";
+import AccountSkeleton from "../skeleton-loaders/account-skeleton";
 import Notification from "../notification/notification";
 import MobileSidebar from "./mobile-sidebar";
 
@@ -18,9 +18,9 @@ export default function TopNav() {
           <MobileSidebar />
           <Logo />
         </div>
-        <div className="hidden items-center gap-4 md:flex">
-          <Notification/>
-          {data ? <AccountDropdown /> : <AccountSkeleton />}
+        <div className="flex items-center gap-4">
+          <Notification />
+          <div className="hidden md:flex">{data ? <AccountDropdown /> : <AccountSkeleton />}</div>
         </div>
       </div>
     </nav>
