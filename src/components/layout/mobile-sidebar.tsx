@@ -15,7 +15,7 @@ import { ISideBarNav, ISideBarNavItem } from "./sidebar-nav";
 import { PiSignOutBold } from "react-icons/pi";
 import ConfirmationModal from "../ui/confirmation-modal";
 import useLogout from "@/lib/hooks/useLogout";
-import AccountSkeleton from "../shared/skeleton-loaders/account-skeleton";
+import AccountSkeleton from "../skeleton-loaders/account-skeleton";
 
 export default function MobileSidebar() {
   const { data } = useSession();
