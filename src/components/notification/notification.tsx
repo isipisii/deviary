@@ -6,14 +6,13 @@ import {
   PopoverTrigger,
   PopoverContent,
   Button,
-  Skeleton,
 } from "@nextui-org/react";
 import { useGetNotifications } from "@/lib/services/notifications.api";
 import { useEffect, useState } from "react";
 import { pusherClient } from "@/lib/pusher/client";
 import { useSession } from "next-auth/react";
 import { useQueryClient } from "@tanstack/react-query";
-import { QueryKeys } from "@/lib/constants";
+import { newNotificationOptimisticUpdate } from "@/lib/services/notifications.api";
 import NotificationList from "./notification-list";
 import NotificationSkeleton from "../skeleton-loaders/notification-skeleton";
 
@@ -32,17 +31,9 @@ export default function Notification() {
         "new-notification",
         async (data: { notification: TNotification }) => {
           const newNotification = data.notification;
+          
           //append the upcoming notification to the cached notifications
-          queryClient.setQueryData<TNotification[]>(
-            [QueryKeys.Notifications],
-            (oldData) => {
-              const newData = oldData ? [newNotification, ...oldData] : oldData;
-              return newData;
-            },
-          );
-          await queryClient.invalidateQueries({
-            queryKey: [QueryKeys.Notifications],
-          });
+          await newNotificationOptimisticUpdate(queryClient, newNotification)
           setHasNewNotification(true);
         },
       );
@@ -70,14 +61,14 @@ export default function Notification() {
           className="relative rounded-xl border-1 border-borderColor text-[1.3rem]"
         >
           {notifications?.some((notification) => !notification.viewed) && (
-            <span className="absolute right-1 top-1 h-[12px] w-[12px] rounded-full bg-red-500"></span>
+            <span className="absolute right-2 top-[.4rem] h-[10px] w-[10px] rounded-full bg-red-500"></span>
           )}
           <FiBell />
         </Button>
       </PopoverTrigger>
       <PopoverContent>
-        <div className="flex w-[400px] flex-col gap-4 p-4 sm:w-[500px] md:w-[600px]">
-          <h3 className="text-xl font-semibold">Notifications</h3>
+        <div className="flex w-[380px] flex-col gap-5 py-4 sm:w-[500px] md:w-[600px]">
+          <h3 className="text-xl font-semibold px-4">Notifications</h3>
           {isLoading ? (
             <div className="flex w-full flex-col gap-4">
               {[...new Array(3)].map((_, index) => (
