@@ -8,7 +8,7 @@ import Notification from "../notification/notification";
 import MobileSidebar from "./mobile-sidebar";
 
 export default function TopNav() {
-  const { data } = useSession();
+  const session = useSession();
 
   return (
     <nav className="fixed top-0 z-[10] w-full border-b border-borderColor bg-background shadow-sm">
@@ -20,7 +20,9 @@ export default function TopNav() {
         </div>
         <div className="flex items-center gap-4">
           <Notification />
-          <div className="hidden md:flex">{data ? <AccountDropdown /> : <AccountSkeleton />}</div>
+          <div className="hidden md:flex">
+            {session.data ? <AccountDropdown /> : <AccountSkeleton />}
+          </div>
         </div>
       </div>
     </nav>
