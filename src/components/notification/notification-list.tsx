@@ -16,7 +16,7 @@ export default function NotificationList({
   }, [setAsViewed]);
 
   return (
-    <ScrollShadow size={90} className="h-[500px] w-full">
+    <ScrollShadow size={80} className="h-[500px] w-full px-4">
       <div className="flex w-full flex-col gap-4">
         {notifications && (
           <div className="flex w-full flex-col gap-4">
