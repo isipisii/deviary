@@ -19,7 +19,7 @@ export const POST = async (request: NextRequest, { params }: TParams) => {
           message: "Unauthenticated, please log in first",
           success: false,
         },
-        { status: 400 },
+        { status: 401 },
       );
     }
 

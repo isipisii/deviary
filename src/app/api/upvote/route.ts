@@ -17,7 +17,7 @@ export const POST = async (request: NextRequest) => {
             return NextResponse.json({
                 message: "Unauthenticated, please log in first",
                 success: false
-            }, { status: 400 })
+            }, { status: 401 })
         }
 
         if(!postId) {
@@ -128,7 +128,7 @@ export const DELETE = async (request: NextRequest) => {
             return NextResponse.json({
                 message: "Unauthenticated, please log in first",
                 success: false
-            }, { status: 400 })
+            }, { status: 401 })
         }
         
         if(!postId) {

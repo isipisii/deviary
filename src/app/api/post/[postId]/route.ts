@@ -81,7 +81,7 @@ export const DELETE = async (request: NextRequest, { params }: TParams) => {
         {
           message: "Unauthenticated, please log in first",
         },
-        { status: 500 },
+        { status: 401 },
       );
     }
 

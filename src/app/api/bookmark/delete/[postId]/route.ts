@@ -17,7 +17,7 @@ export const DELETE = async (request: NextRequest, { params }: TParams) => {
             return NextResponse.json({
                 message: "Unauthenticated, please log in first",
                 success: false
-            }, { status: 400 })
+            }, { status: 401 })
         }
 
         const existingBookmark = await db.bookmark.findFirst({

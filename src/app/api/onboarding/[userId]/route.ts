@@ -26,7 +26,7 @@ export const PATCH = async (request: NextRequest, { params }: { params: { userId
         if(!session) return NextResponse.json({
             success: false,
             message: "Unauthenticated, please log in first",
-        }, { status: 400 })   
+        }, { status: 401 })   
 
         if(!parsedOnboardingData.success) {
             return NextResponse.json({
@@ -81,7 +81,7 @@ export const PATCH = async (request: NextRequest, { params }: { params: { userId
                 name: name as string ||  existingUser?.name,
                 image: uploadedImage || existingUser?.image,
                 onboarded: true,
-            },
+            },  
             select: {
                 id: true,
                 name: true,

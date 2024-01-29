@@ -24,7 +24,7 @@ export const PATCH = async (request: NextRequest, { params }: TParams) => {
             return NextResponse.json({
                 errors: parsedDiaryData.error.flatten().fieldErrors,
                 message: "Error in diary data.",
-            }, { status: 400 })   
+            }, { status: 401 })   
         }
 
         if(!session) return NextResponse.json({

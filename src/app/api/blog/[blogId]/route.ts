@@ -23,7 +23,7 @@ export const PATCH = async (request: NextRequest, { params }: TParams) => {
         if(!session) {
             return  NextResponse.json({
                  message: "Unauthenticated, please log in first"
-             }, { status: 500 })
+             }, { status: 401 })
          }
 
         const post = await db.post.findUnique({

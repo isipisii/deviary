@@ -24,7 +24,7 @@ export const POST = async (request: NextRequest) => {
         if(!session) return NextResponse.json({
             success: false,
             message: "Unauthenticated, please log in first"
-        }, { status: 400 })
+        }, { status: 401 })
 
 
         if(!parsedBlogData.success) {
