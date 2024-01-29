@@ -1,4 +1,5 @@
 "use client";
+
 import {
   Dropdown,
   DropdownTrigger,
@@ -6,7 +7,7 @@ import {
   DropdownItem,
   Button,
 } from "@nextui-org/react";
-import { useState, useCallback} from "react";
+import { useState, useCallback } from "react";
 import { GoKebabHorizontal } from "react-icons/go";
 import { cn } from "@/utils/cn";
 import { postContextMenuItems } from "@/lib/constants";
@@ -52,18 +53,18 @@ export default function PostContextMenu({
     deletePostMutation(post.id);
   }
 
-  const handleToggleBookmark = useCallback(()=> {
+  const handleToggleBookmark = useCallback(() => {
     if (isBookmarked) {
       removeBookmarkMutation(post.id);
       setIsBookmarked(false);
       return;
     }
-    
-    if(!isBookmarked){
+
+    if (!isBookmarked) {
       createBookmarkMutation(post.id);
       setIsBookmarked(true);
     }
-  },[createBookmarkMutation, isBookmarked, post.id, removeBookmarkMutation])
+  }, [createBookmarkMutation, isBookmarked, post.id, removeBookmarkMutation]);
 
   return (
     <>
@@ -74,91 +75,103 @@ export default function PostContextMenu({
         isPending={isPending}
         modalTextContent={{
           header: "Delete post?",
-          body: "This action cannot be undone. Are you sure you want to delete this post?"
+          body: "This action cannot be undone. Are you sure you want to delete this post?",
         }}
         isDelete
       />
-      <Dropdown
-        className={cn("rounded-xl bg-cardBg", className)}
-        placement="bottom-end"
-      >
-        <DropdownTrigger onClick={(e) => e.preventDefault()}>
-          <Button
-            variant="light"
-            size="sm"
-            isIconOnly
-            className={cn("rounded-lg text-[1.2rem] z-[5]", {
-              "text-white": postType === "BLOG_POST",
-            })}
-            startContent={<GoKebabHorizontal />}
-          />
-        </DropdownTrigger>
-        <DropdownMenu
-          aria-label="Dynamic Actions"
-          items={contextMenuItems}
-          variant="flat"
-          disabledKeys={
-            isAddingBookmark || isRemovingBookmark ? ["bookmark"] : undefined
-          }
+
+      <div data-nprogress-action={true}>
+        <Dropdown
+          className={cn("rounded-xl bg-cardBg", className)}
+          placement="bottom-end"
+          onClick={(e) => {
+            e.stopPropagation();
+            e.preventDefault();
+          }}
         >
-          {(item) => {
-            if (item.key === "edit") {
+          <DropdownTrigger
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+            }}
+          >
+            <Button
+              variant="light"
+              size="sm"
+              isIconOnly
+              className={cn("z-[5] rounded-lg text-[1.2rem]", {
+                "text-white": postType === "BLOG_POST",
+              })}
+              startContent={<GoKebabHorizontal />}
+            />
+          </DropdownTrigger>
+          <DropdownMenu
+            aria-label="Dynamic Actions"
+            items={contextMenuItems}
+            variant="flat"
+            disabledKeys={
+              isAddingBookmark || isRemovingBookmark ? ["bookmark"] : undefined
+            }
+          >
+            {(item) => {
+              if (item.key === "edit") {
+                return (
+                  <DropdownItem
+                    key={item.key}
+                    onClick={() => router.push(`/post/edit/${post.id}`)}
+                    startContent={<item.icon />}
+                    className="rounded-lg"
+                  >
+                    {item.label}
+                  </DropdownItem>
+                );
+              }
+
+              if (item.key === "delete") {
+                return (
+                  <DropdownItem
+                    key={item.key}
+                    color="danger"
+                    className="rounded-lg text-danger"
+                    startContent={<item.icon />}
+                    onPress={onOpen}
+                  >
+                    {item.label}
+                  </DropdownItem>
+                );
+              }
+
+              if (item.key === "bookmark") {
+                return (
+                  <DropdownItem
+                    key={item.key}
+                    color="warning"
+                    className={`rounded-lg ${
+                      isBookmarked ? "text-warning" : null
+                    }`}
+                    startContent={
+                      isBookmarked ? <item.activeIcon /> : <item.icon />
+                    }
+                    onClick={handleToggleBookmark}
+                  >
+                    {isBookmarked ? "Bookmarked" : item.label}
+                  </DropdownItem>
+                );
+              }
+
               return (
                 <DropdownItem
                   key={item.key}
-                  onClick={() => router.push(`/post/edit/${post.id}`)}
                   startContent={<item.icon />}
                   className="rounded-lg"
                 >
                   {item.label}
                 </DropdownItem>
               );
-            }
-
-            if (item.key === "delete") {
-              return (
-                <DropdownItem
-                  key={item.key}
-                  color="danger"
-                  className="rounded-lg text-danger"
-                  startContent={<item.icon />}
-                  onPress={onOpen}
-                >
-                  {item.label}
-                </DropdownItem>
-              );
-            }
-
-            if (item.key === "bookmark") {
-              return (
-                <DropdownItem
-                  key={item.key}
-                  color="warning"
-                  className={`rounded-lg ${
-                    isBookmarked ? "text-warning" : null
-                  }`}
-                  startContent={
-                    isBookmarked ? <item.activeIcon /> : <item.icon />
-                  }
-                  onClick={handleToggleBookmark}
-                >
-                  {isBookmarked ? "Bookmarked" : item.label}
-                </DropdownItem>
-              );
-            }
-
-            return (
-              <DropdownItem
-                key={item.key}
-                startContent={<item.icon />}
-                className="rounded-lg"
-              >
-                {item.label}
-              </DropdownItem>
-            );
-          }}
-        </DropdownMenu>
-      </Dropdown>
+            }}
+          </DropdownMenu>
+        </Dropdown>
+      </div>
     </>
   );
 }
