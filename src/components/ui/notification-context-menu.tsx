@@ -6,6 +6,7 @@ import {
   DropdownMenu,
   DropdownItem,
   Button,
+  Spinner,
 } from "@nextui-org/react";
 import { GoKebabHorizontal } from "react-icons/go";
 import { FaRegEye } from "react-icons/fa6";
@@ -19,22 +20,19 @@ interface INotificationContextMenu {
   notification: TNotification;
 }
 
-// TODO: finish the delete and view mutation
 export default function NotificationContextMenu({
   notification,
 }: INotificationContextMenu) {
   const { mutate: deleteNotificationMutation, isPending } =
     useDeleteNotification();
+  const { mutate: viewNotificationMutation } =
+    useViewNotification();
 
   return (
     <div data-nprogress-action={true}>
       <Dropdown
         className="rounded-xl border border-borderColor bg-background"
         placement="bottom-end"
-        onClick={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-        }}
       >
         <DropdownTrigger
           onClick={(e) => {
@@ -53,23 +51,26 @@ export default function NotificationContextMenu({
         <DropdownMenu
           aria-label="Dynamic Actions"
           variant="flat"
-          disabledKeys={isPending ? ["delete"] : undefined}
+          disabledKeys={isPending ? ["delete"] : notification.viewed ? ["view"] : undefined}
         >
           <DropdownItem
             key="delete"
-            startContent={<LuTrash />}
+            startContent={
+              isPending ? <Spinner size="sm" color="danger" /> : <LuTrash />
+            }
             className="rounded-lg text-danger"
             color="danger"
             onClick={() => deleteNotificationMutation(notification.id)}
           >
-            Delete
+            {isPending ? "Deleting" : "Delete"}
           </DropdownItem>
           <DropdownItem
             key="view"
             startContent={<FaRegEye />}
             className="rounded-lg"
+            onClick={() => viewNotificationMutation(notification.id)}
           >
-            Mark as viewed
+            {notification.viewed ? "Viewed" : "Mark as viewed"}
           </DropdownItem>
         </DropdownMenu>
       </Dropdown>
