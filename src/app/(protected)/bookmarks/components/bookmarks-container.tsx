@@ -32,9 +32,15 @@ export default function BookmarksContainer() {
           <p className="text-[5rem] text-navTextColor">
             <LuBookmark />
           </p>
-          <p className="font-medium text-sm md:text-base text-navTextColor text-center">
-            It seems like you haven&apos;t bookmarked any posts yet.
-          </p>
+          <div className="space-y-2">
+            <h3 className="text-center text-2xl font-semibold text-navTextColor md:text-3xl">
+              No bookmarks.
+            </h3>
+            <p className="text-center text-sm font-medium text-navTextColor md:text-base">
+              It seems like you haven&apos;t bookmarked any posts yet.
+            </p>
+          </div>
+
           <Button
             color="secondary"
             variant="light"
