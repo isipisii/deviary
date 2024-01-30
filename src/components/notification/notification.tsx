@@ -15,10 +15,10 @@ import { useQueryClient } from "@tanstack/react-query";
 import { newNotificationOptimisticUpdate } from "@/lib/services/notifications.api";
 import NotificationList from "./notification-list";
 import NotificationSkeleton from "../skeleton-loaders/notification-skeleton";
+import { LuBookmark } from "react-icons/lu";
 
 export default function Notification() {
   const { data: sessionData } = useSession();
-  //TODO: CREATE A TOAST LIKE NOTIFICATION
   const [hasNewNotification, setHasNewNotification] = useState(false);
   const { data: notifications, isLoading } = useGetNotifications();
   const queryClient = useQueryClient();
@@ -31,9 +31,9 @@ export default function Notification() {
         "new-notification",
         async (data: { notification: TNotification }) => {
           const newNotification = data.notification;
-          
+
           //append the upcoming notification to the cached notifications
-          await newNotificationOptimisticUpdate(queryClient, newNotification)
+          await newNotificationOptimisticUpdate(queryClient, newNotification);
           setHasNewNotification(true);
         },
       );
@@ -68,20 +68,40 @@ export default function Notification() {
       </PopoverTrigger>
       <PopoverContent>
         <div className="flex w-[380px] flex-col gap-5 py-4 sm:w-[500px] md:w-[600px]">
-          <h3 className="text-xl font-semibold px-4">Notifications</h3>
+          <h3 className="px-4 text-xl font-semibold">Notifications</h3>
           {isLoading ? (
-            <div className="flex w-full flex-col gap-4">
+            // skeleton loader of notifs
+            <div className="flex w-full flex-col gap-4 px-4">
               {[...new Array(3)].map((_, index) => (
                 <NotificationSkeleton key={index} />
               ))}
             </div>
           ) : (
-            notifications && (
+            // notifications
+            notifications && notifications?.length > 0 && (
               <NotificationList
                 notifications={notifications}
                 setAsViewed={setAsViewed}
               />
             )
+          )}
+          {/* will render if notif is empty */}
+          {notifications?.length === 0 && (
+            <div className="flex h-[490px] w-full items-center justify-center">
+              <div className="flex flex-col items-center gap-4">
+                <p className="text-[4rem] text-navTextColor">
+                  <FiBell />
+                </p>
+                <div className="space-y-2">
+                  <h3 className="text-center text-lg font-semibold text-navTextColor md:text-xl">
+                    No notifications.
+                  </h3>
+                  <p className="text-center  text-xs font-medium text-navTextColor md:text-sm">
+                    Don&apos;t worry, we&apos;ll let you know.
+                  </p>
+                </div>
+              </div>
+            </div>
           )}
         </div>
       </PopoverContent>
