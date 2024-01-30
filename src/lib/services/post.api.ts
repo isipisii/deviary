@@ -12,7 +12,7 @@ import { toast } from "sonner";
 import { UseFormReturn } from "react-hook-form";
 import { QueryKeys } from "../constants";
 import { updateRoute } from "../actions";
-import { formatTitleWithId } from "@/utils/fornatTitleWithId";
+import formatPostHref from "@/utils/formatPostHref";
 
 export async function getFeedPosts(
   take: number,
@@ -192,24 +192,7 @@ function updatePostOptimisticUpdate(
 ) {
   //to keep the data updated in specific post in edit page
   updateRoute(`/post/edit/${updatedPost.id}`);
-
-  if (updatedPost.type === "BLOG_POST") {
-    updateRoute(
-      `/@${updatedPost.author.name.split(" ").join(".")}/${formatTitleWithId(
-        updatedPost.blog?.title as string,
-        updatedPost.id,
-      )}`,
-    );
-  }
-
-  if (updatedPost.type === "CODE_DIARY") {
-    updateRoute(
-      `/@${updatedPost.author.name.split(" ").join(".")}/${formatTitleWithId(
-        updatedPost.diary?.title as string,
-        updatedPost.id,
-      )}`,
-    );
-  }
+  updateRoute(formatPostHref(updatedPost));
 
   return queryClient.setQueryData<InfiniteData<TPage<TPost[]>>>(
     [QueryKeys.Posts],
