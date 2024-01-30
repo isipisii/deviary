@@ -15,7 +15,6 @@ import { useQueryClient } from "@tanstack/react-query";
 import { newNotificationOptimisticUpdate } from "@/lib/services/notifications.api";
 import NotificationList from "./notification-list";
 import NotificationSkeleton from "../skeleton-loaders/notification-skeleton";
-import { LuBookmark } from "react-icons/lu";
 
 export default function Notification() {
   const { data: sessionData } = useSession();
