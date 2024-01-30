@@ -45,7 +45,10 @@ export default function PostActions({
   }, [post.id, removeUpvoteMutation, upvoteMutation, post.isUpvoted]);
 
   return (
-    <div className={cn("flex items-center", selectedOrientation)}>
+    <div
+      className={cn("flex items-center", selectedOrientation)}
+      data-nprogress-action={true}
+    >
       <div className="flex items-center gap-1">
         <CustomTooltip
           placement="bottom"
@@ -62,9 +65,9 @@ export default function PostActions({
               },
             )}
             onClick={(e) => {
-              e.preventDefault()
-              e.stopPropagation()
-              handleToggleUpvote()
+              e.preventDefault();
+              e.stopPropagation();
+              handleToggleUpvote();
             }}
           >
             {post.isUpvoted ? <TbArrowBigUpFilled /> : <TbArrowBigUp />}
@@ -79,9 +82,9 @@ export default function PostActions({
           className="rounded-xl bg-[#fff0] text-2xl text-[#A1A1AA] 
                 hover:bg-[#003db647] hover:text-[#639cff]"
           onClick={(e) => {
-            e.preventDefault()
-            e.stopPropagation()
-            router.push(formatPostHref(post))
+            e.preventDefault();
+            e.stopPropagation();
+            router.push(formatPostHref(post));
           }}
         >
           <FaRegComments />
@@ -92,7 +95,7 @@ export default function PostActions({
         <Button
           isIconOnly
           className="rounded-xl bg-[#fff0] text-2xl text-[#A1A1AA] 
-                hover:bg-[#dd0dba3c] hover:text-[#DD0DB9]"
+          hover:bg-[#dd0dba3c] hover:text-[#DD0DB9]"
         >
           <TbShare3 />
         </Button>
