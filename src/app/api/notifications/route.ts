@@ -9,7 +9,6 @@ export const userSelectedFields = {
   image: true,
 }
 
-// TODO: create a ui for the notificatio tommorrow
 export const GET = async () => {
   const session = await getServerSideSession();
 
