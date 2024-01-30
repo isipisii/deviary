@@ -3,7 +3,7 @@
 
 import { Button, Chip, User } from "@nextui-org/react";
 import MarkdownPreview from "./markdown-preview";
-import { useRouter } from "next-nprogress-bar";
+import { useRouter } from "next/navigation";
 import { HiMiniArrowLongLeft } from "react-icons/hi2";
 import PostActions from "@/components/shared/post-actions";
 import PostContextMenu from "@/components/ui/post-context-menu";
