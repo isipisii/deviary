@@ -84,10 +84,6 @@ export default function PostContextMenu({
         <Dropdown
           className={cn("rounded-xl bg-cardBg", className)}
           placement="bottom-end"
-          onClick={(e) => {
-            e.stopPropagation();
-            e.preventDefault();
-          }}
         >
           <DropdownTrigger
             onClick={(e) => {
