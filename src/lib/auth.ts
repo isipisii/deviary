@@ -57,14 +57,6 @@ export const authOptions: NextAuthOptions = {
         where: {
           email: token.email,
         },
-        include: {
-          bookmarks:{
-            select: {
-              id: true,
-              postId: true
-            }
-          }
-        }
       })
 
       if (!existingUser) {
@@ -78,12 +70,6 @@ export const authOptions: NextAuthOptions = {
       // updates the token inside the server if the update is triggered
       if (trigger === "update" && session?.onboarded) {
         token.onboarded = session.onboarded as boolean
-
-        return token
-      }
-
-      if (trigger === "update" && session?.bookmarks) {
-        token.bookmarks = session?.bookmarks 
 
         return token
       }
