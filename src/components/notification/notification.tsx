@@ -68,22 +68,23 @@ export default function Notification() {
       <PopoverContent>
         <div className="flex w-[380px] flex-col gap-5 py-4 sm:w-[500px] md:w-[600px]">
           <h3 className="px-4 text-xl font-semibold">Notifications</h3>
-          {isLoading ? (
-            // skeleton loader of notifs
+          {/* // skeleton loader of notifs */}
+          {isLoading && (
             <div className="flex w-full flex-col gap-4 px-4">
               {[...new Array(3)].map((_, index) => (
                 <NotificationSkeleton key={index} />
               ))}
             </div>
-          ) : (
-            // notifications
-            notifications && notifications?.length > 0 && (
-              <NotificationList
-                notifications={notifications}
-                setAsViewed={setAsViewed}
-              />
-            )
           )}
+
+          {/* notifications */}
+          {notifications && notifications?.length > 0 && (
+            <NotificationList
+              notifications={notifications}
+              setAsViewed={setAsViewed}
+            />
+          )}
+
           {/* will render if notif is empty */}
           {notifications?.length === 0 && (
             <div className="flex h-[490px] w-full items-center justify-center">
@@ -102,6 +103,7 @@ export default function Notification() {
               </div>
             </div>
           )}
+
         </div>
       </PopoverContent>
     </Popover>
