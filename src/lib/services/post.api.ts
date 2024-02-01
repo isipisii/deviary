@@ -1,5 +1,5 @@
 import axios, { AxiosError } from "axios";
-import { TDiarySchema } from "../validators/post-validator";
+import { TDiarySchema } from "../validators/post.validator";
 import {
   InfiniteData,
   useInfiniteQuery,

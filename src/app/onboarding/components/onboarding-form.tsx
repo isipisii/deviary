@@ -3,11 +3,10 @@
 
 import { Input, Button, Avatar } from "@nextui-org/react";
 import { useForm } from "react-hook-form";
-import { onboardingSchema } from "@/lib/validators/auth-validator";
+import { onboardingSchema } from "@/lib/validators/auth.validator";
 import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { useRouter } from "next-nprogress-bar";
 import { useOnboard } from "@/lib/services/auth.api";
 import useLoadImageFile from "@/lib/hooks/useLoadImageFile";
 import { useSession } from "next-auth/react";
