@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Input, Divider, Button } from "@nextui-org/react";
 import GoogleButton from "./google-button";
 import { useForm } from "react-hook-form";
-import { signUpSchema } from "@/lib/validators/auth-validator";
+import { signUpSchema } from "@/lib/validators/auth.validator";
 import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 

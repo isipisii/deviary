@@ -6,7 +6,7 @@ import Tags from "@/components/shared/tags";
 
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod";
-import { blogSchema } from "@/lib/validators/post-validator";
+import { blogSchema } from "@/lib/validators/post.validator";
 import z from "zod"
 
 import { useTags } from "@/lib/store/useTags";
