@@ -55,7 +55,7 @@ model Social {
 model User {
   id              String @id @default(auto()) @map("_id") @db.ObjectId
   name            String?
-  email           String?   @unique
+  email           String? @unique
   password        String?
   emailVerified   DateTime?
   image           String?
@@ -68,11 +68,9 @@ model User {
   bookmarks       Bookmark[]
   // GuildMember     GuildMember[]
   comments        Comment[]
-  replies         Reply[]
   upvotes         Upvote[]
   sentNotifications Notification[] @relation("SentNotifications")
   receivedNotifications Notification[] @relation("ReceivedNotifications")
-
 
   guildsBelongId  String[] @db.ObjectId
   guildsBelong     Guild[]  @relation("GuildMembers", fields: [guildsBelongId], references: [id])
@@ -88,18 +86,19 @@ model User {
 
 model Guild {
   id              String @id @default(auto()) @map("_id") @db.ObjectId
-  guildName       String
-
-  guildCreatorId  String @db.ObjectId
-  guildCreator    User  @relation("GuildCreator", fields: [guildCreatorId], references: [id])
+  image           Image
+  name            String @unique
+  description     String?
+  isPrivate       Boolean @default(false)
   
-  guildMembersId  String[] @db.ObjectId
-  guildMembers    User[]  @relation("GuildMembers", fields: [guildMembersId], references: [id])
+  creatorId       String @db.ObjectId
+  creator         User  @relation("GuildCreator", fields: [creatorId], references: [id])
+  
+  membersId       String[] @db.ObjectId
+  members         User[]  @relation("GuildMembers", fields: [membersId], references: [id])
 
   createdAt       DateTime  @default(now()) @map(name: "created_at")
-  updatedAt       DateTime  @default(now()) @map(name: "updated_at")
-
-  // GuildMember     GuildMember[]
+  updatedAt       DateTime  @updatedAt @map(name: "updated_at")
 
   @@map("guilds")
 }
@@ -133,8 +132,8 @@ model Post {
   blog          Blog?
   notifications Notification[]
        
-  createdAt     DateTime  @default(now()) @map(name: "created_at")
-  updatedAt     DateTime  @default(now()) @map(name: "updated_at")
+  createdAt       DateTime  @default(now()) @map(name: "created_at")
+  updatedAt       DateTime  @updatedAt @map(name: "updated_at")
   bookmarks     Bookmark[]
   comments      Comment[]
   upvotes       Upvote[]
@@ -161,31 +160,10 @@ model Bookmark {
   postId        String @db.ObjectId
   post          Post @relation(fields: [postId], references: [id], onDelete: Cascade)
   
-  createdAt     DateTime  @default(now()) @map(name: "created_at")
-  updatedAt     DateTime  @default(now()) @map(name: "updated_at")
+  createdAt       DateTime  @default(now()) @map(name: "created_at")
+  updatedAt       DateTime  @updatedAt @map(name: "updated_at")
 
   @@map("bookmarks")
-}
-
-model Reply {
-  id             String   @id @default(auto()) @map("_id") @db.ObjectId
-  content        String 
-
-  commentId      String   @db.ObjectId
-  comment        Comment  @relation(fields: [commentId], references: [id], onDelete: Cascade)
-
-  userId         String   @db.ObjectId
-  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  parentReplyId  String?  @db.ObjectId
-  parentReply    Reply?   @relation("ParentReply", fields: [parentReplyId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-
-  childReplies   Reply[]  @relation("ParentReply")
-
-  createdAt      DateTime @default(now()) @map(name: "created_at")
-  updatedAt      DateTime @default(now()) @map(name: "updated_at")
-
-  @@map("replies")
 }
 
 model Comment {
@@ -195,13 +173,16 @@ model Comment {
   userId       String @db.ObjectId
   user         User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  // parentId     String?  @db.ObjectId
+  // parent       Comment?   @relation("ParentComment", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  // childReplies   Comment[]  @relation("ParentComment")
+
   postId       String @db.ObjectId
   post         Post @relation(fields: [postId], references: [id], onDelete: Cascade)
 
-  createdAt    DateTime  @default(now()) @map(name: "created_at")
-  updatedAt    DateTime  @default(now()) @map(name: "updated_at")
-
-  replies      Reply[]
+  createdAt       DateTime  @default(now()) @map(name: "created_at")
+  updatedAt       DateTime  @updatedAt @map(name: "updated_at")
 
   @@map("comments")
 }
@@ -214,8 +195,8 @@ model Upvote {
   postId        String @db.ObjectId
   post          Post @relation(fields: [postId], references: [id], onDelete: Cascade)
   
-  createdAt     DateTime  @default(now()) @map(name: "created_at")
-  updatedAt     DateTime  @default(now()) @map(name: "updated_at")
+  createdAt       DateTime  @default(now()) @map(name: "created_at")
+  updatedAt       DateTime  @updatedAt @map(name: "updated_at")
 
   @@map("upvotes")
 }
@@ -234,8 +215,8 @@ model Notification {
   recipientId   String @db.ObjectId
   recipient     User @relation("ReceivedNotifications",fields: [recipientId], references: [id], onDelete: Cascade)
 
-  createdAt     DateTime  @default(now()) @map(name: "created_at")
-  updatedAt     DateTime  @default(now()) @map(name: "updated_at")
+  createdAt       DateTime  @default(now()) @map(name: "created_at")
+  updatedAt       DateTime  @updatedAt @map(name: "updated_at")
 
   @@map("notifications")
 }
@@ -261,3 +242,4 @@ type Image {
   imageKey String
   imageUrl String
 }
+
