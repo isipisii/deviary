@@ -2,7 +2,7 @@ import { TSignUpSchema } from "@/app/(auth)/components/sign-up-form";
 import { useMutation } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
 import { Session } from "next-auth";
-import { useRouter } from "next-nprogress-bar";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 export function useSignUp() {

@@ -70,6 +70,8 @@ export const authOptions: NextAuthOptions = {
       // updates the token inside the server if the update is triggered
       if (trigger === "update" && session?.onboarded) {
         token.onboarded = session.onboarded as boolean
+        token.name = session.name 
+        token.picture = session.image
 
         return token
       }
