@@ -6,7 +6,6 @@ import { ThemeProvider } from "next-themes";
 import { NextUIProvider } from '@nextui-org/react'
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { AppProgressBar as ProgressBar } from 'next-nprogress-bar';
 import NextNProgress from "../ui/nprogress";
 
 export default function Providers({ children }: { children: ReactNode }) {
@@ -14,7 +13,7 @@ export default function Providers({ children }: { children: ReactNode }) {
     defaultOptions: {
       queries: {
         staleTime: 60 * 1000,
-        refetchInterval:  60 * 1000 , 
+        refetchInterval:  60 * 1000,
       }
     }
   }))
