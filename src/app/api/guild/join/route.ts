@@ -2,7 +2,7 @@ import { getServerSideSession } from "@/lib/auth";
 import { db } from "@/lib/prisma";
 import { NextResponse, NextRequest } from "next/server";
 
-//this for public guilds
+//this is for public guilds
 export const POST = async (req: NextRequest) => {
   const url = new URL(req.url);
   const session = await getServerSideSession();
