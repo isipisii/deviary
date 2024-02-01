@@ -17,6 +17,7 @@ export default async function EditPost({ params }: { params: { id: string } }) {
       diary: true,
     },
   }) as Partial<TPost>
+  
   return (
     <div className="p-6 md:p-12 w-full flex items-center justify-center">
       <div className="flex justify-between max-w-[900px] w-full flex-col item gap-6">

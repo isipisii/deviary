@@ -1,8 +1,8 @@
 import { db } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
-import { diarySchema } from "@/lib/validators/post-validator";
+import { diarySchema } from "@/lib/validators/post.validator";
 import { getServerSideSession } from "@/lib/auth";
-import { TDiarySchema } from "@/lib/validators/post-validator";
+import { TDiarySchema } from "@/lib/validators/post.validator";
 import createNonExistentTags from "@/utils/createNonExistentTags";
 
 export const POST = async (request: NextRequest) => {

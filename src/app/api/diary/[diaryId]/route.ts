@@ -1,6 +1,6 @@
 import { db } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
-import { TDiarySchema, diarySchema } from "@/lib/validators/post-validator";
+import { TDiarySchema, diarySchema } from "@/lib/validators/post.validator";
 import { getServerSideSession } from "@/lib/auth";
 
 type TParams = { 

@@ -2,7 +2,7 @@ import { db } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import { utapi } from "@/utils/uploadthingapi";
 import { getServerSideSession } from "@/lib/auth";
-import { blogSchemaServer } from "@/lib/validators/post-validator";
+import { blogSchemaServer } from "@/lib/validators/post.validator";
 import createNonExistentTags from "@/utils/createNonExistentTags";
 
 export const POST = async (request: NextRequest) => {

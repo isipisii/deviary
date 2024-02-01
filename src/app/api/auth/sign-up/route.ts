@@ -1,7 +1,7 @@
 import { db } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import argon2 from "argon2";
-import { signUpSchema } from "@/lib/validators/auth-validator";
+import { signUpSchema } from "@/lib/validators/auth.validator";
 import z from "zod";
 
 type TSignUpSchema = z.infer<typeof signUpSchema>
