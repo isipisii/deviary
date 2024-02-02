@@ -1,11 +1,11 @@
-// TODO: CREATE AN API HERE
-
 import { db } from "@/lib/prisma";
 import { NextResponse, NextRequest } from "next/server";
 import { getServerSideSession } from "@/lib/auth";
 import { getPusherInstance } from "@/lib/pusher/server";
 
 const pusherServer = getPusherInstance();
+
+// TODO: CREATE A GET METHOD
 
 export const POST = async (req: NextRequest) => {
   const url = new URL(req.url);
@@ -165,6 +165,7 @@ export const DELETE = async (req: NextRequest) => {
       },
       { status: 200 },
     );
+
   } catch (error) {
     return NextResponse.json(
       {
