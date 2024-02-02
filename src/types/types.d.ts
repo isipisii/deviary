@@ -63,6 +63,7 @@ type TNotification  = {
   senderId: readonly string
   recipientId: readonly string
   post: TPost
+  type: "UPVOTE" | "JOIN_REQUEST"
   viewed: boolean
   postId: string
   createdAt: Date;
