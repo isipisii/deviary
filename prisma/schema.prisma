@@ -53,33 +53,39 @@ model Social {
 }
 
 model User {
-  id              String @id @default(auto()) @map("_id") @db.ObjectId
-  name            String?
-  email           String? @unique
-  password        String?
-  emailVerified   DateTime?
-  image           String?
-  onboarded       Boolean?  @default(false)
-  social          Social?
+  id                    String @id @default(auto()) @map("_id") @db.ObjectId
+  name                  String?
+  email                 String? @unique
+  password              String?
+  emailVerified         DateTime?
+  image                 String?
+  onboarded             Boolean?  @default(false)
+  social                Social?
 
-  accounts        Account[]
-  sessions        Session[]
-  posts           Post[]
-  bookmarks       Bookmark[]
+  accounts              Account[]
+  sessions              Session[]
+  posts                 Post[]
+  bookmarks             Bookmark[]
   // GuildMember     GuildMember[]
-  comments        Comment[]
-  upvotes         Upvote[]
-  sentNotifications Notification[] @relation("SentNotifications")
+  comments              Comment[]
+  upvotes               Upvote[]
+  joinRequests          JoinRequest[]
+
+  sentNotifications     Notification[] @relation("SentNotifications")
   receivedNotifications Notification[] @relation("ReceivedNotifications")
 
-  guildsBelongId  String[] @db.ObjectId
-  guildsBelong     Guild[]  @relation("GuildMembers", fields: [guildsBelongId], references: [id])
+  guildsBelongId        String[] @db.ObjectId
+  guildsBelong          Guild[]  @relation("GuildMembers", fields: [guildsBelongId], references: [id])
 
-  guildsCreatedId String[] @db.ObjectId
-  guildsCreated   Guild[]  @relation("GuildCreator")
+  guildsCreatedId       String[] @db.ObjectId
+  guildsCreated         Guild[]  @relation("GuildCreator" )
 
-  createdAt       DateTime  @default(now()) @map(name: "created_at")
-  updatedAt       DateTime  @updatedAt @map(name: "updated_at")
+  // try
+  // guildsModeratedId     String[] @db.ObjectId
+  // guildsModerated       Guild[]  @relation("GuildModerators", fields: [guildsBelongId], references: [id])
+
+  createdAt             DateTime  @default(now()) @map(name: "created_at")
+  updatedAt             DateTime  @updatedAt @map(name: "updated_at")
 
   @@map("users")
 }
@@ -92,10 +98,16 @@ model Guild {
   isPrivate       Boolean @default(false)
   
   creatorId       String @db.ObjectId
-  creator         User  @relation("GuildCreator", fields: [creatorId], references: [id])
+  creator         User  @relation("GuildCreator", fields: [creatorId], references: [id], onDelete: Cascade)
   
   membersId       String[] @db.ObjectId
   members         User[]  @relation("GuildMembers", fields: [membersId], references: [id])
+
+  // try
+  // moderatorsId    String[] @db.ObjectId
+  // moderator       User[]  @relation("GuildModerators", fields: [moderatorsId], references: [id])
+
+  joinRequests    JoinRequest[]
 
   createdAt       DateTime  @default(now()) @map(name: "created_at")
   updatedAt       DateTime  @updatedAt @map(name: "updated_at")
@@ -103,6 +115,22 @@ model Guild {
   @@map("guilds")
 }
 
+model JoinRequest {
+  id             String @id @default(auto()) @map("_id") @db.ObjectId
+  guildId        String @db.ObjectId
+  guild          Guild @relation(fields: [guildId], references: [id], onDelete: Cascade)
+
+  senderId       String @db.ObjectId
+  sender         User @relation(fields: [senderId], references: [id], onDelete: Cascade)
+
+  // guildCreatorId String @db.ObjectId
+  notifications  Notification[]
+
+  createdAt      DateTime  @default(now()) @map(name: "created_at")
+  updatedAt      DateTime  @updatedAt @map(name: "updated_at")
+
+  @@map("join-requests")
+}
 // model GuildMember {
 //   id               String @id @default(auto()) @map("_id") @db.ObjectId
 //   memberId           String
@@ -132,8 +160,8 @@ model Post {
   blog          Blog?
   notifications Notification[]
        
-  createdAt       DateTime  @default(now()) @map(name: "created_at")
-  updatedAt       DateTime  @updatedAt @map(name: "updated_at")
+  createdAt     DateTime  @default(now()) @map(name: "created_at")
+  updatedAt     DateTime  @updatedAt @map(name: "updated_at")
   bookmarks     Bookmark[]
   comments      Comment[]
   upvotes       Upvote[]
@@ -195,8 +223,8 @@ model Upvote {
   postId        String @db.ObjectId
   post          Post @relation(fields: [postId], references: [id], onDelete: Cascade)
   
-  createdAt       DateTime  @default(now()) @map(name: "created_at")
-  updatedAt       DateTime  @updatedAt @map(name: "updated_at")
+  createdAt     DateTime  @default(now()) @map(name: "created_at")
+  updatedAt     DateTime  @updatedAt @map(name: "updated_at")
 
   @@map("upvotes")
 }
@@ -208,6 +236,9 @@ model Notification {
 
   postId        String? @db.ObjectId
   post          Post? @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  joinRequestId String? @db.ObjectId
+  joinRequest   JoinRequest? @relation(fields: [joinRequestId], references: [id], onDelete: Cascade)
     
   senderId      String @db.ObjectId
   sender        User @relation("SentNotifications", fields: [senderId], references: [id], onDelete: Cascade)
@@ -215,11 +246,12 @@ model Notification {
   recipientId   String @db.ObjectId
   recipient     User @relation("ReceivedNotifications",fields: [recipientId], references: [id], onDelete: Cascade)
 
-  createdAt       DateTime  @default(now()) @map(name: "created_at")
-  updatedAt       DateTime  @updatedAt @map(name: "updated_at")
+  createdAt     DateTime  @default(now()) @map(name: "created_at")
+  updatedAt     DateTime  @updatedAt @map(name: "updated_at")
 
   @@map("notifications")
 }
+
 
 model Tag {
   id         String @id @default(auto()) @map("_id") @db.ObjectId
@@ -230,7 +262,7 @@ model Tag {
 
 enum NotificationType  {
   UPVOTE
-  GUILD_JOIN
+  JOIN_REQUEST
 }
 
 enum PostType  {
