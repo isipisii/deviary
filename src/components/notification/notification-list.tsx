@@ -14,7 +14,7 @@ export default function NotificationList({
   useEffect(() => {
     setAsViewed();
   }, [setAsViewed]);
-
+  
   return (
     <ScrollShadow size={80} className="h-[500px] w-full px-4">
       <div className="flex w-full flex-col gap-4">

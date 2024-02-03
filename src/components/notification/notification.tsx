@@ -1,6 +1,6 @@
 "use client";
 
-import { FiBell } from "react-icons/fi";
+import { FaRegBell, FaBell } from "react-icons/fa";
 import {
   Popover,
   PopoverTrigger,
@@ -18,6 +18,7 @@ import NotificationSkeleton from "../skeleton-loaders/notification-skeleton";
 
 export default function Notification() {
   const { data: sessionData } = useSession();
+  const [isOpen, setIsOpen] = useState(false);
   const [hasNewNotification, setHasNewNotification] = useState(false);
   const { data: notifications, isLoading } = useGetNotifications();
   const queryClient = useQueryClient();
@@ -52,6 +53,8 @@ export default function Notification() {
       classNames={{
         content: ["bg-background", "rounded-xl border border-borderColor"],
       }}
+      isOpen={isOpen} 
+      onOpenChange={(open) => setIsOpen(open)}
     >
       <PopoverTrigger>
         <Button
@@ -62,7 +65,7 @@ export default function Notification() {
           {notifications?.some((notification) => !notification.viewed) && (
             <span className="absolute right-2 top-[.4rem] h-[10px] w-[10px] rounded-full bg-red-500"></span>
           )}
-          <FiBell />
+          {isOpen ? <FaBell/> : <FaRegBell />} 
         </Button>
       </PopoverTrigger>
       <PopoverContent>
@@ -90,7 +93,7 @@ export default function Notification() {
             <div className="flex h-[490px] w-full items-center justify-center">
               <div className="flex flex-col items-center gap-4">
                 <p className="text-[4rem] text-navTextColor">
-                  <FiBell />
+                  <FaRegBell />
                 </p>
                 <div className="space-y-2">
                   <h3 className="text-center text-lg font-semibold text-navTextColor md:text-xl">
