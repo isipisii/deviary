@@ -2,6 +2,7 @@ import { db } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSideSession } from "@/lib/auth";
 
+// accept the request
 export const POST = async (req: NextRequest) => {
   const url = new URL(req.url);
   const joinRequestId = url.searchParams.get("joinRequestId") as string;
@@ -65,7 +66,7 @@ export const POST = async (req: NextRequest) => {
       },
       { status: 200 },
     );
-    
+
   } catch (error) {
     return NextResponse.json(
       {

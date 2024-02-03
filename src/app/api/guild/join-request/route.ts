@@ -5,8 +5,7 @@ import { getPusherInstance } from "@/lib/pusher/server";
 
 const pusherServer = getPusherInstance();
 
-// TODO: CREATE A GET METHOD
-
+// create a join request to a specific guild
 export const POST = async (req: NextRequest) => {
   const url = new URL(req.url);
   const guildId = url.searchParams.get("guildId") as string;
@@ -98,6 +97,7 @@ export const POST = async (req: NextRequest) => {
   }
 };
 
+// remove request
 export const DELETE = async (req: NextRequest) => {
   const url = new URL(req.url);
   const joinRequestId = url.searchParams.get("joinRequestId") as string;
