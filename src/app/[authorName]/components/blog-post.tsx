@@ -93,7 +93,7 @@ export default function BlogPost({ post }: { post: TPost }) {
                   className="bg-background border-[1px] border-borderColor" 
                 />
               </div>
-              <PostActions post={post} />
+              <PostActions post={post} isInPostPage={true} />
             </div>
           </div>
           
