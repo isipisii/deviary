@@ -19,7 +19,7 @@ export default function BlogPostCard({ post }: IBlogPostCard) {
   const { text: estimatedReadingTime } = readingTime(content);
 
   return (
-    <Link href={formatPostHref(post)}>
+    <Link href={formatPostHref(post)} className="w-full">
       <div className="h-[400px] w-full max-w-[350px] rounded-3xl border-2 border-borderColor shadow-lg">
         <div className="relative h-full w-full">
           {/* image and bg gradient */}
