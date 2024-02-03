@@ -1,58 +1,76 @@
 "use client";
 
 import { Button } from "@nextui-org/react";
-import { useRouter } from "next-nprogress-bar";
+import { useRouter } from "next/navigation";
 import { FaRegComments } from "react-icons/fa";
 import { TbArrowBigUp, TbArrowBigUpFilled, TbShare3 } from "react-icons/tb";
 import { cn } from "@/utils/cn";
 import CustomTooltip from "../ui/custom-tooltip";
-import { useState, useCallback } from "react";
+import { useCallback, useState } from "react";
 import { useUpvote, useRemoveUpvote } from "@/lib/services/upvote.api";
 import formatPostHref from "@/utils/formatPostHref";
 
-type TOrientation = "vertical" | "horizontal";
-
-const orientationTypes: Record<string, string> = {
-  vertical: "gap-4 flex-col",
-  horizontal: "justify-between",
-};
-
 export default function PostActions({
   post,
-  orientation,
+  isInPostPage,
 }: {
   post: TPost;
-  orientation?: TOrientation;
+  isInPostPage?: boolean;
 }) {
   const router = useRouter();
-  const selectedOrientation = orientationTypes[orientation ?? "horizontal"];
-  const { mutate: upvoteMutation, isPending } = useUpvote();
-  const { mutate: removeUpvoteMutation } = useRemoveUpvote();
+  const { mutate: upvoteMutation } = useUpvote();
+  const { mutate: removeUpvoteMutation } = useRemoveUpvote()
+  const [postPageState, setPostPageState] = useState<TPost>(post)
 
-  // const [isUpvoted, setIsUpvoted] = useState(post.isUpvoted)
-  // const [upvoteCount, setUpvoteCount] = useState(post.upvoteCount)
-
+  // this is for card com ponents
   const handleToggleUpvote = useCallback(() => {
     if (post.isUpvoted) {
       removeUpvoteMutation(post.id);
-      // setUpvoteCount(prevCount => prevCount - 1)
-      // setIsUpvoted(false)
       return;
     }
     upvoteMutation(post.id);
-    // setUpvoteCount(prevCount => prevCount + 1)
-    // setIsUpvoted(true)
   }, [post.id, removeUpvoteMutation, upvoteMutation, post.isUpvoted]);
+
+  // this is for post page
+  const handleToggleUpvoteInPostPage = useCallback(() => {
+    if (postPageState.isUpvoted) {
+      removeUpvoteMutation(postPageState.id);
+      setPostPageState(prevState => ({
+        ...prevState,
+        isUpvoted: false,
+        upvoteCount: prevState.upvoteCount - 1
+      }))
+      return;
+    }
+    upvoteMutation(postPageState.id);
+    setPostPageState(prevState => ({
+      ...prevState,
+      isUpvoted: true,
+      upvoteCount: prevState.upvoteCount + 1
+    }))
+  }, [
+    postPageState,
+    removeUpvoteMutation,
+    upvoteMutation
+  ]);
 
   return (
     <div
-      className={cn("flex items-center", selectedOrientation)}
+      className="flex w-full items-center justify-between"
       data-nprogress-action={true}
     >
       <div className="flex items-center gap-1">
         <CustomTooltip
           placement="bottom"
-          content={post.isUpvoted ? "Remove Upvote" : "Upvote"}
+          content={
+            isInPostPage
+              ? postPageState.isUpvoted
+                ? "Remove Upvote"
+                : "Upvote"
+              : post.isUpvoted
+                ? "Remove Upvote"
+                : "Upvote"
+          }
         >
           <Button
             isIconOnly
@@ -60,20 +78,34 @@ export default function PostActions({
               `rounded-xl bg-[#fff0] text-2xl text-[#A1A1AA]
              hover:bg-[#34b6003b] hover:text-[#34FF00]`,
               {
-                "text-[#34FF00]": post.isUpvoted,
-                "text-[#A1A1AA]": !post.isUpvoted,
+                "text-[#34FF00]": isInPostPage ? postPageState.isUpvoted : post.isUpvoted,
+                "text-[#A1A1AA]": isInPostPage ? !postPageState.isUpvoted : !post.isUpvoted,
               },
             )}
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
-              handleToggleUpvote();
+              isInPostPage
+                ? handleToggleUpvoteInPostPage()
+                : handleToggleUpvote();
             }}
           >
-            {post.isUpvoted ? <TbArrowBigUpFilled /> : <TbArrowBigUp />}
+            {isInPostPage ? (
+              postPageState.isUpvoted ? (
+                <TbArrowBigUpFilled />
+              ) : (
+                <TbArrowBigUp />
+              )
+            ) : post.isUpvoted ? (
+              <TbArrowBigUpFilled />
+            ) : (
+              <TbArrowBigUp />
+            )}
           </Button>
         </CustomTooltip>
-        <p className="text-[#A1A1AA]">{post.upvoteCount}</p>
+        <p className="text-[#A1A1AA]">
+          {isInPostPage ? postPageState.upvoteCount : post.upvoteCount}
+        </p>
       </div>
 
       <CustomTooltip placement="bottom" content="Comments">
