@@ -27,10 +27,19 @@ type TPost = {
   blog?: TBlog;
   diary?: TDiary;
   isBookmarked?: boolean;
-  isUpvoted: boolean
-  upvoteCount: number
+  isUpvoted: boolean;
+  upvoteCount: number;
   authorId?: readonly string;
   createdAt: Date;
+};
+
+type TComment = {
+  id: readonly string;
+  user: TUser;
+  content: string;
+  postId: string;
+  createdAt: Date;
+  updatedAt: Date;
 };
 
 type TBlog = {
@@ -59,22 +68,22 @@ type TDiary = {
 
 type TComment = {
   id: readonly string;
-  content: string
-  userId: string
-  user: TUser
-  postId: string
+  content: string;
+  userId: string;
+  user: TUser;
+  postId: string;
   createdAt: Date;
-  updatedAt: Date
-}
+  updatedAt: Date;
+};
 
-type TNotification  = {
-  id: readonly string
-  sender: TUser
-  senderId: readonly string
-  recipientId: readonly string
-  post: TPost
-  type: "UPVOTE" | "JOIN_REQUEST"
-  viewed: boolean
-  postId: string
+type TNotification = {
+  id: readonly string;
+  sender: TUser;
+  senderId: readonly string;
+  recipientId: readonly string;
+  post: TPost;
+  type: "UPVOTE" | "JOIN_REQUEST";
+  viewed: boolean;
+  postId: string;
   createdAt: Date;
-}
+};
