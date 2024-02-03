@@ -136,12 +136,21 @@ export const POST = async (request: NextRequest) => {
         postId,
         userId: session.user.id,
         content
-      }
+      },
+      include: {
+        user: {
+          select: {
+            name: true,
+            email: true,
+            image: true,
+          },
+        },
+      },
     })
 
     return NextResponse.json(
       {
-        data: newComment,
+        newComment,
         success: true,
         message: "Comment created",
       },
