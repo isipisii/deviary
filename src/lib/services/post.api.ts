@@ -28,7 +28,7 @@ export async function getFeedPosts(
 
 export function useGetFeedPosts(filter?: string[]) {
   return useInfiniteQuery({
-    queryKey: ["posts"],
+    queryKey: [QueryKeys.Posts],
     initialPageParam: "",
     queryFn: ({ pageParam: lastCursor }) => getFeedPosts(5, lastCursor),
     getNextPageParam: (lastPage) =>
@@ -161,7 +161,6 @@ export function useDeletePost(closeModal?: () => void) {
   });
 }
 
-
 function createPostOptimisticUpdate(queryClient: QueryClient, newPost: TPost) {
   return queryClient.setQueryData<InfiniteData<TPage<TPost[]>>>(
     [QueryKeys.Posts],
@@ -205,8 +204,8 @@ function updatePostOptimisticUpdate(
                 return {
                   ...page,
                   data: page.data
-                    ? page.data.map((data) =>
-                        data.id === updatedPost.id ? updatedPost : data,
+                    ? page.data.map((post) =>
+                        post.id === updatedPost.id ? updatedPost : post,
                       )
                     : [],
                 };
