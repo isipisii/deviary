@@ -4,7 +4,7 @@
 @tailwind utilities;
 
 body {
-    font-family: 'Inter', sans-serif;
+    font-family: 'Noto Sans', sans-serif;
 }
 
 ::-webkit-scrollbar{
