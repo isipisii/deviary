@@ -57,6 +57,16 @@ type TDiary = {
   solution: string;
 };
 
+type TComment = {
+  id: readonly string;
+  content: string
+  userId: string
+  user: TUser
+  postId: string
+  createdAt: Date;
+  updatedAt: Date
+}
+
 type TNotification  = {
   id: readonly string
   sender: TUser
