@@ -57,7 +57,6 @@ export default function PostActions({
   return (
     <div
       className="flex w-full items-center justify-between"
-      data-nprogress-action={true}
     >
       <div className="flex items-center gap-1">
         <CustomTooltip
@@ -88,7 +87,7 @@ export default function PostActions({
             )}
             onClick={(e) => {
               e.preventDefault();
-              e.stopPropagation();
+              e.nativeEvent.stopImmediatePropagation();
               isInPostPage
                 ? handleToggleUpvoteInPostPage()
                 : handleToggleUpvote();
