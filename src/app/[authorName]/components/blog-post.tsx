@@ -34,12 +34,14 @@ export default function BlogPost({ post }: { post: TPost }) {
         >
           {/* RIGHT */}
           <div className="order-1 flex w-full flex-col gap-4 lg:order-none lg:max-w-[800px]">
-            <img
-              src={post.blog?.thumbnail?.imageUrl as string}
-              alt="thumbnail"
-              className="h-[200px] w-full object-cover px-[20px] md:h-[400px]"
-            />
-
+            <div className="w-full px-[20px]">
+              <img
+                src={post.blog?.thumbnail?.imageUrl as string}
+                alt="thumbnail"
+                className="h-[200px] w-full object-cover md:h-[400px] rounded-3xl"
+              /> 
+            </div>
+          
             <div className="w-full">
               <div className="flex flex-col gap-4 px-[20px]">
                 <div className="space-y-3">
