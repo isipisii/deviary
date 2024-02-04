@@ -9,7 +9,7 @@ import DiaryCard from "@/components/shared/diary-card";
 import PostsSkeletonLoader from "@/components/skeleton-loaders/posts-skeleton-loader";
 import { LuBookmark } from "react-icons/lu";
 import { Button } from "@nextui-org/react";
-import { useRouter } from "next-nprogress-bar";
+import { useRouter } from "next/router";
 
 export default function BookmarksContainer() {
   const router = useRouter();
@@ -25,6 +25,10 @@ export default function BookmarksContainer() {
     }
   }, [hasNextPage, inView, fetchNextPage]);
 
+
+  {/*this is the shape of pages if its empty: Array [ [] ], so in order to 
+  check if theres no bookmarks is to check if its 1st element is an array 
+  since it should be an empty page object*/}
   if (Array.isArray(data?.pages[0])) {
     return (
       <div className="grid h-[70vh] place-items-center">
