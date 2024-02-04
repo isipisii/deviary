@@ -9,31 +9,30 @@ import axios, { AxiosError } from "axios";
 import { toast } from "sonner";
 import { QueryKeys } from "../constants";
 
-// TODO: render comments, create mutation for delete and editing the comment, and prefetch the data in server
-export async function getPostComments(take: number, lastCursor: string) {
+export async function getPostComments(take: number, lastCursor: string, postId: string) {
   const res = await axios.get("/api/comments", {
-    params: { take, lastCursor },
+    params: { take, lastCursor, postId },
   });
 
   return res.data.data as TPage<TComment[]>;
 }
 
-export function useGetPostComments() {
+export function useGetPostComments(postId: string) {
   return useInfiniteQuery({
-    queryKey: [QueryKeys.Comments],
+    queryKey: [QueryKeys.Comments, postId],
     initialPageParam: "",
-    queryFn: ({ pageParam: lastCursor }) => getPostComments(5, lastCursor),
+    queryFn: ({ pageParam: lastCursor }) => getPostComments(5, lastCursor, postId),
     getNextPageParam: (lastPage) =>
       lastPage.metaData ? lastPage?.metaData.lastCursor : null,
   });
 }
 
-export function useCreateComment() {
+export function useCreateComment(resetForm: () => void) {
   const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ["createComment"],
-    mutationFn: async (content: string) => {
-      const res = await axios.post("/api/comments", { content });
+    mutationFn: async ({ content, postId }: { content: string, postId: string }) => {
+      const res = await axios.post("/api/comments", { content }, { params: { postId } });
       return res.data.newComment as TComment;
     },
     onSuccess: (newComment) => {
@@ -61,13 +60,79 @@ export function useCreateComment() {
           return newData;
         },
       );
+      resetForm()
     },
-    onError: (error: AxiosError<ErrorResponse>) => {
+    onError: (error) => {
       toast.error("An error occured while creating a comment");
+      console.log(error)
     },
-    onSettled: async () => {
-        await queryClient.invalidateQueries({queryKey: [QueryKeys.Comments]})
-    }
   });
 }
 
+export function useEditComment() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationKey: ["editComment"],
+    mutationFn: async ({
+      commentId,
+      content,
+    }: {
+      commentId: string;
+      content: string;
+    }) => {
+      const res = await axios.patch(`/api/comments/${commentId}`, {
+        content,
+      });
+
+      return res.data.udpatedComment as TComment;
+    },
+    onSuccess: async (updatedComment) => {
+      queryClient.setQueryData<InfiniteData<TPage<TComment[]>>>(
+        [QueryKeys.Comments],
+        (oldData) => {
+          const newData = oldData
+            ? {
+                ...oldData,
+                pages: oldData.pages.map((page, index) => {
+                  if (index === 0) {
+                    return {
+                      ...page,
+                      data: page.data
+                        ? page.data.map((comment) =>
+                            comment.id === updatedComment.id
+                              ? updatedComment
+                              : comment,
+                          )
+                        : [],
+                    };
+                  }
+                  return page;
+                }),
+              }
+            : oldData;
+
+          return newData;
+        },
+      );
+    },
+    onError: (error: AxiosError<ErrorResponse>) => {
+      toast.error("An error occured while deleting a comment");
+    },
+  });
+}
+
+export function useDeleteComment() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationKey: ["deleteComment"],
+    mutationFn: async (commentId: string) => {
+      return await axios.delete(`/api/comments/${commentId}`);
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: [QueryKeys.Comments] });
+    },
+    onError: (error: AxiosError<ErrorResponse>) => {
+      toast.error("An error occured while deleting a comment");
+    },
+  });
+}
