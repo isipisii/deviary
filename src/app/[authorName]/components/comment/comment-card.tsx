@@ -1,7 +1,7 @@
 import { User } from "@nextui-org/react";
 import React from "react";
 
-export default function CommentCard({ comment }: { comment?: TComment }) {
+export default function CommentCard({ comment }: { comment: TComment }) {
     
   return (
     <div
@@ -13,11 +13,12 @@ export default function CommentCard({ comment }: { comment?: TComment }) {
         <User
           as="button"
           avatarProps={{
-            src: "",
+            src: comment.user.image,
+            className: "h-[35px] w-[35px]"
           }}
           className="self-start transition-transform"
-          description="alebenig4@gmail.com"
-          name="Alessandro Benig"
+          name={comment.user.name}
+          description={comment?.user.email}
         />
         {/* <PostContextMenu
                       post={post}
@@ -26,8 +27,7 @@ export default function CommentCard({ comment }: { comment?: TComment }) {
       </div>
       {/* comment */}
       <p className="text-sm">
-        adsadwasdwasdwasdw flex-col gap flex-col gap flex-col gap flex-col gap
-        flex-col gap
+        {comment.content}
       </p>
       {/* <PostActions post={post} isInPostPage={true} /> */}
     </div>
