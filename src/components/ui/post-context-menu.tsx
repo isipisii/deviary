@@ -16,7 +16,7 @@ import {
   useCreateBookmark,
   useRemoveBookmark,
 } from "@/lib/services/bookmark.api";
-import { useRouter } from "next-nprogress-bar";
+import { useRouter } from "next/router";
 import { useDisclosure } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 import ConfirmationModal from "./confirmation-modal";
@@ -79,8 +79,6 @@ export default function PostContextMenu({
         }}
         isDelete
       />
-
-      <div data-nprogress-action={true}>
         <Dropdown
           className={cn("rounded-xl bg-cardBg", className)}
           placement="bottom-end"
@@ -88,7 +86,7 @@ export default function PostContextMenu({
           <DropdownTrigger
             onClick={(e) => {
               e.preventDefault();
-              e.stopPropagation();
+              e.nativeEvent.stopImmediatePropagation();
             }}
           >
             <Button
@@ -167,7 +165,6 @@ export default function PostContextMenu({
             }}
           </DropdownMenu>
         </Dropdown>
-      </div>
     </>
   );
 }
