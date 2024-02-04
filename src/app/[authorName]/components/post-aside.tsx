@@ -9,6 +9,7 @@ import { useSession } from "next-auth/react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import z from "zod";
+import { useCreateComment } from "@/lib/services/comments.api";
 
 const commentSchema = z.object({
   content: z.string().min(1, { message: "Title is required" }),
@@ -23,17 +24,23 @@ export default function PostAside({ post }: { post: TPost }) {
     register,
     handleSubmit,
     watch,
-    formState: { errors },
+    formState: { errors, },
+    reset
   } = useForm<TCommentSchema>({
     resolver: zodResolver(commentSchema),
   });
+  const {
+    mutate: createCommentMutation,
+    isPending: isCreatingComment,
+    variables,
+  } = useCreateComment(reset);
 
   function toggleOpenCommentForm() {
-    setIsCommentFormOpen(prevState => !prevState);
+    setIsCommentFormOpen((prevState) => !prevState);
   }
 
   function handleSubmitCommentMutation(formData: TCommentSchema) {
-    // todo
+    createCommentMutation({ content: formData.content, postId: post.id });
   }
 
   return (
@@ -87,6 +94,7 @@ export default function PostAside({ post }: { post: TPost }) {
               labelPlacement="inside"
               label="Write your comment"
               radius="lg"
+              minRows={3}
               maxRows={20}
               variant="bordered"
               classNames={{
@@ -99,15 +107,17 @@ export default function PostAside({ post }: { post: TPost }) {
             />
             <Button
               color="secondary"
+              type="submit"
               className="text-semibold self-end rounded-xl text-white"
               isDisabled={!!!watch("content")}
+              isLoading={isCreatingComment}
             >
               Comment
             </Button>
           </form>
         )}
         {/* comments */}
-        <CommentList />
+        <CommentList isCreatingComment={isCreatingComment} postId={post.id} />
       </div>
     </div>
   );
