@@ -41,6 +41,9 @@ export const GET = async (request: NextRequest) => {
           },
         },
       },
+      orderBy: {
+        createdAt: "desc",
+      },
     });
 
     if (comments.length === 0) {
