@@ -29,51 +29,49 @@ export default function NotificationContextMenu({
     useViewNotification();
 
   return (
-    <div data-nprogress-action={true}>
-      <Dropdown
-        className="rounded-xl border border-borderColor bg-background"
-        placement="bottom-end"
+    <Dropdown
+      className="rounded-xl border border-borderColor bg-background"
+      placement="bottom-end"
+    >
+      <DropdownTrigger
+        onClick={(e) => {
+          e.preventDefault();
+          e.nativeEvent.stopImmediatePropagation();
+        }}
       >
-        <DropdownTrigger
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-          }}
+        <Button
+          variant="light"
+          size="sm"
+          isIconOnly
+          className="z-[5] rounded-lg text-[1rem]"
+          startContent={<GoKebabHorizontal />}
+        />
+      </DropdownTrigger>
+      <DropdownMenu
+        aria-label="Dynamic Actions"
+        variant="flat"
+        disabledKeys={isPending ? ["delete"] : notification.viewed ? ["view"] : undefined}
+      >
+        <DropdownItem
+          key="delete"
+          startContent={
+            isPending ? <Spinner size="sm" color="danger" /> : <LuTrash />
+          }
+          className="rounded-lg text-danger"
+          color="danger"
+          onClick={() => deleteNotificationMutation(notification.id)}
         >
-          <Button
-            variant="light"
-            size="sm"
-            isIconOnly
-            className="z-[5] rounded-lg text-[1rem]"
-            startContent={<GoKebabHorizontal />}
-          />
-        </DropdownTrigger>
-        <DropdownMenu
-          aria-label="Dynamic Actions"
-          variant="flat"
-          disabledKeys={isPending ? ["delete"] : notification.viewed ? ["view"] : undefined}
+          {isPending ? "Deleting" : "Delete"}
+        </DropdownItem>
+        <DropdownItem
+          key="view"
+          startContent={<FaRegEye />}
+          className="rounded-lg"
+          onClick={() => viewNotificationMutation(notification.id)}
         >
-          <DropdownItem
-            key="delete"
-            startContent={
-              isPending ? <Spinner size="sm" color="danger" /> : <LuTrash />
-            }
-            className="rounded-lg text-danger"
-            color="danger"
-            onClick={() => deleteNotificationMutation(notification.id)}
-          >
-            {isPending ? "Deleting" : "Delete"}
-          </DropdownItem>
-          <DropdownItem
-            key="view"
-            startContent={<FaRegEye />}
-            className="rounded-lg"
-            onClick={() => viewNotificationMutation(notification.id)}
-          >
-            {notification.viewed ? "Viewed" : "Mark as viewed"}
-          </DropdownItem>
-        </DropdownMenu>
-      </Dropdown>
-    </div>
+          {notification.viewed ? "Viewed" : "Mark as viewed"}
+        </DropdownItem>
+      </DropdownMenu>
+    </Dropdown>
   );
 }
