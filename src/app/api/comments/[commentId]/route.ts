@@ -42,17 +42,25 @@ export const PATCH = async (request: NextRequest, { params }: TParams) => {
       data: {
         content,
       },
+      include: {
+        user: {
+          select: {
+            name: true,
+            email: true,
+            image: true,
+          },
+        },
+      },
     });
 
     return NextResponse.json(
       {
-        data: updatedComment,
+        updatedComment,
         success: true,
         message: "Comment updated",
       },
       { status: 200 },
     );
-
   } catch (error) {
     return NextResponse.json(
       {
