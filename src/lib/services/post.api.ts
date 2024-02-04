@@ -7,7 +7,7 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { QueryClient } from "@tanstack/query-core";
-import { useRouter } from "next-nprogress-bar";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { UseFormReturn } from "react-hook-form";
 import { QueryKeys } from "../constants";
