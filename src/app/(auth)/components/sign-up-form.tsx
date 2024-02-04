@@ -10,14 +10,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { FaEyeSlash, FaEye } from "react-icons/fa";
 import Link from "next/link";
-
 import { useSignUp } from "@/lib/services/auth.api";
-import { useRouter } from 'next-nprogress-bar';
 
 export type TSignUpSchema = z.infer<typeof signUpSchema>;
 
 export default function SignUpForm() {
-  const router = useRouter()
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] = useState(false);
   const {
@@ -109,7 +106,6 @@ export default function SignUpForm() {
         />
 
         <Button
-          type="submit"
           color="secondary"
           size="md"
           variant="solid"
