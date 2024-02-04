@@ -111,7 +111,7 @@ function upvoteOptismiticUpdate(
   queryClient: QueryClient,
   postId: string,
   upvoted: boolean,
-  searchQuery?: string
+  searchQuery?: string 
 ) {
   const cachedBookmarks = queryClient.getQueryData([QueryKeys.Bookmarks]);
   const cachedSearchedPosts = queryClient.getQueryData([QueryKeys.SearchedPosts, searchQuery]);
