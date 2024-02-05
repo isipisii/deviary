@@ -35,9 +35,9 @@ export function useCreateComment(resetForm: () => void) {
       const res = await axios.post("/api/comments", { content }, { params: { postId } });
       return res.data.newComment as TComment;
     },
-    onSuccess: (newComment) => {
+    onSuccess: (newComment, { postId }) => {
       queryClient.setQueryData<InfiniteData<TPage<TComment[]>>>(
-        [QueryKeys.Comments],
+        [QueryKeys.Comments, postId],
         (oldData) => {
           const newData = oldData
             ? {
@@ -69,8 +69,9 @@ export function useCreateComment(resetForm: () => void) {
   });
 }
 
-export function useEditComment() {
+export function useEditComment(closeEditForm: () => void) {
   const queryClient = useQueryClient();
+
   return useMutation({
     mutationKey: ["editComment"],
     mutationFn: async ({
@@ -79,22 +80,23 @@ export function useEditComment() {
     }: {
       commentId: string;
       content: string;
+      postId: string
     }) => {
       const res = await axios.patch(`/api/comments/${commentId}`, {
         content,
       });
 
-      return res.data.udpatedComment as TComment;
+      return res.data.updatedComment as TComment;
     },
-    onSuccess: async (updatedComment) => {
+    onSuccess: async (updatedComment, { postId }) => {
       queryClient.setQueryData<InfiniteData<TPage<TComment[]>>>(
-        [QueryKeys.Comments],
+        [QueryKeys.Comments, postId],
         (oldData) => {
           const newData = oldData
             ? {
                 ...oldData,
                 pages: oldData.pages.map((page, index) => {
-                  if (index === 0) {
+                  if (page) {
                     return {
                       ...page,
                       data: page.data
@@ -114,8 +116,10 @@ export function useEditComment() {
           return newData;
         },
       );
+      closeEditForm()
     },
     onError: (error: AxiosError<ErrorResponse>) => {
+      console.log(error)
       toast.error("An error occured while deleting a comment");
     },
   });
