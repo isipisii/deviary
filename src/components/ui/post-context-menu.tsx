@@ -16,7 +16,7 @@ import {
   useCreateBookmark,
   useRemoveBookmark,
 } from "@/lib/services/bookmark.api";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { useDisclosure } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 import ConfirmationModal from "./confirmation-modal";
