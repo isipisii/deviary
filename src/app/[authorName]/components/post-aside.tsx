@@ -11,11 +11,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import z from "zod";
 import { useCreateComment } from "@/lib/services/comments.api";
 
-const commentSchema = z.object({
+export const commentSchema = z.object({
   content: z.string().min(1, { message: "Title is required" }),
 });
 
-type TCommentSchema = z.infer<typeof commentSchema>;
+export type TCommentSchema = z.infer<typeof commentSchema>;
 
 export default function PostAside({ post }: { post: TPost }) {
   const [isCommentFormOpen, setIsCommentFormOpen] = useState(false);
