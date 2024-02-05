@@ -10,7 +10,7 @@ export default function CommentSkeleton() {
       <div className="flex justify-between">
         <div className="flex items-center gap-2">
           <Skeleton className="h-[35px] w-[35px] rounded-full" />
-          <div className="space- y-1">
+          <div className="space-y-1">
             <Skeleton className="h-[.75rem] w-[100px] rounded-full" />
             <Skeleton className="h-[.7rem] w-[90px] rounded-full" />
           </div>
