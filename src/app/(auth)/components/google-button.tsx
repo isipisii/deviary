@@ -4,7 +4,7 @@
 import { useState } from "react"
 import { signIn } from "next-auth/react"
 import { Button } from "@nextui-org/react"
-import { useRouter } from 'next-nprogress-bar';
+import { useRouter } from "next/navigation"
 import Image from "next/image";
 
 export default function GoogleButton() {
