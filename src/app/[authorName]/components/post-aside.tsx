@@ -3,44 +3,17 @@
 import { useState } from "react";
 import PostActions from "@/components/shared/post-actions";
 import PostContextMenu from "@/components/ui/post-context-menu";
-import { Textarea, User, Button } from "@nextui-org/react";
+import { User} from "@nextui-org/react";
 import CommentList from "./comment/comment-list";
 import { useSession } from "next-auth/react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import z from "zod";
-import { useCreateComment } from "@/lib/services/comments.api";
-
-export const commentSchema = z.object({
-  content: z.string().min(1, { message: "Title is required" }),
-});
-
-export type TCommentSchema = z.infer<typeof commentSchema>;
+import CommentForm from "./comment/comment-form";
 
 export default function PostAside({ post }: { post: TPost }) {
   const [isCommentFormOpen, setIsCommentFormOpen] = useState(false);
   const { data } = useSession();
-  const {
-    register,
-    handleSubmit,
-    watch,
-    formState: { errors, },
-    reset
-  } = useForm<TCommentSchema>({
-    resolver: zodResolver(commentSchema),
-  });
-  const {
-    mutate: createCommentMutation,
-    isPending: isCreatingComment,
-    variables,
-  } = useCreateComment(reset);
 
   function toggleOpenCommentForm() {
     setIsCommentFormOpen((prevState) => !prevState);
-  }
-
-  function handleSubmitCommentMutation(formData: TCommentSchema) {
-    createCommentMutation({ content: formData.content, postId: post.id });
   }
 
   return (
@@ -48,8 +21,8 @@ export default function PostAside({ post }: { post: TPost }) {
       <div className="order-last flex flex-col gap-4 md:sticky md:top-[5.5rem] md:m-0">
         <div
           className=" flex 
-            h-[150px] w-full flex-col justify-between
-            rounded-3xl border border-borderColor p-4"
+          h-[150px] w-full flex-col justify-between
+          rounded-3xl border border-borderColor p-4"
         >
           <div className="flex justify-between">
             <User
@@ -76,48 +49,20 @@ export default function PostAside({ post }: { post: TPost }) {
 
         {/* comment form */}
         {isCommentFormOpen && (
-          <form
-            className="flex flex-col gap-4 rounded-3xl 
-            border border-borderColor bg-background p-4"
-            onSubmit={handleSubmit(handleSubmitCommentMutation)}
-          >
-            <User
-              as="button"
-              avatarProps={{
-                src: data?.user.image ?? "",
-              }}
-              className="self-start transition-transform"
-              description={data?.user.email}
-              name={data?.user.name}
-            />
-            <Textarea
-              labelPlacement="inside"
-              label="Write your comment"
-              radius="lg"
-              minRows={3}
-              maxRows={20}
-              variant="bordered"
-              classNames={{
-                label: "font-semibold",
-                inputWrapper: " border-borderColor border-2 rounded-2xl",
-              }}
-              {...register("content")}
-              errorMessage={errors.content?.message}
-              isInvalid={!!errors.content}
-            />
-            <Button
-              color="secondary"
-              type="submit"
-              className="text-semibold self-end rounded-xl text-white"
-              isDisabled={!!!watch("content")}
-              isLoading={isCreatingComment}
-            >
-              Comment
-            </Button>
-          </form>
+          <CommentForm
+            isEditing={false}
+            textAreaProps={{
+              labelPlacement: "inside",
+              label: "Write your comment",
+              radius: "lg",
+              minRows: 3,
+              maxRows: 20,
+            }}
+            postId={post.id}
+          />
         )}
         {/* comments */}
-        <CommentList isCreatingComment={isCreatingComment} postId={post.id} />
+        <CommentList postId={post.id} />
       </div>
     </div>
   );
