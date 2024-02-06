@@ -82,7 +82,8 @@ type TNotification = {
   sender: TUser;
   senderId: readonly string;
   recipientId: readonly string;
-  post: TPost;
+  post?: TPost;
+  comment?: Partial<TComment>
   type: "UPVOTE" | "JOIN_REQUEST";
   viewed: boolean;
   postId: string;
