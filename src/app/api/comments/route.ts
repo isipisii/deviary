@@ -1,6 +1,9 @@
 import { db } from "@/lib/prisma";
 import { NextResponse, NextRequest } from "next/server";
 import { getServerSideSession } from "@/lib/auth";
+import { getPusherInstance } from "@/lib/pusher/server";
+
+const pusherServer = getPusherInstance();
 
 export const GET = async (request: NextRequest) => {
   const url = new URL(request.url);
@@ -9,7 +12,7 @@ export const GET = async (request: NextRequest) => {
   const lastCursor = url.searchParams.get("lastCursor") as string;
 
   try {
-    if(!postId) {
+    if (!postId) {
       return NextResponse.json(
         {
           message: "Missing post id",
@@ -98,13 +101,13 @@ export const GET = async (request: NextRequest) => {
 
 export const POST = async (request: NextRequest) => {
   const session = await getServerSideSession();
-  const url = new URL(request.url)
+  const url = new URL(request.url);
   const postId = url.searchParams.get("postId") as string;
   const body = (await request.json()) as { content: string };
   const { content } = body;
 
   try {
-    if(!postId) {
+    if (!postId) {
       return NextResponse.json(
         {
           message: "Missing post id",
@@ -134,11 +137,27 @@ export const POST = async (request: NextRequest) => {
       );
     }
 
+    const post = await db.post.findUnique({
+      where: {
+        id: postId,
+      },
+    });
+
+    if (!post) {
+      return NextResponse.json(
+        {
+          message: "Post not found",
+          success: false,
+        },
+        { status: 404 },
+      );
+    }
+
     const newComment = await db.comment.create({
       data: {
         postId,
         userId: session.user.id,
-        content
+        content,
       },
       include: {
         user: {
@@ -149,7 +168,49 @@ export const POST = async (request: NextRequest) => {
           },
         },
       },
-    })
+    });
+
+    // TODO: CREATE A UI FOR COMMENT NOTIFICATION AND APPEND THE NEW NOTIFICATION IN WEB SOCKET
+    if (post.authorId !== session.user.id) {
+      const notification = await db.notification.create({
+        data: {
+          senderId: session.user.id,
+          recipientId: post.authorId,
+          commentId: newComment.id,
+          type: "COMMENT",
+        },
+        include: {
+          sender: {
+            select: {
+              image: true,
+              name: true,
+              email: true,
+              id: true,
+            },
+          },
+          comment: {
+            select: {
+              content: true,
+              post: {
+                include: {
+                  blog: true,
+                  diary: true
+                }
+              }
+            },
+          },
+        },
+      });
+
+      console.log(notification)
+
+      // const channel = `channel_user_${notification.recipientId}`;
+      // const event = "new-notification";
+
+      // await pusherServer.trigger(channel, event, {
+      //   notification,
+      // });
+    }
 
     return NextResponse.json(
       {
@@ -159,7 +220,6 @@ export const POST = async (request: NextRequest) => {
       },
       { status: 200 },
     );
-
   } catch (error) {
     return NextResponse.json(
       {
