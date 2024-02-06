@@ -36,8 +36,9 @@ type TPost = {
 type TComment = {
   id: readonly string;
   user: TUser;
+  userId: readonly string;
   content: string;
-  postId: string;
+  postId: readonly string;
   createdAt: Date;
   updatedAt: Date;
 };
