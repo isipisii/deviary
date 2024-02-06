@@ -39,7 +39,6 @@ export default function CommentContextMenu({ comment, showEditForm }: { comment:
       <DropdownMenu
         aria-label="Dynamic Actions"
         variant="flat"
-        disabledKeys={isDeleting ? ["delete"] : undefined}
       >
         <DropdownItem
           key="edit"
@@ -56,7 +55,10 @@ export default function CommentContextMenu({ comment, showEditForm }: { comment:
           }
           className="rounded-lg text-danger"
           color="danger"
-          onClick={() => deleteCommentMutation(comment.id)}
+          onClick={() => {
+            if(isDeleting) return
+            deleteCommentMutation(comment.id)
+          }}
         >
           {isDeleting ? "Deleting" : "Delete"}
         </DropdownItem>
