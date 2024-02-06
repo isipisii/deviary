@@ -1,23 +1,13 @@
-export default function formatDate(date: Date) {
-    const currentDate = new Date().toLocaleDateString()
-    const dateParam = new Date(date)
+import { format, formatDistance, isYesterday, isToday } from "date-fns";
 
-    if(currentDate === dateParam.toLocaleDateString()) {
-        return "Today"
+export default function formatDate(date: Date) {
+    if(isToday(date)) {
+        return formatDistance(date, new Date(), { addSuffix: true })
     }
 
-    if(isYesterday(dateParam)) {
+    if(isYesterday(date)) {
         return "Yesterday"
     }
 
-    return dateParam.toDateString().split(" ").slice(1).join(" ")
-}
-
-function isYesterday (date: Date) {  
-    const yesterday = new Date()
-    yesterday.setDate(yesterday.getDate() - 1)
-  
-    return date.getDate() === yesterday.getDate() &&
-        date.getMonth() === yesterday.getMonth() &&
-        date.getFullYear() === yesterday.getFullYear()
+    return format(date, 'MMMM d, yyyy')
 }
