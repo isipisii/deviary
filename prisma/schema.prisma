@@ -205,12 +205,13 @@ model Comment {
   // parent       Comment?   @relation("ParentComment", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
   // childReplies   Comment[]  @relation("ParentComment")
+  notification Notification[]
 
   postId       String @db.ObjectId
   post         Post @relation(fields: [postId], references: [id], onDelete: Cascade)
 
-  createdAt       DateTime  @default(now()) @map(name: "created_at")
-  updatedAt       DateTime  @updatedAt @map(name: "updated_at")
+  createdAt    DateTime  @default(now()) @map(name: "created_at")
+  updatedAt    DateTime  @updatedAt @map(name: "updated_at")
 
   @@map("comments")
 }
@@ -234,7 +235,10 @@ model Notification {
   viewed        Boolean @default(false)
   type          NotificationType
 
-  postId        String? @db.ObjectId
+  commentId     String? @db.ObjectId 
+  comment       Comment? @relation(fields: [commentId], references: [id], onDelete: Cascade)
+
+  postId        String? @db.ObjectId 
   post          Post? @relation(fields: [postId], references: [id], onDelete: Cascade)
 
   joinRequestId String? @db.ObjectId
@@ -252,7 +256,6 @@ model Notification {
   @@map("notifications")
 }
 
-
 model Tag {
   id         String @id @default(auto()) @map("_id") @db.ObjectId
   tagName    String
@@ -263,6 +266,7 @@ model Tag {
 enum NotificationType  {
   UPVOTE
   JOIN_REQUEST
+  COMMENT
 }
 
 enum PostType  {
