@@ -11,7 +11,7 @@ export default function CommentList({
   isCreatingComment,
   postId,
 }: {
-  isCreatingComment: boolean;
+  isCreatingComment?: boolean;
   postId: string;
 }) {
   const { inView, ref } = useInView();
