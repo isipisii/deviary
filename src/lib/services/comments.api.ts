@@ -69,7 +69,7 @@ export function useCreateComment(resetForm: () => void) {
   });
 }
 
-export function useEditComment(closeEditForm: () => void) {
+export function useEditComment(closeEditForm?: () => void) {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -116,7 +116,8 @@ export function useEditComment(closeEditForm: () => void) {
           return newData;
         },
       );
-      closeEditForm()
+
+      if(closeEditForm) closeEditForm()
     },
     onError: (error: AxiosError<ErrorResponse>) => {
       console.log(error)
