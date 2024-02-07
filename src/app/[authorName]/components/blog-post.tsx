@@ -1,38 +1,26 @@
 /* eslint-disable @next/next/no-img-element */
-"use client";
 
-import { Button, Chip } from "@nextui-org/react";
 import MarkdownPreview from "./markdown-preview";
-import { useRouter } from "next/navigation";
-import { HiMiniArrowLongLeft } from "react-icons/hi2";
 import formatDate from "@/utils/formatDate";
 import readingTime from "reading-time";
 import PostAside from "./post-aside";
+import PostTags from "./post-tags";
+import BackButton from "./back-button";
 
 export default function BlogPost({ post }: { post: TPost }) {
-  const router = useRouter();
   const { text: estimatedReadingTime } = readingTime(
     post.blog?.content as string,
   );
 
   return (
     <>
-      <Button
-        variant="light"
-        size="md"
-        onClick={() => router.back()}
-        className="absolute left-5 top-5 rounded-xl text-sm font-semibold md:text-base"
-        isIconOnly
-      >
-        <HiMiniArrowLongLeft className="text-[1.5rem] md:text-[2rem]" />
-      </Button>
-
-      <div className="mt-20 flex w-full items-center justify-center sm:mt-[3.5rem] ">
+      <BackButton />
+      <section className="mt-20 flex w-full items-center justify-center sm:mt-[3.5rem] ">
         <div
           className="flex w-full max-w-[1500px] flex-col-reverse 
           justify-center p-0 md:p-4 lg:flex-row"
         >
-          {/* RIGHT */}
+          {/* LEFT */}
           <div className="order-1 flex w-full flex-col gap-4 lg:order-none lg:max-w-[800px]">
             <div className="w-full px-[20px]">
               <img
@@ -52,31 +40,16 @@ export default function BlogPost({ post }: { post: TPost }) {
                     {formatDate(post.createdAt)} • {estimatedReadingTime}
                   </p>
                 </div>
-                <div className="flex flex-wrap gap-2">
-                  {post.tags.map((tag, index) => (
-                    <Chip
-                      radius="full"
-                      size="md"
-                      color="secondary"
-                      variant="flat"
-                      classNames={{
-                        base: "border-none font-semibold",
-                      }}
-                      key={index}
-                    >
-                      #{tag}
-                    </Chip>
-                  ))}
-                </div>
+                <PostTags tags={post.tags}/>
               </div>
               <MarkdownPreview modelValue={post.blog?.content as string} />
             </div>
           </div>
                       
-          {/* LEFT */}
+          {/* RIGHT */}
           <PostAside post={post} />
         </div>
-      </div>
+      </section>
     </>
   );
 }
