@@ -9,7 +9,7 @@ export const userSelectedFields = {
   image: true,
 }
 
-export const GET = async () => {
+export const GET = async (request: NextRequest) => {
   const session = await getServerSideSession();
 
   try {
@@ -38,6 +38,22 @@ export const GET = async () => {
               select: {
                 ...userSelectedFields
               },
+            }
+          },
+        },
+        comment: {
+          select: {
+            content: true,
+            post: {
+              include: {
+                blog: true,
+                diary: true,
+                author: {
+                  select: {
+                    ...userSelectedFields
+                  }
+                }
+              }
             }
           },
         },
