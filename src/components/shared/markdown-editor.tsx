@@ -1,15 +1,13 @@
 "use client";
 
-import { MdPreview, MdCatalog, MdEditor } from "md-editor-rt";
+import { MdEditor } from "md-editor-rt";
 import "md-editor-rt/lib/style.css";
 import { useState } from "react";
 import { useTheme } from "next-themes";
 
-import type { Themes } from "md-editor-rt";
-
 export default function MarkdownEditor({ markdown, setValue }: { markdown: string, setValue: (v: string) => void }) {
   const [id] = useState("preview-only");
-  const { theme } = useTheme();
+  const { resolvedTheme } = useTheme();
 
   return (
     <div className="w-full">
@@ -17,7 +15,7 @@ export default function MarkdownEditor({ markdown, setValue }: { markdown: strin
         editorId={id}
         onChange={setValue}
         modelValue={markdown}
-        theme={theme as Themes}
+        theme={resolvedTheme === "dark" ? "dark" : "light"}
         style={{ borderRadius: ".9rem"}}
         language="en-US"
         pageFullscreen={false}
