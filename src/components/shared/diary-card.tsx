@@ -18,8 +18,8 @@ export default function DiaryCard({ post }: IDiaryCard) {
     <Link href={formatPostHref(post)} className=" w-full max-w-[350px]">
       <div
         className="flex h-[400px] w-full
-      flex-col justify-between gap-2 rounded-3xl border-2 
-      border-borderColor bg-cardBg p-4 shadow-xl"
+        flex-col justify-between gap-2 rounded-3xl border-2 
+        border-borderColor bg-cardBg p-4 shadow-xl"
       >
         <div className="grid gap-2">
           <div className="flex justify-between">
