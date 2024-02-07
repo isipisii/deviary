@@ -2,6 +2,7 @@ import { db } from "@/lib/prisma";
 import { NextResponse, NextRequest } from "next/server";
 import { getServerSideSession } from "@/lib/auth";
 import { getPusherInstance } from "@/lib/pusher/server";
+import { userSelectedFields } from "../notifications/route";
 
 const pusherServer = getPusherInstance();
 
@@ -170,7 +171,6 @@ export const POST = async (request: NextRequest) => {
       },
     });
 
-    // TODO: CREATE A UI FOR COMMENT NOTIFICATION AND APPEND THE NEW NOTIFICATION IN WEB SOCKET
     if (post.authorId !== session.user.id) {
       const notification = await db.notification.create({
         data: {
@@ -182,10 +182,7 @@ export const POST = async (request: NextRequest) => {
         include: {
           sender: {
             select: {
-              image: true,
-              name: true,
-              email: true,
-              id: true,
+              ...userSelectedFields
             },
           },
           comment: {
@@ -194,7 +191,12 @@ export const POST = async (request: NextRequest) => {
               post: {
                 include: {
                   blog: true,
-                  diary: true
+                  diary: true,
+                  author: {
+                    select: {
+                      ...userSelectedFields
+                    }
+                  }
                 }
               }
             },
@@ -202,14 +204,12 @@ export const POST = async (request: NextRequest) => {
         },
       });
 
-      console.log(notification)
+      const channel = `channel_user_${notification.recipientId}`;
+      const event = "new-notification";
 
-      // const channel = `channel_user_${notification.recipientId}`;
-      // const event = "new-notification";
-
-      // await pusherServer.trigger(channel, event, {
-      //   notification,
-      // });
+      await pusherServer.trigger(channel, event, {
+        notification,
+      });
     }
 
     return NextResponse.json(
