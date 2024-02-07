@@ -5,7 +5,15 @@ import "md-editor-rt/lib/style.css";
 import { useState } from "react";
 import { useTheme } from "next-themes";
 
-export default function MarkdownEditor({ markdown, setValue }: { markdown: string, setValue: (v: string) => void }) {
+
+
+export default function MarkdownEditor({
+  markdown,
+  setValue,
+}: {
+  markdown: string;
+  setValue: (v: string) => void;
+}) {
   const [id] = useState("preview-only");
   const { resolvedTheme } = useTheme();
 
@@ -16,7 +24,7 @@ export default function MarkdownEditor({ markdown, setValue }: { markdown: strin
         onChange={setValue}
         modelValue={markdown}
         theme={resolvedTheme === "dark" ? "dark" : "light"}
-        style={{ borderRadius: ".9rem"}}
+        style={{ borderRadius: ".9rem" }}
         language="en-US"
         pageFullscreen={false}
         scrollAuto
