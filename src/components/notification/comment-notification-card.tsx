@@ -27,7 +27,6 @@ export default function CommentNotificationCard({
             src={sender.image}
             className="h-[35px] w-[35px] md:h-[40px] md:w-[40px]"
           />
-
           <div className="absolute -bottom-2 -right-2 bg-background p-1 rounded-full">
             <p className="text-[1.1rem] text-[#4283f4] ">
               <FaComment />
