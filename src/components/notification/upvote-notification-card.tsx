@@ -15,48 +15,57 @@ export default function UpvoteNotificationCard({
   const { sender, post, createdAt } = notification;
 
   return (
-    <Link href={formatPostHref(post)} className="w-full" 
-    >            
-      <div className="relative flex gap-3 py-3 w-full">
+    <Link href={formatPostHref(post as TPost)} className="w-full">
+      <div className="relative flex w-full gap-3 py-3">
         {!notification.viewed && (
           <div className="absolute right-0 top-0 h-[10px] w-[10px] rounded-full bg-secondary" />
         )}
+        
+        {/* sender's avatar */}
+        <div className="relative h-[35px] w-[35px] md:h-[40px] md:w-[40px]">
+          <Avatar
+            src={sender.image}
+            className="h-[35px] w-[35px] md:h-[40px] md:w-[40px]"
+          />
 
-        <div className="relative md:h-[40px] md:w-[40px] h-[35px] w-[35px]">
-         <Avatar src={sender.image} className="md:h-[40px] md:w-[40px] h-[35px] w-[35px]" />
-          
-          <p className="absolute bottom-0 right-0 text-[1.1rem] text-[#34FF00]">
-            <TbArrowBigUpFilled />
-          </p>
+          <div className="absolute -bottom-2 -right-2 rounded-full bg-background p-1">
+            <p className="text-[1.1rem] text-[#34FF00]">
+              <TbArrowBigUpFilled />
+            </p>
+          </div>
         </div>
 
-        <div className="flex flex-col gap-3 w-[95%]">
+        <div className="flex w-[95%] flex-col gap-3">
           <div className="flex items-center justify-between">
-            <p className="text-xs md:text-sm">
+            <p className="text-[.8rem] md:text-[.93rem]">
               <Link href={`/profile/${sender.id}`} className="font-semibold">
                 {sender.name}
               </Link>{" "}
               <span className="text-navTextColor">
-                upvoted your {post.type === "BLOG_POST" ? "blog" : "diary"} post
+                upvoted your {post?.type === "BLOG_POST" ? "blog" : "diary"}{" "}
+                post
               </span>
             </p>
             <NotificationContextMenu notification={notification} />
           </div>
 
-          <div className="flex items-center gap-2 rounded-lg border border-borderColor p-3">
-            {post.type === "BLOG_POST" && (
+          {/* post */}
+          <div className="flex items-center gap-2 rounded-lg bg-light p-3">
+            {post?.type === "BLOG_POST" && (
               <img
-                src={post.blog?.thumbnail?.imageUrl}
+                src={post?.blog?.thumbnail?.imageUrl}
                 alt="try"
-                className="h-[40px] w-[80px]  md:h-[50px] md:w-[90px] rounded-md object-cover"
+                className="h-[40px] w-[80px] rounded-md object-cover md:h-[50px] md:w-[90px]"
               />
             )}
             {/* post title */}
-            <p className="text-xs md:text-sm">
-              {post.type === "BLOG_POST" ? post.blog?.title : post.diary?.title}
+            <p className="truncate text-[.75rem] md:text-[.8rem]">
+              {post?.type === "BLOG_POST"
+                ? post.blog?.title
+                : post?.diary?.title}
             </p>
           </div>
-          <p className="self-end md:text-xs text-[.7rem] text-navTextColor">
+          <p className="self-end text-[.7rem] text-navTextColor md:text-xs">
             {formatDate(createdAt)}
           </p>
         </div>
