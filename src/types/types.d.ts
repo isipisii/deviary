@@ -33,16 +33,6 @@ type TPost = {
   createdAt: Date;
 };
 
-type TComment = {
-  id: readonly string;
-  user: TUser;
-  userId: readonly string;
-  content: string;
-  postId: readonly string;
-  createdAt: Date;
-  updatedAt: Date;
-};
-
 type TBlog = {
   content: string;
   thumbnail?: {
@@ -72,6 +62,7 @@ type TComment = {
   content: string;
   userId: string;
   user: TUser;
+  post: TPost;
   postId: string;
   createdAt: Date;
   updatedAt: Date;
@@ -82,9 +73,9 @@ type TNotification = {
   sender: TUser;
   senderId: readonly string;
   recipientId: readonly string;
-  post?: TPost;
   comment?: Partial<TComment>
-  type: "UPVOTE" | "JOIN_REQUEST";
+  post?: TPost;
+  type: "UPVOTE" | "JOIN_REQUEST" | "COMMENT";
   viewed: boolean;
   postId: string;
   createdAt: Date;
