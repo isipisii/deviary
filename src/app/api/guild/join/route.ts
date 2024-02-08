@@ -55,16 +55,12 @@ export const POST = async (req: NextRequest) => {
       );
     }
 
-    await db.guild.update({
+    await db.guildMember.create({
       data: {
-        membersId: {
-          push: session.user.id,
-        },
-      },
-      where: {
-        id: guildId,
-      },
-    });
+        userId: session.user.id,
+        guildId
+      }
+    })
 
     return NextResponse.json(
       {
