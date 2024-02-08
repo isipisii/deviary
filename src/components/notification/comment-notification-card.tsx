@@ -16,19 +16,19 @@ export default function CommentNotificationCard({
 
   return (
     <Link href={formatPostHref(comment?.post as TPost)} className="w-full">
-      <div className="relative flex w-full gap-3 rounded-lg py-4">
+      <div className="relative flex w-full gap-3 p-4 hover:bg-[#a8a7a716] transition-all duration-1000 ease-in-out ">
         {!notification.viewed && (
-          <div className="absolute right-0 top-0 h-[10px] w-[10px] rounded-full bg-secondary" />
+          <div className="absolute left-6 top-1/2 h-[10px] w-[10px] rounded-full bg-secondary" />
         )}
 
         {/* sender's avatar */}
-        <div className="relative h-[35px] w-[35px] md:h-[40px] md:w-[40px]">
+        <div className="relative h-[30px] w-[30px] md:h-[35px] md:w-[35px]">
           <Avatar
             src={sender.image}
-            className="h-[35px] w-[35px] md:h-[40px] md:w-[40px]"
+            className="h-[30px] w-[30px] md:h-[35px] md:w-[35px]"
           />
           <div className="absolute -bottom-2 -right-2 bg-background p-1 rounded-full">
-            <p className="text-[1.1rem] text-[#4283f4] ">
+            <p className="text-[1rem] text-[#4283f4] ">
               <FaComment />
             </p>
           </div>
@@ -49,20 +49,11 @@ export default function CommentNotificationCard({
             <NotificationContextMenu notification={notification} />
           </div>
 
-          {/* post */}
+          {/* comment */}
           <div className="flex items-center gap-2 rounded-lg bg-light p-3">
-            {comment?.post?.type === "BLOG_POST" && (
-              <img
-                src={comment?.post?.blog?.thumbnail?.imageUrl}
-                alt="try"
-                className="h-[40px] w-[80px] rounded-md object-cover md:h-[50px] md:w-[90px]"
-              />
-            )}
-            {/* post title */}
-            <p className="truncate text-[.75rem] md:text-[.8rem]">
-              {comment?.post?.type === "BLOG_POST"
-                ? comment.post.blog?.title
-                : comment?.post?.diary?.title}
+            {/* comment content */}
+            <p className="truncate text-[.8rem] md:text-[.93rem] font-medium">
+              {comment?.content}
             </p>
           </div>
 

@@ -15,10 +15,13 @@ import { useQueryClient } from "@tanstack/react-query";
 import { newNotificationOptimisticUpdate } from "@/lib/services/notifications.api";
 import NotificationList from "./notification-list";
 import NotificationSkeleton from "../skeleton-loaders/notification-skeleton";
+import { FaRegEye } from "react-icons/fa6";
+import { useViewAllNotifications } from "@/lib/services/notifications.api";
 
 export default function Notification() {
   const { data: sessionData } = useSession();
   const [isOpen, setIsOpen] = useState(false);
+  const { mutate: viewAllNotificationsMutation } = useViewAllNotifications()
   const [hasNewNotification, setHasNewNotification] = useState(false);
   const { data: notifications, isLoading } = useGetNotifications();
   const queryClient = useQueryClient();
@@ -51,9 +54,9 @@ export default function Notification() {
     <Popover
       placement="bottom-end"
       classNames={{
-        content: ["bg-background", "rounded-xl border border-borderColor"],
+        content: ["bg-background p-0", "rounded-xl border border-borderColor"],
       }}
-      isOpen={isOpen} 
+      isOpen={isOpen}
       onOpenChange={(open) => setIsOpen(open)}
     >
       <PopoverTrigger>
@@ -65,7 +68,7 @@ export default function Notification() {
           {notifications?.some((notification) => !notification.viewed) && (
             <span className="absolute right-2 top-[.4rem] h-[10px] w-[10px] rounded-full bg-red-500"></span>
           )}
-          {isOpen ? <FaBell/> : <FaRegBell />} 
+          {isOpen ? <FaBell /> : <FaRegBell />}
         </Button>
       </PopoverTrigger>
       <PopoverContent>
@@ -107,6 +110,18 @@ export default function Notification() {
             </div>
           )}
 
+          <div className="flex w-full items-end justify-end px-4">
+            <Button
+              color="secondary"
+              variant="light"
+              size="sm"
+              className="rounded-lg"
+              startContent={<FaRegEye />}
+              onClick={() => viewAllNotificationsMutation()}
+            >
+              Mark all as viewed
+            </Button>
+          </div>
         </div>
       </PopoverContent>
     </Popover>
