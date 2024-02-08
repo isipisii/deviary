@@ -66,20 +66,19 @@ model User {
   sessions              Session[]
   posts                 Post[]
   bookmarks             Bookmark[]
-  // GuildMember     GuildMember[]
   comments              Comment[]
   upvotes               Upvote[]
   joinRequests          JoinRequest[]
+  guildsBelong          GuildMember[]
 
   sentNotifications     Notification[] @relation("SentNotifications")
   receivedNotifications Notification[] @relation("ReceivedNotifications")
 
-  guildsBelongId        String[] @db.ObjectId
-  guildsBelong          Guild[]  @relation("GuildMembers", fields: [guildsBelongId], references: [id])
+  // guildsBelongId        String[] @db.ObjectId
+  // guildsBelong          Guild[]  @relation("GuildMembers", fields: [guildsBelongId], references: [id])
 
   guildsCreatedId       String[] @db.ObjectId
-  guildsCreated         Guild[]  @relation("GuildCreator" )
-
+  guildsCreated         Guild[] @relation("GuildCreator")
   // try
   // guildsModeratedId     String[] @db.ObjectId
   // guildsModerated       Guild[]  @relation("GuildModerators", fields: [guildsBelongId], references: [id])
@@ -99,20 +98,31 @@ model Guild {
   
   creatorId       String @db.ObjectId
   creator         User  @relation("GuildCreator", fields: [creatorId], references: [id], onDelete: Cascade)
-  
-  membersId       String[] @db.ObjectId
-  members         User[]  @relation("GuildMembers", fields: [membersId], references: [id])
 
   // try
   // moderatorsId    String[] @db.ObjectId
   // moderator       User[]  @relation("GuildModerators", fields: [moderatorsId], references: [id])
-
+  members         GuildMember[]
   joinRequests    JoinRequest[]
 
   createdAt       DateTime  @default(now()) @map(name: "created_at")
   updatedAt       DateTime  @updatedAt @map(name: "updated_at")
 
   @@map("guilds")
+}
+
+model GuildMember {
+  id              String @id @default(auto()) @map("_id") @db.ObjectId
+  userId          String @db.ObjectId
+  user            User  @relation(fields: [userId], references: [id], onDelete: Cascade) 
+  
+  guildId         String @db.ObjectId
+  guild           Guild  @relation(fields: [guildId], references: [id], onDelete: Cascade) 
+
+  createdAt       DateTime  @default(now()) @map(name: "created_at")
+  updatedAt       DateTime  @updatedAt @map(name: "updated_at")
+
+  @@map("guild-members")
 }
 
 model JoinRequest {
@@ -131,11 +141,6 @@ model JoinRequest {
 
   @@map("join-requests")
 }
-// model GuildMember {
-//   id               String @id @default(auto()) @map("_id") @db.ObjectId
-//   memberId           String
-//   user             User  @relation(fields: [memberId], references: [id]) 
-// }
 
 model Blog {
   id            String @id @default(auto()) @map("_id") @db.ObjectId
