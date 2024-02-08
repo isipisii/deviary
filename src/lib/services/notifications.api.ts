@@ -20,6 +20,7 @@ export function useDeleteNotification() {
   const queryClient = useQueryClient();
 
   return useMutation({
+    mutationKey: ["deleteNotification"],
     mutationFn: async (notificationId: string) => {
       return await axios.delete(`/api/notifications/${notificationId}`);
     },
@@ -34,10 +35,43 @@ export function useDeleteNotification() {
   });
 }
 
+export function useViewAllNotifications() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationKey: ["viewAllNotifications"],
+    mutationFn: async () => {
+      return await axios.patch("/api/notifications/view/all");
+    },
+    onMutate: async () => {
+      await queryClient.cancelQueries({ queryKey: [QueryKeys.Notifications] });
+      const previousNotifications = queryClient.getQueryData([
+        QueryKeys.Notifications,
+      ]);
+      viewAllNotificationsOptimisticUpdate(queryClient);
+
+      return { previousNotifications };
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: [QueryKeys.Notifications],
+      });
+    },
+    onError: (error, notificationId, context) => {
+      if (context)
+        queryClient.setQueryData(
+          [QueryKeys.Notifications],
+          context.previousNotifications,
+        );
+    },
+  });
+}
+
 export function useViewNotification() {
   const queryClient = useQueryClient();
 
   return useMutation({
+    mutationKey: ["viewNotification"],
     mutationFn: async (notificationId: string) => {
       return await axios.patch(`/api/notifications/view/${notificationId}`);
     },
@@ -55,19 +89,17 @@ export function useViewNotification() {
         queryKey: [QueryKeys.Notifications],
       });
     },
-    onError: (error, noitificationId, context) => {
+    onError: (error, notificationId, context) => {
       if (context)
         queryClient.setQueryData(
           [QueryKeys.Notifications],
-          context?.previousNotifications,
+          context.previousNotifications,
         );
-
-      console.log(error);
-      toast.error("An error occured while deleting the notification");
     },
   });
 }
 
+// this fn is used for upcoming notifications from web socket
 export async function newNotificationOptimisticUpdate(
   queryClient: QueryClient,
   newNotification: TNotification,
@@ -97,6 +129,18 @@ function viewNotificationOptimisticUpdate(
               ? { ...notification, viewed: true }
               : notification,
           )
+        : oldData;
+      return newData;
+    },
+  );
+}
+
+function viewAllNotificationsOptimisticUpdate(queryClient: QueryClient) {
+  queryClient.setQueryData<TNotification[]>(
+    [QueryKeys.Notifications],
+    (oldData) => {
+      const newData = oldData
+        ? oldData.map((notification) => ({ ...notification, viewed: true }))
         : oldData;
       return newData;
     },
