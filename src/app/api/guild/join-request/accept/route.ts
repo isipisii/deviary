@@ -7,6 +7,7 @@ export const POST = async (req: NextRequest) => {
   const url = new URL(req.url);
   const joinRequestId = url.searchParams.get("joinRequestId") as string;
   const session = await getServerSideSession();
+  const authenticatedUserId = session?.user.id;
 
   try {
     if (!session) {
@@ -42,17 +43,25 @@ export const POST = async (req: NextRequest) => {
       );
     }
 
-    await db.guild.update({
-      where: {
-        id: existingRequest.guildId,
-      },
-      data: {
-        membersId: {
-          push: session.user.id,
+    if (existingRequest.guild.creatorId !== authenticatedUserId) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "You cant remove this request",
         },
+        { status: 403 },
+      );
+    }
+
+    // create a new guild member
+    await db.guildMember.create({
+      data: {
+        userId: existingRequest.senderId,
+        guildId: existingRequest.guildId,
       },
     });
 
+    // delete the join request
     await db.joinRequest.delete({
       where: {
         id: existingRequest.id,
@@ -66,7 +75,6 @@ export const POST = async (req: NextRequest) => {
       },
       { status: 200 },
     );
-
   } catch (error) {
     return NextResponse.json(
       {
