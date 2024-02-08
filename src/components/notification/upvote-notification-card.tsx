@@ -16,26 +16,27 @@ export default function UpvoteNotificationCard({
 
   return (
     <Link href={formatPostHref(post as TPost)} className="w-full">
-      <div className="relative flex w-full gap-3 py-3">
+       <div className="relative flex w-full gap-3 p-4 hover:bg-[#a8a7a716] transition-all duration-1000 ease-in-out ">
         {!notification.viewed && (
-          <div className="absolute right-0 top-0 h-[10px] w-[10px] rounded-full bg-secondary" />
+          <div className="absolute left-6 top-1/2 h-[10px] w-[10px] rounded-full bg-secondary" />
         )}
         
         {/* sender's avatar */}
-        <div className="relative h-[35px] w-[35px] md:h-[40px] md:w-[40px]">
+        <div className="relative h-[30px] w-[30px] md:h-[35px] md:w-[35px]">
           <Avatar
             src={sender.image}
-            className="h-[35px] w-[35px] md:h-[40px] md:w-[40px]"
+            className="h-[30px] w-[30px] md:h-[35px] md:w-[35px]"
           />
 
           <div className="absolute -bottom-2 -right-2 rounded-full bg-background p-1">
-            <p className="text-[1.1rem] text-[#34FF00]">
+            <p className="text-[1rem] text-[#34FF00]">
               <TbArrowBigUpFilled />
             </p>
           </div>
         </div>
 
-        <div className="flex w-[95%] flex-col gap-3">
+        <div className="flex w-[90%] flex-col gap-3">
+          {/* sender */}
           <div className="flex items-center justify-between">
             <p className="text-[.8rem] md:text-[.93rem]">
               <Link href={`/profile/${sender.id}`} className="font-semibold">
@@ -59,7 +60,7 @@ export default function UpvoteNotificationCard({
               />
             )}
             {/* post title */}
-            <p className="truncate text-[.75rem] md:text-[.8rem]">
+            <p className="truncate text-[.75rem] md:text-[.8rem] font-medium">
               {post?.type === "BLOG_POST"
                 ? post.blog?.title
                 : post?.diary?.title}
