@@ -7,7 +7,7 @@ import {
 import axios from "axios";
 import { updateRoute } from "../actions";
 import { QueryKeys } from "../constants";
-import { usePathname, useSearchParams } from "next/navigation";
+import { useParams, usePathname, useSearchParams } from "next/navigation";
 
 export function useUpvote() {
   const queryClient = useQueryClient();
@@ -15,6 +15,7 @@ export function useUpvote() {
   const path = usePathname();
   const searchParams = useSearchParams()
   const searchQuery = searchParams?.get("query") as string
+  const { tagName } = useParams() as { tagName: string }
 
   return useMutation({
     mutationKey: ["upvote"],
@@ -26,15 +27,11 @@ export function useUpvote() {
       );
     },
     onMutate: async (postId) => {
-      await queryClient.cancelQueries({ queryKey: [QueryKeys.Posts] });
-      await queryClient.cancelQueries({ queryKey: [QueryKeys.Bookmarks] });
+      await cancelQueries(queryClient, searchQuery, tagName)
+      const cachedDataSnapshot  = getCachedDataSnapshot(queryClient, searchQuery, tagName)
+      upvoteOptismiticUpdate(queryClient, postId, true, searchQuery, tagName);
 
-      const previousPosts = queryClient.getQueryData([QueryKeys.Posts]);
-      const previousBookmarks = queryClient.getQueryData([QueryKeys.Bookmarks]);
-
-      upvoteOptismiticUpdate(queryClient, postId, true, searchQuery);
-
-      return { previousPosts, previousBookmarks };
+      return cachedDataSnapshot
     },
     onError: (error, postId, context) => {
       queryClient.setQueryData([QueryKeys.Posts], context?.previousPosts);
@@ -42,18 +39,11 @@ export function useUpvote() {
         [QueryKeys.Bookmarks],
         context?.previousBookmarks,
       );
+      queryClient.setQueryData([QueryKeys.PostsByTag, tagName], context?.previousPostsByTag);
     },
     onSettled: async () => {
-      await queryClient.invalidateQueries({
-        queryKey: [QueryKeys.Posts],
-      });
-      await queryClient.invalidateQueries({
-        queryKey: [QueryKeys.Bookmarks],
-      });
-      await queryClient.invalidateQueries({
-        queryKey: [QueryKeys.SearchedPosts, searchQuery],
-      });
-      updateRoute(path as string);
+      await invalidateQueries(queryClient, searchQuery, tagName)
+      // updateRoute(path as string);
     },
   });
 }
@@ -64,6 +54,7 @@ export function useRemoveUpvote() {
   const path = usePathname();
   const searchParams = useSearchParams()
   const searchQuery = searchParams?.get("query") as string
+  const { tagName } = useParams() as { tagName: string }
 
   return useMutation({
     mutationKey: ["removeUpvote"],
@@ -74,15 +65,11 @@ export function useRemoveUpvote() {
       });
     },
     onMutate: async (postId) => {
-      await queryClient.cancelQueries({ queryKey: [QueryKeys.Posts] });
-      await queryClient.cancelQueries({ queryKey: [QueryKeys.Bookmarks] });
+      await cancelQueries(queryClient, searchQuery, tagName)
+      const cachedDataSnapshot  = getCachedDataSnapshot(queryClient, searchQuery, tagName)
+      upvoteOptismiticUpdate(queryClient, postId, false, searchQuery, tagName);
 
-      const previousPosts = queryClient.getQueryData([QueryKeys.Posts]);
-      const previousBookmarks = queryClient.getQueryData([QueryKeys.Bookmarks]);
-
-      upvoteOptismiticUpdate(queryClient, postId, false, searchQuery);
-
-      return { previousPosts, previousBookmarks };
+      return cachedDataSnapshot
     },
     onError: (error, postId, context) => {
       queryClient.setQueryData([QueryKeys.Posts], context?.previousPosts);
@@ -90,28 +77,50 @@ export function useRemoveUpvote() {
         [QueryKeys.Bookmarks],
         context?.previousBookmarks,
       );
+      queryClient.setQueryData([QueryKeys.PostsByTag, tagName], context?.previousPostsByTag);
     },
     onSettled: async () => {
-      await queryClient.invalidateQueries({
-        queryKey: [QueryKeys.Posts],
-      });
-      await queryClient.invalidateQueries({
-        queryKey: [QueryKeys.Bookmarks],
-      });
-
-      await queryClient.invalidateQueries({
-        queryKey: [QueryKeys.SearchedPosts, searchQuery],
-      });
-      updateRoute(path as string);
+      await invalidateQueries(queryClient, searchQuery, tagName)
+      // updateRoute(path as string);
     },
   });
+}
+
+function getCachedDataSnapshot(queryClient: QueryClient, searchQuery?: string, tagName?: string) {
+  const previousPosts = queryClient.getQueryData([QueryKeys.Posts]);
+  const previousBookmarks = queryClient.getQueryData([QueryKeys.Bookmarks]);
+  const previousPostsByTag = queryClient.getQueryData([QueryKeys.PostsByTag, tagName]);
+  const previousSearchedPosts = queryClient.getQueryData([QueryKeys.SearchedPosts, searchQuery]);
+
+  return { previousBookmarks, previousPostsByTag, previousPosts, previousSearchedPosts }
+}
+
+async function cancelQueries(queryClient: QueryClient, searchQuery?: string, tagName?: string) {
+  await queryClient.cancelQueries({ queryKey: [QueryKeys.Posts] });
+  await queryClient.cancelQueries({ queryKey: [QueryKeys.Bookmarks] });
+  await queryClient.cancelQueries({ queryKey: [QueryKeys.SearchedPosts, searchQuery] });
+  await queryClient.cancelQueries({ queryKey: [QueryKeys.PostsByTag, tagName] });
+}
+
+async function invalidateQueries(queryClient: QueryClient, searchQuery?: string, tagName?: string) {
+  await queryClient.invalidateQueries({
+    queryKey: [QueryKeys.Posts],
+  });
+  await queryClient.invalidateQueries({
+    queryKey: [QueryKeys.Bookmarks],
+  });
+  await queryClient.invalidateQueries({
+    queryKey: [QueryKeys.SearchedPosts, searchQuery],
+  });
+  await queryClient.invalidateQueries({ queryKey: [QueryKeys.PostsByTag, tagName] });
 }
 
 function upvoteOptismiticUpdate(
   queryClient: QueryClient,
   postId: string,
   upvoted: boolean,
-  searchQuery?: string 
+  searchQuery?: string,
+  tagPageParam?: string
 ) {
   const cachedBookmarks = queryClient.getQueryData([QueryKeys.Bookmarks]);
   const cachedSearchedPosts = queryClient.getQueryData([QueryKeys.SearchedPosts, searchQuery]);
@@ -212,4 +221,39 @@ function upvoteOptismiticUpdate(
       return newData;
     });
   }
+
+  queryClient.setQueryData<InfiniteData<TPage<TPost[]>>>(
+    [QueryKeys.PostsByTag, tagPageParam],
+    (oldData) => {
+      const newData = oldData
+        ? {
+            ...oldData,
+            pages: oldData.pages.map((page) => {
+              if (page) {
+                return {
+                  ...page,
+                  data: page.data
+                    ? page.data.map((post) =>
+                        post.id === postId
+                          ? {
+                              ...post,
+                              upvoteCount: upvoted
+                                ? post.upvoteCount + 1
+                                : post.upvoteCount - 1,
+                              isUpvoted: upvoted,
+                            }
+                          : post,
+                      )
+                    : [],
+                };
+              }
+
+              return page;
+            }),
+          }
+        : oldData;
+
+      return newData;
+    },
+  );
 }
