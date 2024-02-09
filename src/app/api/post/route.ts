@@ -4,7 +4,7 @@ import { getServerSideSession } from "@/lib/auth";
 
 export const GET = async (request: NextRequest) => {
   const session = await getServerSideSession();
-  const userId = session?.user.id as string
+  const userId = session?.user.id as string;
 
   try {
     // get page and lastCursor from query
@@ -33,7 +33,7 @@ export const GET = async (request: NextRequest) => {
           },
         },
       }),
-      take: take ?? 10,
+      take: take ? Number(take) : 10,
       //same as with the filter
       ...(lastCursor && {
         skip: 1,
@@ -88,7 +88,7 @@ export const GET = async (request: NextRequest) => {
     const cursor = lastPostInResults?.id;
 
     const nextPage = await db.post.findMany({
-      take: take ?? 7,
+      take: take ? Number(take) : 10,
       skip: 1,
       cursor: {
         id: cursor,
@@ -101,10 +101,10 @@ export const GET = async (request: NextRequest) => {
     });
 
     const postsWithoutAggregateField = posts.map((post) => {
-      const {_count, ...rest} = post
+      const { _count, ...restFields } = post;
 
-      return rest
-    })
+      return restFields;
+    });
 
     const data = {
       data: postsWithoutAggregateField,
