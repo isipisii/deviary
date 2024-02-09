@@ -12,56 +12,55 @@ export const POST = async (req: NextRequest) => {
     const guildName = formData.get("guildName") 
     const guildDescription = formData.get("guildDescription")
     const isPrivate = formData.get("isPrivate") === "true" ? true : false;
-
-
+    
     const parsedGuildData = guildSchema.safeParse({
         name: guildName,
         description: guildDescription
     })
 
     try {
-        if(!session) return NextResponse.json({
-            success: false,
-            message: "Unauthenticated",
-        }, { status: 401 })  
+      if(!session) return NextResponse.json({
+          success: false,
+          message: "Unauthenticated",
+      }, { status: 401 })  
 
-        if(!parsedGuildData.success) {
-            return NextResponse.json({
-                errors: parsedGuildData.error.flatten().fieldErrors,
-                message: "Error in guild data.",
-            }, { status: 400 })   
-        }
-        
-        const isExisting = await db.guild.findFirst({
-            where: {
-              name: parsedGuildData.data.name
-            }
-        })
+      if(!parsedGuildData.success) {
+          return NextResponse.json({
+              errors: parsedGuildData.error.flatten().fieldErrors,
+              message: "Error in guild data.",
+          }, { status: 400 })   
+      }
+      
+      const isExisting = await db.guild.findFirst({
+          where: {
+            name: parsedGuildData.data.name
+          }
+      })
 
-        if(isExisting) return NextResponse.json({
-            success: false,
-            message: "Guild name is already taken",
-        }, { status: 400 })   
+      if(isExisting) return NextResponse.json({
+          success: false,
+          message: "Guild name is already taken",
+      }, { status: 400 })   
 
-        const { data } = await utapi.uploadFiles(imageFile)
-        const createdGuild = await db.guild.create({
-            data: {
-                name: parsedGuildData.data.name,
-                description:parsedGuildData.data.description,
-                image: {
-                    imageKey: data?.key as string,
-                    imageUrl: data?.url as string
-                },
-                creatorId: session.user.id,
-                isPrivate
-            }
-        })
+      const { data } = await utapi.uploadFiles(imageFile)
+      const createdGuild = await db.guild.create({
+          data: {
+              name: parsedGuildData.data.name,
+              description:parsedGuildData.data.description,
+              image: {
+                  imageKey: data?.key as string,
+                  imageUrl: data?.url as string
+              },
+              creatorId: session.user.id,
+              isPrivate
+          }
+      })
 
-        return NextResponse.json({
-            success: false,
-            guild: createdGuild,
-            message: "Guild created",
-        }, { status: 400 })   
+      return NextResponse.json({
+          success: false,
+          guild: createdGuild,
+          message: "Guild created",
+      }, { status: 400 })   
 
     } catch (error) {
         return NextResponse.json({
