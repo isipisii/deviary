@@ -73,43 +73,19 @@ export const GET = async (request: NextRequest) => {
         const lastBookmark = bookmarks.at(-1)
         const cursor = lastBookmark?.id
 
-        const nextPage = await db.post.findMany({
+        const nextPage = await db.bookmark.findMany({
+            where: {
+                userId: session.user.id
+            },
+            orderBy: {
+                createdAt: "desc"
+            },
             take: take ?? 5,
             skip: 1,
             cursor: {
               id: cursor,
             },
         });
-
-        // const bookmarksWithIsBookmarkedAndIsUpvotedField = bookmarks.map(bookmark => (
-        //     {...bookmark, post: {...bookmark.post, isBookmarked: true, bookmarkId: bookmark.id}}
-        // ))
-
-
-        // const bookmarksWithIsBookmarkedAndIsUpvotedField = await Promise.all(
-        //     bookmarks.map(async (bookmark) => {
-        //         const userId = session.user.id;
-
-        //         const isUpvoted = userId
-        //         ? (await db.upvote.count({
-        //             where: {
-        //               postId: bookmark.post.id,
-        //               userId: userId,
-        //             },
-        //           })) > 0
-        //         : false;
-      
-        //         return {
-        //             ...bookmark, 
-        //             post: {
-        //                 ...bookmark.post, 
-        //                 isBookmarked: true, 
-        //                 bookmarkId: bookmark.id, 
-        //                 isUpvoted
-        //             }
-        //         }
-        //     })
-        // )
         
         bookmarks.forEach((bookmark) => {
             (bookmark as any).post.isUpvoted = bookmark.post._count.upvotes > 0;

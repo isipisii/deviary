@@ -9,7 +9,7 @@ import DiaryCard from "@/components/shared/diary-card";
 import PostsSkeletonLoader from "@/components/skeleton-loaders/posts-skeleton-loader";
 import { LuBookmark } from "react-icons/lu";
 import { Button } from "@nextui-org/react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 export default function BookmarksContainer() {
   const router = useRouter();

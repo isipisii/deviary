@@ -9,7 +9,7 @@ const pusherServer = getPusherInstance();
 export const GET = async (request: NextRequest) => {
   const url = new URL(request.url);
   const postId = url.searchParams.get("postId") as string;
-  const take = Number(url.searchParams.get("take"));
+  const take = url.searchParams.get("take");
   const lastCursor = url.searchParams.get("lastCursor") as string;
 
   try {
@@ -27,8 +27,7 @@ export const GET = async (request: NextRequest) => {
       where: {
         postId,
       },
-
-      take: take ?? 5,
+      take: take ? Number(take) : 10,
       ...(lastCursor && {
         cursor: {
           id: lastCursor,
@@ -67,7 +66,13 @@ export const GET = async (request: NextRequest) => {
     const cursor = lastComment?.id;
 
     const nextPage = await db.comment.findMany({
-      take: take ?? 5,
+      where: {
+        postId,
+      },
+      orderBy: {
+        createdAt: "desc"
+      },
+      take: take ? Number(take) : 10,
       skip: 1,
       cursor: {
         id: cursor,
