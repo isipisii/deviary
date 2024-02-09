@@ -17,6 +17,7 @@ export default async function BookMarkPage() {
     queryFn: ({ pageParam: lastCursor }) => getBookmarks(5, lastCursor),
     getNextPageParam: (lastPage: TPage<TBookmark[]>) =>
       lastPage.metaData ? lastPage?.metaData.lastCursor : null,
+    pages: 3,
   });
 
   return (
