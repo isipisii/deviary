@@ -22,7 +22,7 @@ export default async function PostPage({
   const post = await getPostById(postId, session?.user.id as string);
 
   await queryClient.prefetchInfiniteQuery({
-    queryKey: [QueryKeys.Comments],
+    queryKey: [QueryKeys.Comments, postId],
     initialPageParam: "",
     queryFn: ({ pageParam: lastCursor }) => getPostComments(5, lastCursor, postId),
     getNextPageParam: (lastPage: TPage<TComment[]>) =>
