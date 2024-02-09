@@ -3,7 +3,7 @@
 import { ReactNode } from "react";
 import { useSideBarNavStore } from "@/lib/store/useSideBarNavStore";
 
-export default function LayoutWrapper({ children }: { children: ReactNode }) {
+export default function ProtectedRoutesLayoutWrapper({ children }: { children: ReactNode }) {
   const { isSideBarMinimized } = useSideBarNavStore((state) => state);
 
   return (

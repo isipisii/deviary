@@ -28,7 +28,8 @@ export const QueryKeys = {
     SearchedPosts: "searchedPosts",
     SuggestedTitles: "suggestedTitles",
     Notifications: "notifications",
-    Comments: "comments"
+    Comments: "comments",
+    PostsByTag: "postsByTag"
 }
 
 export const sideBarNavs: ISideBarNav[]  = [

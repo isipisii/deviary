@@ -1,50 +1,32 @@
-import { db } from "@/lib/prisma";
 import { NextResponse, NextRequest } from "next/server";
+import { db } from "@/lib/prisma";
 import { getServerSideSession } from "@/lib/auth";
 
-export const GET = async (request: NextRequest) => {
+export const GET = async (
+  request: NextRequest,
+  { params }: { params: { tag: string } },
+) => {
   const session = await getServerSideSession();
   const userId = session?.user.id as string;
+  const url = new URL(request.url);
+
+  const take = url.searchParams.get("take");
+  const lastCursor = url.searchParams.get("lastCursor") as string;
 
   try {
-    // get page and lastCursor from query
-    const url = new URL(request.url);
-
-    const take = Number(url.searchParams.get("take"));
-    const lastCursor = url.searchParams.get("lastCursor") as string;
-    const filter = url.searchParams.get("filter")?.toString().split(",");
-
-    if (!session) {
-      return NextResponse.json(
-        {
-          message: "Unauthenticard, please log in first",
-          success: false,
-        },
-        { status: 400 },
-      );
-    }
-
     const posts = await db.post.findMany({
-      //puts the where clause if there's a filter from the search params
-      ...(filter && {
-        where: {
-          tags: {
-            hasSome: filter,
-          },
+      where: {
+        tags: {
+          has: params.tag,
         },
-      }),
-      take: take ? Number(take) : 10,
-      //same as with the filter
+      },
+      take: take ? Number(take) : 5,
       ...(lastCursor && {
         skip: 1,
         cursor: {
           id: lastCursor,
         },
       }),
-      orderBy: {
-        createdAt: "desc",
-      },
-
       include: {
         blog: true,
         diary: true,

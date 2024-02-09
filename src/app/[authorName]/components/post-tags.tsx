@@ -1,10 +1,12 @@
 import { Chip } from "@nextui-org/react";
+import Link from "next/link";
 
 export default function PostTags({ tags }: { tags: string[] }) {
   return (
     <div className="flex flex-wrap gap-2">
       {tags.map((tag, index) => (
-        <Chip
+        <Link href={`/tag/${tag}`} key={index + tag}>
+          <Chip
           radius="full"
           size="md"
           color="secondary"
@@ -16,6 +18,7 @@ export default function PostTags({ tags }: { tags: string[] }) {
         >
           #{tag}
         </Chip>
+        </Link>
       ))}
     </div>
   );

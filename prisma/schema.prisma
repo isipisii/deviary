@@ -74,9 +74,6 @@ model User {
   sentNotifications     Notification[] @relation("SentNotifications")
   receivedNotifications Notification[] @relation("ReceivedNotifications")
 
-  // guildsBelongId        String[] @db.ObjectId
-  // guildsBelong          Guild[]  @relation("GuildMembers", fields: [guildsBelongId], references: [id])
-
   guildsCreatedId       String[] @db.ObjectId
   guildsCreated         Guild[] @relation("GuildCreator")
   // try
@@ -262,9 +259,11 @@ model Notification {
 }
 
 model Tag {
-  id         String @id @default(auto()) @map("_id") @db.ObjectId
-  tagName    String
-
+  id            String @id @default(auto()) @map("_id") @db.ObjectId
+  tagName       String @unique
+  
+  createdAt     DateTime  @default(now()) @map(name: "created_at")
+  updatedAt     DateTime  @updatedAt @map(name: "updated_at")
   @@map("tags")
 }
 
