@@ -88,6 +88,9 @@ export const GET = async (request: NextRequest) => {
     const cursor = lastPostInResults?.id;
 
     const nextPage = await db.post.findMany({
+      orderBy: {
+        createdAt: "desc",
+      },
       take: take ? Number(take) : 10,
       skip: 1,
       cursor: {
