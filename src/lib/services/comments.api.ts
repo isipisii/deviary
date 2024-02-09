@@ -3,7 +3,6 @@ import {
   useInfiniteQuery,
   useQueryClient,
   InfiniteData,
-  QueryClient,
 } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
 import { toast } from "sonner";
@@ -120,7 +119,6 @@ export function useEditComment(closeEditForm?: () => void) {
       if(closeEditForm) closeEditForm()
     },
     onError: (error: AxiosError<ErrorResponse>) => {
-      console.log(error)
       toast.error("An error occured while deleting a comment");
     },
   });
