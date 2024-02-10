@@ -35,10 +35,7 @@ type TPost = {
 
 type TBlog = {
   content: string;
-  thumbnail?: {
-    imageKey?: string;
-    imageUrl?: string;
-  };
+  thumbnail?: TImage
   title: string;
 };
 
@@ -80,3 +77,20 @@ type TNotification = {
   postId: string;
   createdAt: Date;
 };
+
+type TImage = {
+  imageKey?: string;
+  imageUrl?: string;
+}
+
+type TGuild = {
+  id: readonly string;
+  image: TImage
+  name: string
+  isPrivate: boolean
+  creator: TUser
+  description?: string
+  creatorId: readonly string
+  createdAt: Date;
+  updatedAt: Date;
+}
