@@ -2,25 +2,26 @@
 
 import { Avatar, Button } from "@nextui-org/react";
 import React, { ChangeEvent } from "react";
+import { FaImage } from "react-icons/fa6";
 import { IoClose } from "react-icons/io5";
 
 interface ILoadAvatar {
   selectedImage: string;
   handleRemoveImage: () => void;
   handleFileChange: (e: ChangeEvent<HTMLInputElement>) => void;
-  userCurrentImage: string;
+  initialImage?: string;
 }
 
 export default function LoadAvatar({
   selectedImage,
   handleFileChange,
   handleRemoveImage,
-  userCurrentImage,
+  initialImage,
 }: ILoadAvatar) {
   return (
     <div
-      className="relative flex h-[150px] w-[150px] flex-col 
-        items-center gap-2 self-center"
+      className="relative flex h-[130px] w-[130px] flex-col
+        items-center gap-2 self-center cursor-pointer"
     >
       {selectedImage && (
         <Button
@@ -33,12 +34,16 @@ export default function LoadAvatar({
           <IoClose />
         </Button>
       )}
-      <label htmlFor="file-input" className="cursor-pointer">
+      <label htmlFor="file-input">
         <Avatar
+          showFallback
+          fallback={
+            <FaImage className="text-[2rem]"  />
+          }
           radius="full"
-          className="h-[150px] w-[150px]"
-          src={selectedImage || userCurrentImage}
-          classNames={{ base: "border-borderColor border" }}
+          className="h-[130px] w-[130px]"
+          src={selectedImage || initialImage}
+          classNames={{ base: "border-borderColor border hover:bg-light bg-transparent" }}
         />
       </label>
       <input
