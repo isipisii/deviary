@@ -70,7 +70,7 @@ export default function OnBoardingForm({ user }: IOnboardingForm) {
           selectedImage={selectedImage} 
           handleFileChange={handleFileChange} 
           handleRemoveImage={handleRemoveImage} 
-          userCurrentImage={user.image}
+          initialImage={user.image}
         />
         <p className="text-lg font-semibold text-center">{user.email}</p>
         <Input
