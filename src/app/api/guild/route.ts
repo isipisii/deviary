@@ -56,11 +56,20 @@ export const POST = async (req: NextRequest) => {
           }
       })
 
+      // create a member as guild creator
+      await db.guildMember.create({
+        data: {
+          userId: session.user.id,
+          guildId: createdGuild.id,
+          role: "CREATOR"
+        }
+      })
+
       return NextResponse.json({
-          success: false,
+          success: true,
           guild: createdGuild,
           message: "Guild created",
-      }, { status: 400 })   
+      }, { status: 200 })   
 
     } catch (error) {
         return NextResponse.json({
@@ -81,15 +90,15 @@ export const GET = async (req: NextRequest) => {
       const take = Number(url.searchParams.get("take"));
       const lastCursor = url.searchParams.get("lastCursor") as string;
   
-      // if (!session) {
-      //   return NextResponse.json(
-      //     {
-      //       message: "Unauthenticard, please log in first",
-      //       success: false,
-      //     },
-      //     { status: 401 },
-      //   );
-      // }
+      if (!session) {
+        return NextResponse.json(
+          {
+            message: "Unauthenticard, please log in first",
+            success: false,
+          },
+          { status: 401 },
+        );
+      }
   
       const guilds = await db.guild.findMany({
         take: take ?? 10,
