@@ -29,7 +29,7 @@ function LoadThumbnail({ selectedImage, handleFileChange, handleRemoveImage }: I
             <IoClose />
         </Button>
         )}
-        <label htmlFor="file-input" className=" w-full h-full">
+        <label htmlFor="file-input" className="w-full h-full">
             {selectedImage ? (
                 //eslint-disable-next-line @next/next/no-img-element
                 <img className="w-full h-full rounded-2xl object-cover cursor-pointer" src={selectedImage} alt="Thumbnail" />
