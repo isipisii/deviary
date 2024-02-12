@@ -25,8 +25,7 @@ export default function NotificationContextMenu({
 }: INotificationContextMenu) {
   const { mutate: deleteNotificationMutation, isPending } =
     useDeleteNotification();
-  const { mutate: viewNotificationMutation } =
-    useViewNotification();
+  const { mutate: viewNotificationMutation } = useViewNotification();
 
   return (
     <Dropdown
@@ -50,8 +49,18 @@ export default function NotificationContextMenu({
       <DropdownMenu
         aria-label="Dynamic Actions"
         variant="flat"
-        disabledKeys={isPending ? ["delete"] : notification.viewed ? ["view"] : undefined}
+        disabledKeys={
+          isPending ? ["delete"] : notification.viewed ? ["view"] : undefined
+        }
       >
+        <DropdownItem
+          key="view"
+          startContent={<FaRegEye />}
+          className="rounded-lg"
+          onClick={() => viewNotificationMutation(notification.id)}
+        >
+          {notification.viewed ? "Viewed" : "Mark as viewed"}
+        </DropdownItem>
         <DropdownItem
           key="delete"
           startContent={
@@ -62,14 +71,6 @@ export default function NotificationContextMenu({
           onClick={() => deleteNotificationMutation(notification.id)}
         >
           {isPending ? "Deleting" : "Delete"}
-        </DropdownItem>
-        <DropdownItem
-          key="view"
-          startContent={<FaRegEye />}
-          className="rounded-lg"
-          onClick={() => viewNotificationMutation(notification.id)}
-        >
-          {notification.viewed ? "Viewed" : "Mark as viewed"}
         </DropdownItem>
       </DropdownMenu>
     </Dropdown>
