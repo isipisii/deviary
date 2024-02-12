@@ -30,6 +30,7 @@ export const QueryKeys = {
   Notifications: "notifications",
   Comments: "comments",
   PostsByTag: "postsByTag",
+  MyGuilds: "myGuilds"
 };
 
 export const sideBarNavs: ISideBarNav[] = [
