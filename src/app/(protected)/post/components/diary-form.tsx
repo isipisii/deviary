@@ -56,7 +56,8 @@ export default function DiaryForm({ postToEdit }: { postToEdit?: Partial<TPost> 
         />
         <Textarea
           labelPlacement="inside"
-          label="Code snippet (optional)"
+          isRequired
+          label="Code snippet"
           radius="lg"
           maxRows={15}
           variant="bordered"
@@ -89,9 +90,8 @@ export default function DiaryForm({ postToEdit }: { postToEdit?: Partial<TPost> 
         />
         <Textarea
           labelPlacement="inside"
-          isRequired
           maxRows={15}
-          label="Solution"
+          label="Solution (optional)"
           radius="lg"
           variant="bordered"
           classNames={{

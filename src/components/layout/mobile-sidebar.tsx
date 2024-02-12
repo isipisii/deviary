@@ -16,6 +16,7 @@ import { PiSignOutBold } from "react-icons/pi";
 import ConfirmationModal from "../ui/confirmation-modal";
 import useLogout from "@/lib/hooks/useLogout";
 import AccountSkeleton from "../skeleton-loaders/account-skeleton";
+import SettingsModal from "../ui/settings-modal";
 
 export default function MobileSidebar() {
   const { data } = useSession();
@@ -67,7 +68,6 @@ export default function MobileSidebar() {
         <div
           className="fixed inset-0 z-[15] h-screen w-screen bg-[#292f46]/50
           backdrop-opacity-30 transition-all duration-1000 ease-in-out md:hidden"
-          onClick={closeMenu}
         />
       )}
 
@@ -142,8 +142,8 @@ export default function MobileSidebar() {
               variant="light"
               radius="lg"
               onClick={() => {
-                closeMenu()
-                onOpen()
+                closeMenu();
+                onOpen();
               }}
             >
               <PiSignOutBold className="rotate-180 text-[1.3rem]" />
@@ -202,6 +202,35 @@ function MobileSidebarNavItem({
   closeMenu,
 }: IMobileSidebarNavItem) {
   const isActive = useIsActive();
+  const { onOpen, onOpenChange, isOpen } = useDisclosure();
+
+  if (title === "Settings") {
+    return (
+      <>
+        <SettingsModal isOpen={isOpen} onOpenChange={onOpenChange} />
+        <button
+          onClick={() => {
+            closeMenu();
+            onOpen();
+          }}
+          className={`flex w-full items-center gap-2 
+          rounded-2xl bg-light p-2 text-xs
+            font-[500] transition-all duration-1000 ease-in-out hover:bg-lightHover ${
+              isActive(href)
+                ? "bg-lightHover font-[600] text-activeNavTextColor"
+                : "text-navTextColor"
+            }`}
+        >
+          {Icon && (
+            <p className="rounded-[.8rem] bg-background p-2 text-[1.2rem] text-secondary">
+              <Icon />
+            </p>
+          )}
+          {title}
+        </button>
+      </>
+    );
+  }
 
   return (
     <Link
@@ -215,11 +244,7 @@ function MobileSidebarNavItem({
         }`}
       onClick={closeMenu}
     >
-      <p
-        className={cn(
-          "rounded-[.8rem] bg-background p-2 text-[1.2rem] text-secondary",
-        )}
-      >
+      <p className="rounded-[.8rem] bg-background p-2 text-[1.2rem] text-secondary">
         {Icon && <Icon />}
       </p>
       {title}

@@ -10,7 +10,7 @@ export default function ProtectedRoutesLayoutWrapper({ children }: { children: R
     <main
       className={`${
         isSideBarMinimized ? "md:ml-[90px]" : "md:ml-[290px]"
-      } mt-[75px] transition-all duration-1000 ease-in-out`}
+      } mt-[73px] transition-all duration-1000 ease-in-out pb-[5rem] md:pb-0`}
     >
       {children}
     </main>

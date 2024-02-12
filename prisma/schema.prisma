@@ -92,7 +92,7 @@ model Guild {
   name            String @unique
   description     String?
   isPrivate       Boolean @default(false)
-  
+
   creatorId       String @db.ObjectId
   creator         User  @relation("GuildCreator", fields: [creatorId], references: [id], onDelete: Cascade)
 
@@ -110,6 +110,7 @@ model Guild {
 
 model GuildMember {
   id              String @id @default(auto()) @map("_id") @db.ObjectId
+  role            GuildMemberRole @default(MEMBER)
   userId          String @db.ObjectId
   user            User  @relation(fields: [userId], references: [id], onDelete: Cascade) 
   
@@ -276,6 +277,12 @@ enum NotificationType  {
 enum PostType  {
   BLOG_POST 
   CODE_DIARY
+}
+
+enum  GuildMemberRole {
+  MEMBER
+  CREATOR
+  MODERATOR
 }
 
 type Image {
