@@ -23,3 +23,24 @@ body {
 ::-webkit-scrollbar-thumb:hover{
     background-color: rgba(232, 231, 231, 0.507);
 }
+
+.guild-details {
+    text-align: start;
+}
+
+.guild-lower {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: row;
+    gap: 1.1rem;
+}
+@media (max-width: 1024px) {
+    .guild-details {
+        text-align: center;
+    }
+    .guild-lower {
+        flex-direction: column;
+    }
+  }
