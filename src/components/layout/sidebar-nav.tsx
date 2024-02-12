@@ -13,6 +13,7 @@ import { cn } from "@/utils/cn";
 import CustomTooltip from "../ui/custom-tooltip";
 import { useIsActive } from "@/lib/hooks/useIsActive";
 import SettingsModal from "../ui/settings-modal";
+import { useGetMyGuilds } from "@/lib/services/guild.api";
 
 export function SideBar() {
   const { isSideBarMinimized, minimizeSideBar, maximizeSideBar } =
@@ -34,7 +35,7 @@ export function SideBar() {
       <div className="absolute -right-5 top-[5.5rem] z-20 hidden group-hover:block">
         <CustomTooltip content={isSideBarMinimized ? "Maximize" : "Minimize"}>
           <Button
-            className="h-[40px] w-[40px] min-w-0 rounded-full border-2 
+            className="h-[40px] w-[40px] min-w-0  rounded-full border-2 
              border-borderColor bg-white p-0 text-[1.3rem] text-black"
             onClick={handleToggleMinimize}
           >
@@ -66,56 +67,9 @@ export interface ISideBarNav {
 
 export function SideBarNav({ title, items }: ISideBarNav) {
   const { isSideBarMinimized } = useSideBarNavStore((state) => state);
-  const [guilds, setGuilds] = useState<ISideBarNavItem[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const isOverflowing = guilds.length > 2;
+  const { data: guilds, error, isLoading } = useGetMyGuilds();
+  const isOverflowing = Array.isArray(guilds) ? guilds?.length > 2 : false;
   const [seeMore, setSeeMore] = useState(false);
-
-  const guildsArr = [
-    {
-      title: "ReactJS",
-      href: "/guild",
-      type: "guild",
-      imageUrl: "https://avatars.githubusercontent.com/u/6412038?s=200&v=4",
-    },
-    {
-      title: "Libre Minds",
-      href: "/guild",
-      type: "guild",
-      imageUrl: "https://avatars.githubusercontent.com/u/148235334?s=200&v=4",
-    },
-    {
-      title: "Libre Minds",
-      href: "/guild",
-      type: "guild",
-      imageUrl: "https://avatars.githubusercontent.com/u/148235334?s=200&v=4",
-    },
-    {
-      title: "ReactJS",
-      href: "/guild",
-      type: "guild",
-      imageUrl: "https://avatars.githubusercontent.com/u/6412038?s=200&v=4",
-    },
-  ];
-
-  // REMINDER: use useQuery for fetching if theres already an actual api endppint for this
-  useEffect(() => {
-    // mock up api call since i dont have yet an api for guilds
-    async function getGuilds() {
-      setIsLoading(true);
-      const guilds = (await new Promise((resolve) => {
-        setTimeout(() => {
-          resolve(guildsArr);
-        }, 4000);
-      })) as ISideBarNavItem[];
-
-      setGuilds(guilds);
-      setIsLoading(false);
-    }
-
-    getGuilds();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   return (
     <div className="relative flex flex-col gap-2">
@@ -138,14 +92,15 @@ export function SideBarNav({ title, items }: ISideBarNav) {
               </div>
             )
           : title === "Guild" &&
+            guilds &&
             guilds
               .slice(0, seeMore ? guilds.length : 2)
               .map((guild, index) => (
                 <SideBarNavItem
                   key={index}
-                  href={guild.href}
-                  imageUrl={guild.imageUrl}
-                  title={guild.title}
+                  href={`/guilds/${guild.guild.id}`}
+                  imageUrl={guild.guild.image.imageUrl}
+                  title={guild.guild.name}
                 />
               ))}
       </div>
@@ -212,18 +167,10 @@ export function SideBarNavItem({
               : "text-navTextColor"
           }`}
         >
-          {Icon && !imageUrl ? (
+          {Icon &&  (
             <p className="rounded-2xl bg-background p-2 text-[1.5rem] text-secondary">
               <Icon />
             </p>
-          ) : (
-            <div className="rounded-2xl bg-background p-2">
-              <img
-                src={imageUrl}
-                className="h-[23px] w-[23px] rounded-full"
-                alt="guild logo"
-              />
-            </div>
           )}
           {isSideBarMinimized ? null : title}
         </button>
@@ -255,7 +202,7 @@ export function SideBarNavItem({
         <div className="rounded-2xl bg-background p-2">
           <img
             src={imageUrl}
-            className="h-[23px] w-[23px] rounded-full"
+            className="h-[25px] w-[25px] rounded-full object-cover"
             alt="guild logo"
           />
         </div>
