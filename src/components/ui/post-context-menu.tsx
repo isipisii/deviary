@@ -7,7 +7,7 @@ import {
   DropdownItem,
   Button,
 } from "@nextui-org/react";
-import { useState, useCallback } from "react";
+import { useState } from "react";
 import { GoKebabHorizontal } from "react-icons/go";
 import { cn } from "@/utils/cn";
 import { postContextMenuItems } from "@/lib/constants";
@@ -53,7 +53,7 @@ export default function PostContextMenu({
     deletePostMutation(post.id);
   }
 
-  const handleToggleBookmark = useCallback(() => {
+  function handleToggleBookmark() {
     if (isBookmarked) {
       removeBookmarkMutation(post.id);
       setIsBookmarked(false);
@@ -64,7 +64,7 @@ export default function PostContextMenu({
       createBookmarkMutation(post.id);
       setIsBookmarked(true);
     }
-  }, [createBookmarkMutation, isBookmarked, post.id, removeBookmarkMutation]);
+  }
 
   return (
     <>
