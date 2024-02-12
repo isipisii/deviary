@@ -8,7 +8,9 @@ import { guildSchema } from "@/lib/validators/guild.validator";
 import { Button, Input, RadioGroup, Textarea } from "@nextui-org/react";
 import { CustomRadio } from "@/components/ui/custom-radio";
 import { useState } from "react";
+import { useCreateGuild, useEditGuild } from "@/lib/services/guild.api";
 import z from "zod";
+import useExtractColor from "@/lib/hooks/useExtractColor";
 
 type TGuildSchema = z.infer<typeof guildSchema>;
 
@@ -17,7 +19,6 @@ interface IGuildForm {
   guildToEdit?: TGuild;
 }
 
-// TODO: CREATE THE MUTATIONS FOR GUILD AND SOME ADDITIONAL STYLES 
 export default function GuildForm({ isEditing, guildToEdit }: IGuildForm) {
   const {
     watch,
@@ -38,14 +39,27 @@ export default function GuildForm({ isEditing, guildToEdit }: IGuildForm) {
     selectedImageFile,
   } = useLoadImageFile(guildToEdit?.image.imageUrl);
 
+  const { mutate: createGuildMutation, isPending: isCreating } = useCreateGuild()
+  const { mutate: updateGuildMutation, isPending: isUpdating } = useEditGuild()
+
   const isButtonDisabled = !(
     !!watch("name") &&
     !!watch("description") &&
     selectedImage
-  );
+  ) || isUpdating || isCreating  
+  const isPending = isUpdating || isCreating
 
-  function handleCreateGuild(formData: TGuildSchema) {
-    console.log(formData);
+  function handleCreateOrEditGuild(guildData: TGuildSchema) {
+    const guildFormData = new FormData()
+
+    if(selectedImageFile) guildFormData.append("imageFile", selectedImageFile)
+    guildFormData.append("guildName", guildData.name)
+    guildFormData.append("guildDescription", guildData.description)
+    guildFormData.append("isPrivate", (privacy === "private" ? true : false).toString())
+
+    if(isEditing && guildToEdit) {
+      updateGuildMutation({guildData: guildFormData, guildId: guildToEdit.id})
+    } else createGuildMutation(guildFormData)
   }
 
   return (
@@ -59,7 +73,7 @@ export default function GuildForm({ isEditing, guildToEdit }: IGuildForm) {
       </div>
       <form
         className="flex flex-col gap-4"
-        onSubmit={handleSubmit(handleCreateGuild)}
+        onSubmit={handleSubmit(handleCreateOrEditGuild)}
       >
         <Input
           labelPlacement="inside"
@@ -68,7 +82,6 @@ export default function GuildForm({ isEditing, guildToEdit }: IGuildForm) {
           radius="lg"
           size="sm"
           variant="bordered"
-          defaultValue={guildToEdit?.name || ""}
           classNames={{
             label: "font-semibold",
             inputWrapper:
@@ -77,6 +90,7 @@ export default function GuildForm({ isEditing, guildToEdit }: IGuildForm) {
           {...register("name")}
           isInvalid={!!errors.name}
           errorMessage={errors.name?.message}
+          defaultValue={guildToEdit?.name || ""}
         />
         <Textarea
           labelPlacement="inside"
@@ -124,7 +138,7 @@ export default function GuildForm({ isEditing, guildToEdit }: IGuildForm) {
           color="secondary"
           className="w-full max-w-[200px] self-end rounded-xl font-semibold text-white"
           isDisabled={isButtonDisabled}
-          //   isLoading={isPending}
+          isLoading={isPending}
         >
           Create
         </Button>
