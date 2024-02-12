@@ -1,5 +1,3 @@
-"use client";
-
 import { Avatar, Button } from "@nextui-org/react";
 import React, { ChangeEvent } from "react";
 import { FaImage } from "react-icons/fa6";
