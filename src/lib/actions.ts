@@ -10,6 +10,18 @@ export const updateRoute = async (path: string) => {
   revalidatePath(path);
 };
 
+
+export async function getGuildById(guildId: string) {
+  const guild = await db.guild.findUnique({
+    where: {
+      id: guildId
+    }
+  }) 
+
+  return guild as TGuild
+
+}
+
 export async function getPostById(postId: string, authenticatedUserId: string) {
   const post = await db.post.findUnique({
     where: {
