@@ -1,8 +1,7 @@
 import type { Config } from "tailwindcss";
 const { nextui } = require("@nextui-org/react");
-import { withUt } from "uploadthing/tw";
 
-export default withUt({
+const config = {
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
@@ -58,6 +57,7 @@ export default withUt({
         light: {
           extend: "light",
           colors: {
+            foreground: "#00060C",
             navTextColor: "#555454",
             activeNavTextColor: "#000000",
             typography: "#71717A",
@@ -86,4 +86,6 @@ export default withUt({
     // require('@tailwindcss/typography'),
   ],
   darkMode: "class",
-});
+}
+
+export default config
