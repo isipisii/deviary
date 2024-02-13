@@ -24,6 +24,9 @@ body {
     background-color: rgba(232, 231, 231, 0.507);
 }
 
+/* this is for guild details, flex directions arent working properly with media query in tailwind.
+life's been stressing me out, fuck. */
+
 .guild-details {
     text-align: start;
 }
