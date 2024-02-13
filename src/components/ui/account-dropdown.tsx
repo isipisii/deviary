@@ -12,7 +12,6 @@ import {
   useDisclosure,
 } from "@nextui-org/react";
 
-
 import { PiSignOutBold } from "react-icons/pi";
 import { LuSettings, LuUser2 } from "react-icons/lu";
 import ConfirmationModal from "./confirmation-modal";
@@ -25,7 +24,7 @@ export default function AccountDropdown() {
   const {  handleLogout, isPending } = useLogout(onClose)
 
   return (
-    <>
+    <>  
       <ConfirmationModal
         isOpen={isOpen}
         onOpenChange={onOpenChange}
@@ -39,15 +38,19 @@ export default function AccountDropdown() {
       />
 
       <Dropdown
-        placement="bottom-start"
+        placement="bottom-end"
         backdrop="transparent"
-        className="bg-background"
+        className="bg-background border border-borderColor"
       >
         <DropdownTrigger>
           <User
             as="button"
             avatarProps={{
               src: data?.user?.image ?? "",
+            }}
+            classNames={{
+              description: "text-navTextColor",
+              name: "font-medium",
             }}
             className="transition-transform"
             description={data?.user.email}
