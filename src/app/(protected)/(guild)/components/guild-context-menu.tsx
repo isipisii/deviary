@@ -7,6 +7,7 @@ import {
   Button,
 } from "@nextui-org/react";
 import { GoKebabHorizontal } from "react-icons/go";
+import { PiSignOutBold } from "react-icons/pi";
 import { TbShare3 } from "react-icons/tb";
 
 export default function GuildContextMenu() {
@@ -18,29 +19,28 @@ export default function GuildContextMenu() {
     >
       <DropdownTrigger>
         <Button
-          variant="light"
+          variant="bordered"
           size="md"
           isIconOnly
-          className="z-[5] rounded-xl text-[1.2rem]"
+          className="z-[5] rounded-xl text-[1.2rem] border-1 border-borderColor"
           startContent={<GoKebabHorizontal />}
         />
       </DropdownTrigger>
       <DropdownMenu variant="flat">
         <DropdownItem
           key="share"
-          // color={item.key === "delete" ? "danger" : "default"}
-          // className={item.key === "delete" ? "text-danger" : ""}
           className="rounded-lg"
           startContent={<TbShare3 />}
         >
-          Share squad
+          Share guild
         </DropdownItem>
         <DropdownItem
           key="leave"
-          // color={item.key === "delete" ? "danger" : "default"}
-          // className={item.key === "delete" ? "text-danger" : ""}
           className="rounded-lg text-danger"
           color="danger"
+          startContent={
+            <PiSignOutBold />
+          }
         >
           Leave guild
         </DropdownItem>
