@@ -32,6 +32,10 @@ export default function CommentCard({ comment }: { comment: TComment }) {
             className: "h-[35px] w-[35px]",
           }}
           className="self-start transition-transform"
+          classNames={{
+            description: "text-navTextColor",
+            name: "font-medium",
+          }}
           name={comment.user.name}
           description={comment?.user.email}
         />
