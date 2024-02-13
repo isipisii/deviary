@@ -12,7 +12,19 @@ import { QueryKeys } from "../constants";
 import { updateRoute } from "../actions";
 import { useRouter } from "next/navigation";
 
-// TODO: STYLE THE GUILD UI
+
+export async function getGuildById(guildId: string) {
+  const res = await axios.get(`/api/guild/${guildId}`)
+  return res.data.guild as TGuild
+}
+
+export function useGetGuildById(guildId: string){
+  return useQuery({
+    queryKey: [QueryKeys.Guild, guildId],
+    queryFn: async () => getGuildById(guildId),
+  })
+}
+
 
 export function useCreateGuild() {
   const router = useRouter();
@@ -28,7 +40,7 @@ export function useCreateGuild() {
       router.push(`/guilds/${newGuild.id}`);
     },
     onError: (error: AxiosError<ErrorResponse>) => {
-      toast.error(error.message);
+      toast.error(error.response?.data.message);
     },
   });
 }
@@ -53,7 +65,7 @@ export function useEditGuild() {
       router.push(`/guilds/${updatedGuild.id}`);
     },
     onError: (error: AxiosError<ErrorResponse>) => {
-        toast.error(error.message);
+      toast.error(error.response?.data.message);
     },
   });
 }
@@ -68,7 +80,7 @@ export function useGetMyGuilds() {
   });
 }
 
-// for publci guilds
+// for public guilds
 export function useJoinGuild(){
   const queryClient = useQueryClient()
 
@@ -80,10 +92,9 @@ export function useJoinGuild(){
     },
     onSuccess: async (updatedGuild) => {
       await queryClient.invalidateQueries({queryKey: [QueryKeys.MyGuilds]}) 
-      // TODO
     },
     onError: (error: AxiosError<ErrorResponse>) => {
-      toast.error(error.message);
+      toast.error(error.response?.data.message);
     },
   })
 }
@@ -99,7 +110,7 @@ export function useJoinRequestGuild(){
     },
     // TODO
     onSuccess: async () => {
-
+      
     },
     onError: (error: AxiosError<ErrorResponse>) => {
       toast.error(error.message);
@@ -125,7 +136,6 @@ export function useRemoveJoinRequest(){
     },
   })
 }
-
 
 export function useAcceptJoinRequest(){
   const queryClient = useQueryClient()
