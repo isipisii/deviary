@@ -89,8 +89,20 @@ type TGuild = {
   name: string
   isPrivate: boolean
   creator: TUser
+  members: TGuildMember[]
+  isBelong?: boolean,
+  membersCount: number,
+  hasAnExistingJoinRequest: boolean
   description?: string
   creatorId: readonly string
   createdAt: Date;
   updatedAt: Date;
+}
+
+type TGuildMember = {
+  id: readonly string;
+  userId: readonly string,
+  guild: readonly string,
+  user: TUser,
+  role: "MEMBER" | "CREATOR" | "MODERATOR"
 }
