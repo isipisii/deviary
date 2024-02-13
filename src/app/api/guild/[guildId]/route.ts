@@ -114,6 +114,7 @@ export const PATCH = async (req: NextRequest, { params }: TParams) => {
 
 export const GET = async (req: NextRequest, { params }: TParams) => {
   const guildId = params.guildId;
+  const session = await getServerSideSession();
 
   const selectedUserFields = {
     id: true,
@@ -123,6 +124,36 @@ export const GET = async (req: NextRequest, { params }: TParams) => {
   };
 
   try {
+    if (!session) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Unauthenticated",
+        },
+        { status: 401 },
+      );
+    }
+
+    const guildMembersCount = await db.guildMember.count({
+      where: {
+        guildId
+      }
+    })
+
+    const isUserAGuildMember = await db.guildMember.count({
+      where: {
+        guildId,
+        userId: session.user.id
+      }
+    }) > 0
+
+    const hasAnExistingJoinRequest = await db.joinRequest.count({
+      where: {
+        guildId,
+        senderId: session.user.id
+      }
+    }) > 0
+
     const guild = await db.guild.findUnique({
       where: {
         id: guildId,
@@ -130,13 +161,18 @@ export const GET = async (req: NextRequest, { params }: TParams) => {
       include: {
         creator: {
           select: {
-            ...selectedUserFields,
+            ...selectedUserFields
           },
         },
         members: {
-          select: {
-            ...selectedUserFields,
-          },
+          take: 5,
+          include: {
+            user: {
+              select: {
+                ...selectedUserFields
+              }
+            }
+          }
         },
       },
     });
@@ -150,16 +186,24 @@ export const GET = async (req: NextRequest, { params }: TParams) => {
         { status: 404 },
       );
     }
+  
+    const guildWithAdditionalFields = {
+      ...guild,
+      isBelong: isUserAGuildMember,
+      membersCount: guildMembersCount,
+      hasAnExistingJoinRequest
+    } 
 
     return NextResponse.json(
       {
-        guild,
+        guild: guildWithAdditionalFields,
         success: true,
-        message: "Internal Server Error",
       },
-      { status: 500 },
+      { status: 200 },
     );
   } catch (error) {
+
+    console.log(error)
     return NextResponse.json(
       {
         success: false,
