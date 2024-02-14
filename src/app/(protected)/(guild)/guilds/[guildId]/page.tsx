@@ -17,10 +17,9 @@ export default async function GuildPage({
   const guildId = params.guildId;
 
   await queryClient.prefetchQuery({
-    queryKey: [QueryKeys, guildId],
+    queryKey: [QueryKeys.Guild, guildId],
     queryFn: async () => getGuildById(guildId),
   });
-  // const guild = await getGuildById(params.guildId)
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
