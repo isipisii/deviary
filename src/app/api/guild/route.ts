@@ -101,7 +101,7 @@ export const GET = async (req: NextRequest) => {
       }
   
       const guilds = await db.guild.findMany({
-        take: take ?? 10,
+        take: take ? Number(take) : 10,
         ...(lastCursor && {
           skip: 1,
           cursor: {
@@ -127,12 +127,15 @@ export const GET = async (req: NextRequest) => {
       }
   
       //gets the last post's id to use in getting the next page
-      const lastPostInResults = guilds.at(-1);
-      const cursor = lastPostInResults?.id;
+      const lastGuildInResults = guilds.at(-1);
+      const cursor = lastGuildInResults?.id;
   
       const nextPage = await db.guild.findMany({
-        take: take ?? 7,
+        take: take ? Number(take) : 10,
         skip: 1,
+        orderBy: {
+          createdAt: "desc",
+        },
         cursor: {
           id: cursor,
         },
