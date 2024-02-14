@@ -1,6 +1,12 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
-import { Button, User, useDisclosure } from "@nextui-org/react";
+import {
+  Button,
+  CircularProgress,
+  User,
+  useDisclosure,
+} from "@nextui-org/react";
 import { HiMenuAlt2 } from "react-icons/hi";
 import { LuX } from "react-icons/lu";
 import { useEffect, useState } from "react";
@@ -17,6 +23,7 @@ import ConfirmationModal from "../ui/confirmation-modal";
 import useLogout from "@/lib/hooks/useLogout";
 import AccountSkeleton from "../skeleton-loaders/account-skeleton";
 import SettingsModal from "../ui/settings-modal";
+import { useGetMyGuilds } from "@/lib/services/guild.api";
 
 export default function MobileSidebar() {
   const { data } = useSession();
@@ -172,6 +179,7 @@ interface IMobileSideBarNav extends ISideBarNav {
 }
 
 function MobileSidebarNav({ title, items, closeMenu }: IMobileSideBarNav) {
+  const { data: guilds, isLoading } = useGetMyGuilds();
   return (
     <div>
       <p className="mb-3 text-sm font-semibold">{title}</p>
@@ -186,6 +194,27 @@ function MobileSidebarNav({ title, items, closeMenu }: IMobileSideBarNav) {
             closeMenu={closeMenu}
           />
         ))}
+        {isLoading
+          ? title === "Guild" && (
+              <div className="mt-4 flex w-full items-center justify-center">
+                <CircularProgress
+                  size="md"
+                  color="secondary"
+                  aria-label="Loading..."
+                />
+              </div>
+            )
+          : title === "Guild" &&
+            guilds &&
+            guilds.map((guild, index) => (
+              <MobileSidebarNavItem
+                key={index}
+                href={`/guilds/${guild.guild.id}`}
+                imageUrl={guild.guild.image.imageUrl}
+                title={guild.guild.name}
+                closeMenu={closeMenu}
+              />
+            ))}
       </ul>
     </div>
   );
@@ -199,6 +228,7 @@ function MobileSidebarNavItem({
   href,
   title,
   icon: Icon,
+  imageUrl,
   closeMenu,
 }: IMobileSidebarNavItem) {
   const isActive = useIsActive();
@@ -244,9 +274,19 @@ function MobileSidebarNavItem({
         }`}
       onClick={closeMenu}
     >
-      <p className="rounded-[.8rem] bg-background p-2 text-[1.2rem] text-secondary">
-        {Icon && <Icon />}
-      </p>
+      {Icon && !imageUrl ? (
+        <p className="rounded-[.8rem] bg-background p-2 text-[1.2rem] text-secondary">
+          {Icon && <Icon />}
+        </p>
+      ) : (
+        <div className="bg-background p-2 rounded-[.8rem]">
+          <img
+            src={imageUrl}
+            alt={title}
+            className="h-[1.4rem] w-[1.4rem] rounded-full bg-background object-cover"
+          />
+        </div>
+      )}
       {title}
     </Link>
   );
