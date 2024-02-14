@@ -39,6 +39,14 @@ life's been stressing me out, fuck. */
     flex-direction: row;
     gap: 1.1rem;
 }
+
+.guild-details-skeleton-container{
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+ 
+
 @media (max-width: 1024px) {
     .guild-details {
         text-align: center;
@@ -46,4 +54,7 @@ life's been stressing me out, fuck. */
     .guild-lower {
         flex-direction: column;
     }
-  }
+    .guild-details-skeleton-container {
+        align-items: center;
+    }
+}
