@@ -18,6 +18,14 @@ export async function getGuildById(guildId: string) {
   return res.data.guild as TGuild
 }
 
+export async function getGuilds(lastCursor: string, take: number, privacy?: "public" | "private") {
+  const res = await axios.get("/api/guild", {
+    params: { lastCursor, take, privacy }
+  })
+
+  return res.data.data as TPage<TGuild[]>
+}
+
 export function useGetGuildById(guildId: string){
   return useQuery({
     queryKey: [QueryKeys.Guild, guildId],
@@ -25,6 +33,15 @@ export function useGetGuildById(guildId: string){
   })
 }
 
+export function useGetGuilds(){
+  return useInfiniteQuery({
+    queryKey: [QueryKeys.Guilds],
+    initialPageParam: "",
+    queryFn: ({ pageParam: lastCursor }) => getGuilds(lastCursor, 5),
+    getNextPageParam: (lastPage) =>
+    lastPage.metaData ? lastPage?.metaData.lastCursor : null,
+  })
+}
 
 export function useCreateGuild() {
   const router = useRouter();
