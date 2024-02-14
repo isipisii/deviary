@@ -19,13 +19,13 @@ export default async function Feed() {
 
   return (
     <div className="p-6 md:p-12">
-        <div className="flex items-center justify-between">
-            <PageTitle>Feed</PageTitle>
-            <FilterDropdown />
-        </div>
-        <HydrationBoundary state={dehydrate(queryClient)}>
-          <FeedContainer />
-        </HydrationBoundary>
+      <div className="flex items-center justify-between">
+        <PageTitle>Feed</PageTitle>
+        <FilterDropdown />
+      </div>
+      <HydrationBoundary state={dehydrate(queryClient)}>
+        <FeedContainer />
+      </HydrationBoundary>
     </div>
   )
 }
