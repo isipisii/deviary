@@ -47,6 +47,7 @@ export default function AccountDropdown() {
             as="button"
             avatarProps={{
               src: data?.user?.image ?? "",
+              isBordered: true
             }}
             classNames={{
               description: "text-navTextColor",
