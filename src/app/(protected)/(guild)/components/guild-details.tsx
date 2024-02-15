@@ -1,15 +1,31 @@
 /* eslint-disable @next/next/no-img-element */
-import { Avatar, AvatarGroup, Button, Skeleton } from "@nextui-org/react";
+import { Avatar, Button } from "@nextui-org/react";
 import GuildContextMenu from "./guild-context-menu";
 import { AiOutlineUserAdd } from "react-icons/ai";
+import CustomAvatarGroup from "@/components/ui/custom-avatar-group";
+import { useJoinGuild, useJoinRequestGuild } from "@/lib/services/guild.api";
 
 export default function GuildDetails({ guild }: { guild: TGuild }) {
+  const { mutate: joinGuildMutation, isPending: joiningGuild } = useJoinGuild()
+  const { mutate: joinRequestGuildMutation, isPending: sendingJoiningRequest } = useJoinRequestGuild()
+  const isPending = joiningGuild || sendingJoiningRequest
+
+  function handleJoinGuild() {
+    if(!guild.isPrivate) {
+      joinGuildMutation(guild.id)
+
+      return
+    }
+    joinRequestGuildMutation(guild.id)
+  }
+
   return (
     <div className="z-[5] grid h-auto w-full place-items-center gap-4 border-b border-borderColor bg-background/30 p-6 backdrop-blur-xl md:p-12 lg:place-items-start ">
-      <img
+      <Avatar
         src={guild?.image.imageUrl}
         alt="guild-avatar"
-        className="h-[120px] w-[120px] rounded-full  bg-foreground object-cover p-1 shadow-sm md:h-[150px] md:w-[150px]"
+        isBordered
+        className="rounded-full= h-[120px] w-[120px] object-cover shadow-sm md:h-[150px] md:w-[150px]"
       />
 
       <div className="guild-lower">
@@ -24,36 +40,34 @@ export default function GuildDetails({ guild }: { guild: TGuild }) {
             </p>
           </div>
 
-          <AvatarGroup
-            max={5}
-            total={guild.membersCount - 5}
-            size="sm"
-            renderCount={(count) => (
-              <p className="ms-2 text-sm font-medium text-foreground">
-                +{count} others
-              </p>
-            )}
-          >
-            {guild?.members.map((member) => (
-              <Avatar src={member.user.image} key={member.id} />
-            ))}
-          </AvatarGroup>
+          <CustomAvatarGroup
+            members={guild.members}
+            totalMembersCount={guild.membersCount}
+          />
         </div>
 
         <div className="flex items-center gap-2">
           <Button
             size="md"
             color="secondary"
-            variant={guild.isBelong ? "bordered" : "solid"}
+            variant={
+              guild.isBelong || guild.hasAnExistingJoinRequest
+                ? "bordered"
+                : "solid"
+            }
             className={`w-full rounded-xl font-medium ${
-              guild.isBelong ? "text-secondary" : "text-white"
+              ((guild.isBelong || guild.hasAnExistingJoinRequest) &&
+                "text-secondary") ||
+              "text-white"
             }`}
+            onClick={handleJoinGuild}
+            isLoading={isPending}
+            isDisabled={guild.isBelong}
           >
-            {guild.isBelong
-              ? "Joined"
-              : guild.isPrivate
-                ? "Request to join"
-                : "Join"}
+            {(guild.hasAnExistingJoinRequest && "Cancel Request") ||
+              (guild.isBelong && "Joined") ||
+              (guild.isPrivate && "Request to join") ||
+              "Join Guild"}
           </Button>
 
           <Button
