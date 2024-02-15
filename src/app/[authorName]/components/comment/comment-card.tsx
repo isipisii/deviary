@@ -52,7 +52,7 @@ export default function CommentCard({ comment }: { comment: TComment }) {
           initialValue={comment.content}
         />
       ) : (
-        <p className="whitespace-pre-wrap break-words">{comment.content}</p>
+        <p className="whitespace-pre-wrap break-words text-sm">{comment.content}</p>
       )}
     </div>
   );
