@@ -87,6 +87,7 @@ export function useEditGuild() {
   });
 }
 
+// get guilds where the authenticated user belongs
 export function useGetMyGuilds() {
   return useQuery({
     queryKey: [QueryKeys.MyGuilds],
@@ -107,8 +108,9 @@ export function useJoinGuild(){
         guildId
       }});
     },
-    onSuccess: async (updatedGuild) => {
+    onSuccess: async (data, guildId) => {
       await queryClient.invalidateQueries({queryKey: [QueryKeys.MyGuilds]}) 
+      await queryClient.invalidateQueries({queryKey: [QueryKeys.Guild, guildId]}) 
     },
     onError: (error: AxiosError<ErrorResponse>) => {
       toast.error(error.response?.data.message);
@@ -116,6 +118,7 @@ export function useJoinGuild(){
   })
 }
 
+// send join request for private guilds
 export function useJoinRequestGuild(){
   const queryClient = useQueryClient()
 
@@ -125,12 +128,13 @@ export function useJoinRequestGuild(){
         guildId
       }});
     },
-    // TODO
-    onSuccess: async () => {
-      
+    onSuccess: async (data, guildId) => {
+      await queryClient.invalidateQueries({queryKey: [QueryKeys.Guild, guildId]}) 
+      await queryClient.invalidateQueries({queryKey: [QueryKeys.Guilds]}) 
     },
     onError: (error: AxiosError<ErrorResponse>) => {
-      toast.error(error.message);
+      console.log(error)
+      toast.error(error.response?.data.message);
     },
   })
 }
@@ -149,7 +153,7 @@ export function useRemoveJoinRequest(){
       
     },
     onError: (error: AxiosError<ErrorResponse>) => {
-      toast.error(error.message);
+      toast.error(error.response?.data.message);
     },
   })
 }
@@ -168,7 +172,7 @@ export function useAcceptJoinRequest(){
       
     },
     onError: (error: AxiosError<ErrorResponse>) => {
-      toast.error(error.message);
+      toast.error(error.response?.data.message);
     },
   })
 }
