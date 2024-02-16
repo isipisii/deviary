@@ -111,11 +111,37 @@ export function useJoinGuild(){
     },
     onSuccess: async (data, guildId) => {
       await queryClient.invalidateQueries({queryKey: [QueryKeys.MyGuilds]}) 
+      await queryClient.invalidateQueries({queryKey: [QueryKeys.Guilds]}) 
       await queryClient.invalidateQueries({queryKey: [QueryKeys.Guild, guildId]}) 
     },
     onError: (error: AxiosError<ErrorResponse>) => {
       toast.error(error.response?.data.message);
     },
+  })
+}
+
+export function useLeaveGuild(closeModal: () => void){
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationKey: ["leaveGuild"],
+    mutationFn: async (guildId: string) => {
+      return await axios.delete("/api/guild/leave", { params: {
+        guildId
+      }});
+    },
+    onSuccess: async (data, guildId) => {
+      await queryClient.invalidateQueries({queryKey: [QueryKeys.MyGuilds]}) 
+      await queryClient.invalidateQueries({queryKey: [QueryKeys.Guilds]}) 
+      await queryClient.invalidateQueries({queryKey: [QueryKeys.Guild, guildId]}) 
+    },
+    onError: (error: AxiosError<ErrorResponse>) => {
+      console.log(error)
+      toast.error(error.response?.data.message);
+    },
+    onSettled: () => {
+      if (closeModal) closeModal();
+    }
   })
 }
 
@@ -158,7 +184,6 @@ export function useRemoveJoinRequest(){
       await queryClient.invalidateQueries({queryKey: [QueryKeys.MyGuilds]}) 
     },
     onError: (error: AxiosError<ErrorResponse>) => {
-      console.log(error)
       toast.error(error.response?.data.message);
     },
   })
@@ -168,14 +193,34 @@ export function useAcceptJoinRequest(){
   const queryClient = useQueryClient()
 
   return useMutation({
+    mutationKey: ["acceptJoinRequest"],
     mutationFn: async (joinRequestId: string) => {
-      return await axios.delete("/api/guild/join-request/accept", { params: {
+      return await axios.post("/api/guild/join-request/accept", null, { params: {
         joinRequestId
       }});
     },
-    // TODO
+    // TODO: invalidate cached members if theres alrdy an api
     onSuccess: async () => {
-      
+      await queryClient.invalidateQueries({queryKey: [QueryKeys.Notifications]})
+    },
+    onError: (error: AxiosError<ErrorResponse>) => {
+      toast.error(error.response?.data.message);
+    },
+  })
+}
+
+export function useDeclineJoinRequest(){
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationKey: ["declineJoinRequest"],
+    mutationFn: async (joinRequestId: string) => {
+      return await axios.delete("/api/guild/join-request/decline", { params: {
+        joinRequestId
+      }});
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({queryKey: [QueryKeys.Notifications]})
     },
     onError: (error: AxiosError<ErrorResponse>) => {
       toast.error(error.response?.data.message);
