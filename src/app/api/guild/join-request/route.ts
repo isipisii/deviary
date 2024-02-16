@@ -98,10 +98,10 @@ export const POST = async (req: NextRequest) => {
   }
 };
 
-// remove request
+// remove request for the user who made the req
 export const DELETE = async (req: NextRequest) => {
   const url = new URL(req.url);
-  const joinRequestId = url.searchParams.get("joinRequestId") as string;
+  const guildId = url.searchParams.get("guildId") as string;
   const session = await getServerSideSession();
 
   try {
@@ -119,15 +119,9 @@ export const DELETE = async (req: NextRequest) => {
 
     const existingRequest = await db.joinRequest.findFirst({
       where: {
-        id: joinRequestId,
-      },
-      include: {
-        guild: {
-          select: {
-            creatorId: true,
-          },
-        },
-      },
+        senderId: authenticatedUserId,
+        guildId
+      }
     });
 
     if (!existingRequest) {
@@ -140,22 +134,9 @@ export const DELETE = async (req: NextRequest) => {
       );
     }
 
-    if (
-      existingRequest.senderId !== authenticatedUserId ||
-      existingRequest.guild.creatorId !== authenticatedUserId
-    ) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "You cant remove this request",
-        },
-        { status: 403 },
-      );
-    }
-
     await db.joinRequest.delete({
       where: {
-        id: joinRequestId,
+        id: existingRequest.id
       },
     });
 
