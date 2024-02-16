@@ -103,6 +103,7 @@ export function useJoinGuild(){
   const queryClient = useQueryClient()
 
   return useMutation({
+    mutationKey: ["joinGuild"],
     mutationFn: async (guildId: string) => {
       return await axios.post("/api/guild/join", null, { params: {
         guildId
@@ -123,6 +124,7 @@ export function useJoinRequestGuild(){
   const queryClient = useQueryClient()
 
   return useMutation({
+    mutationKey: ["joinRequest"],
     mutationFn: async (guildId: string) => {
       return await axios.post("/api/guild/join-request", null, { params: {
         guildId
@@ -139,20 +141,24 @@ export function useJoinRequestGuild(){
   })
 }
 
+// remove join request, this is used by the user who made the request
 export function useRemoveJoinRequest(){
   const queryClient = useQueryClient()
 
   return useMutation({
+    mutationKey: ["removeJoinRequest"],
     mutationFn: async (guildId: string) => {
       return await axios.delete("/api/guild/join-request", { params: {
         guildId
       }});
     },
-    // TODO
-    onSuccess: async () => {
-      
+    onSuccess: async (data, guildId) => {
+      await queryClient.invalidateQueries({queryKey: [QueryKeys.Guild, guildId]}) 
+      await queryClient.invalidateQueries({queryKey: [QueryKeys.Guilds]}) 
+      await queryClient.invalidateQueries({queryKey: [QueryKeys.MyGuilds]}) 
     },
     onError: (error: AxiosError<ErrorResponse>) => {
+      console.log(error)
       toast.error(error.response?.data.message);
     },
   })
