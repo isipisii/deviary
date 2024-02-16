@@ -14,6 +14,7 @@ interface IConfirmationModal {
   isPending: boolean;
   modalTextContent: { header: string; body: string };
   isDelete?: boolean;
+  buttonText: string
 }
 
 export default function ConfirmationModal({
@@ -23,14 +24,8 @@ export default function ConfirmationModal({
   isPending,
   modalTextContent,
   isDelete = true,
+  buttonText
 }: IConfirmationModal) {
-
-  function buttonText() {
-    if (isDelete) {
-      return isPending ? "Deleting" : "Delete";
-    }
-    return isPending ? "Logging out" : "Log out";
-  }
 
   return (
     <Modal
@@ -69,7 +64,7 @@ export default function ConfirmationModal({
                 isLoading={isPending}
                 onClick={action}
               >
-                {buttonText()}
+                {buttonText}
               </Button>
             </ModalFooter>
           </>
