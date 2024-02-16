@@ -78,6 +78,7 @@ export default function PostContextMenu({
           body: "This action cannot be undone. Are you sure you want to delete this post?",
         }}
         isDelete
+        buttonText="Delete"
       />
         <Dropdown
           className={cn("rounded-xl bg-cardBg", className)}
