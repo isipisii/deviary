@@ -71,6 +71,7 @@ type TNotification = {
   senderId: readonly string;
   recipientId: readonly string;
   comment?: Partial<TComment>
+  joinRequest: TJoinRequest
   post?: TPost;
   type: "UPVOTE" | "JOIN_REQUEST" | "COMMENT";
   viewed: boolean;
@@ -105,4 +106,12 @@ type TGuildMember = {
   guild: readonly string,
   user: TUser,
   role: "MEMBER" | "CREATOR" | "MODERATOR"
+}
+
+type TJoinRequest = {
+  id: readonly string;
+  senderId: readonly string;
+  sender: TUser,
+  guild: TGuild
+  guildId: readonly string;
 }
