@@ -16,7 +16,7 @@ export default async function TagsPage({ params }: { params: {tagName: string }}
     queryKey: [QueryKeys.PostsByTag, tagName],
     initialPageParam: "",
     queryFn: ({ pageParam: lastCursor }) => getPostsByTag(lastCursor, 5,tagName),
-    getNextPageParam: (lastPage: TPage<TPost[]>) =>
+    getNextPageParam: (lastPage) =>
       lastPage.metaData ? lastPage?.metaData.lastCursor : null,
     pages: 3,
   });

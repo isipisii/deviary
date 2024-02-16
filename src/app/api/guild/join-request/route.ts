@@ -55,7 +55,7 @@ export const POST = async (req: NextRequest) => {
       );
     }
 
-    const createdJoinRequest = await db.joinRequest.create({
+     await db.joinRequest.create({
       data: {
         senderId: session.user.id,
         guildId,
@@ -63,21 +63,21 @@ export const POST = async (req: NextRequest) => {
     });
 
     // send notification to the creator of guild
-    const notification = await db.notification.create({
-      data: {
-        joinRequestId: createdJoinRequest.id,
-        recipientId: guild.creatorId,
-        type: "JOIN_REQUEST",
-        senderId: session.user.id,
-      },
-    });
+    // const notification = await db.notification.create({
+    //   data: {
+    //     joinRequestId: createdJoinRequest.id,
+    //     recipientId: guild.creatorId,
+    //     type: "JOIN_REQUEST",
+    //     senderId: session.user.id,
+    //   },
+    // });
 
-    const channel = `channel_user_${notification.recipientId}`;
-    const event = "new-notification";
+    // const channel = `channel_user_${notification.recipientId}`;
+    // const event = "new-notification";
 
-    await pusherServer.trigger(channel, event, {
-      notification,
-    });
+    // await pusherServer.trigger(channel, event, {
+    //   notification,
+    // });
 
     return NextResponse.json(
       {
@@ -86,6 +86,7 @@ export const POST = async (req: NextRequest) => {
       },
       { status: 200 },
     );
+
   } catch (error) {
     return NextResponse.json(
       {
@@ -97,10 +98,10 @@ export const POST = async (req: NextRequest) => {
   }
 };
 
-// remove request
+// remove request for the user who made the req
 export const DELETE = async (req: NextRequest) => {
   const url = new URL(req.url);
-  const joinRequestId = url.searchParams.get("joinRequestId") as string;
+  const guildId = url.searchParams.get("guildId") as string;
   const session = await getServerSideSession();
 
   try {
@@ -118,15 +119,9 @@ export const DELETE = async (req: NextRequest) => {
 
     const existingRequest = await db.joinRequest.findFirst({
       where: {
-        id: joinRequestId,
-      },
-      include: {
-        guild: {
-          select: {
-            creatorId: true,
-          },
-        },
-      },
+        senderId: authenticatedUserId,
+        guildId
+      }
     });
 
     if (!existingRequest) {
@@ -139,22 +134,9 @@ export const DELETE = async (req: NextRequest) => {
       );
     }
 
-    if (
-      existingRequest.senderId !== authenticatedUserId ||
-      existingRequest.guild.creatorId !== authenticatedUserId
-    ) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "You cant remove this request",
-        },
-        { status: 403 },
-      );
-    }
-
     await db.joinRequest.delete({
       where: {
-        id: joinRequestId,
+        id: existingRequest.id
       },
     });
 

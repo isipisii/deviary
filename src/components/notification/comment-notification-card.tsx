@@ -24,7 +24,8 @@ export default function CommentNotificationCard({
         {/* sender's avatar */}
         <div className="relative h-[30px] w-[30px] md:h-[35px] md:w-[35px]">
           <Avatar
-            src={sender.image}
+            src={sender.image ?? ""}
+            showFallback
             className="h-[30px] w-[30px] md:h-[35px] md:w-[35px]"
           />
           <div className="absolute -bottom-2 -right-2 bg-background p-1 rounded-full">

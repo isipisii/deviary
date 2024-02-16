@@ -7,9 +7,17 @@ import {
   Button,
 } from "@nextui-org/react";
 import { GoKebabHorizontal } from "react-icons/go";
+import { PiSignOutBold } from "react-icons/pi";
 import { TbShare3 } from "react-icons/tb";
 
-export default function GuildContextMenu() {
+export default function GuildContextMenu({ guild }: { guild: TGuild }) {
+  const dropdownItems = [
+    { text: "Share guild", key: "share", icon: TbShare3 },
+    { text: "Leave guild", key: "leave", icon: PiSignOutBold },
+  ];
+  const filteredItems = guild.isBelong
+    ? dropdownItems
+    : dropdownItems.filter((item) => item.key !== "leave");
 
   return (
     <Dropdown
@@ -18,32 +26,37 @@ export default function GuildContextMenu() {
     >
       <DropdownTrigger>
         <Button
-          variant="light"
+          variant="bordered"
           size="md"
           isIconOnly
-          className="z-[5] rounded-xl text-[1.2rem]"
+          className="z-[5] rounded-xl border-1 border-borderColor text-[1.2rem]"
           startContent={<GoKebabHorizontal />}
         />
       </DropdownTrigger>
-      <DropdownMenu variant="flat">
-        <DropdownItem
-          key="share"
-          // color={item.key === "delete" ? "danger" : "default"}
-          // className={item.key === "delete" ? "text-danger" : ""}
-          className="rounded-lg"
-          startContent={<TbShare3 />}
-        >
-          Share squad
-        </DropdownItem>
-        <DropdownItem
-          key="leave"
-          // color={item.key === "delete" ? "danger" : "default"}
-          // className={item.key === "delete" ? "text-danger" : ""}
-          className="rounded-lg text-danger"
-          color="danger"
-        >
-          Leave guild
-        </DropdownItem>
+      <DropdownMenu variant="flat" items={filteredItems}>
+        {(item) => {
+          if (item.key === "share") {
+            return (
+              <DropdownItem
+                key={item.key}
+                className="rounded-lg"
+                startContent={<item.icon />}
+              >
+                {item.text}
+              </DropdownItem>
+            );
+          }
+          return (
+            <DropdownItem
+              key={item.key}
+              className="rounded-lg text-danger"
+              color="danger"
+              startContent={<item.icon />}
+            >
+              {item.text}
+            </DropdownItem>
+          );
+        }}
       </DropdownMenu>
     </Dropdown>
   );

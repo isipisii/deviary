@@ -111,7 +111,7 @@ export default function Notification() {
           )}
 
           <div className="flex w-full items-end justify-end px-4">
-            <Button
+            {notifications && notifications?.length > 0 && <Button
               color="secondary"
               variant="light"
               size="sm"
@@ -120,7 +120,7 @@ export default function Notification() {
               onClick={() => viewAllNotificationsMutation()}
             >
               Mark all as viewed
-            </Button>
+            </Button>}
           </div>
         </div>
       </PopoverContent>

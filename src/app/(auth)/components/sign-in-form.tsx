@@ -17,7 +17,7 @@ import { useRouter } from "next/navigation";
 export type TSignInSchema = z.infer<typeof signInSchema>;
 
 export default function SignInForm() {
-  const router = useRouter()
+  const router = useRouter();
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isSigningIn, setIsSigningIn] = useState(false);
   const {
@@ -28,40 +28,41 @@ export default function SignInForm() {
   } = useForm<TSignInSchema>({
     resolver: zodResolver(signInSchema),
   });
-  const isButtonDisable =  !(!!watch("email") && !!watch("password")) || isSigningIn
+  const isButtonDisable =
+    !(!!watch("email") && !!watch("password")) || isSigningIn;
 
   async function handleSignIn(formValue: TSignInSchema) {
     try {
-      setIsSigningIn(true)
+      setIsSigningIn(true);
 
       const res = await signIn("credentials", {
         email: formValue.email,
         password: formValue.password,
-        redirect: false
-      }) 
+        redirect: false,
+      });
 
-      router.refresh()
+      router.refresh();
 
-      if(res?.ok) {
-        router.push("/")
+      if (res?.ok) {
+        router.push("/");
       }
 
-      if(res?.error) {
-        toast.error("Invalid Credentials")
+      if (res?.error) {
+        toast.error("Invalid Credentials");
       }
 
-      setIsSigningIn(false)
+      setIsSigningIn(false);
     } catch (error) {
-      console.error(error)
+      console.error(error);
     }
   }
 
   return (
     <form
-      className="max-w-[500px] w-full flex flex-col gap-4 mx-4"
+      className="mx-4 flex w-full max-w-[500px] flex-col gap-4"
       onSubmit={handleSubmit(handleSignIn)}
     >
-      <h2 className="font-semibold text-2xl">Sign in to your account</h2>
+      <h2 className="text-2xl font-semibold">Sign in to your account</h2>
       <div className="flex flex-col gap-3">
         <Input
           type="email"
@@ -92,9 +93,9 @@ export default function SignInForm() {
               onClick={() => setIsPasswordVisible((prevState) => !prevState)}
             >
               {isPasswordVisible ? (
-                <FaEyeSlash className="text-lg text-default-400 pointer-events-none" />
+                <FaEyeSlash className="pointer-events-none text-lg text-default-400" />
               ) : (
-                <FaEye className="text-lg text-default-400 pointer-events-none" />
+                <FaEye className="pointer-events-none text-lg text-default-400" />
               )}
             </button>
           }
@@ -107,23 +108,26 @@ export default function SignInForm() {
           variant="solid"
           isLoading={isSigningIn}
           isDisabled={isButtonDisable}
-          className="text-white font-semibold"
+          className="font-semibold text-white"
         >
           Sign in
         </Button>
       </div>
 
-      <div className="flex gap-4 w-full items-center">
-        <Divider className="w-[35%]" />
-        <p className="w-full text-center opacity-60 text-sm">
-          Or continue with
+      <div className="flex w-full items-center gap-4">
+        <Divider className="w-[30%] sm:w-[35%]" />
+        <p className="w-full text-center text-[.75rem] opacity-60  md:text-[.875rem]">
+          Or sign up with
         </p>
-        <Divider className="w-[35%]" />
+        <Divider className="w-[30%] sm:w-[35%]" />
       </div>
 
       <GoogleButton />
       <p className="text-center text-sm">
-        Dont have an account? <Link href="/sign-up" className="text-primary-500">Sign up</Link>
+        Dont have an account?{" "}
+        <Link href="/sign-up" className="text-primary-500">
+          Sign up
+        </Link>
       </p>
     </form>
   );

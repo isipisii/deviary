@@ -36,7 +36,6 @@ export const POST = async (request: NextRequest) => {
 
         await createNonExistentTags(tags)
         const uploadedImage =  await utapi.uploadFiles(thumbnail)
-       
         const createdPost = await db.post.create({
             data: {
                 type: "BLOG_POST",
@@ -49,9 +48,9 @@ export const POST = async (request: NextRequest) => {
                         thumbnail: {
                             imageKey: uploadedImage.data?.key as string,
                             imageUrl: uploadedImage.data?.url as string
-                        }
+                        },
                     }
-                }
+                },
             }, 
             include: {
                 blog: true,
@@ -66,8 +65,6 @@ export const POST = async (request: NextRequest) => {
             }
         })
 
-        
-        
         return NextResponse.json({
             data: createdPost,
             message: "Blog post created",
@@ -75,6 +72,7 @@ export const POST = async (request: NextRequest) => {
         }, { status: 200 })
     
     } catch (error) {
+        console.log(error)
         return NextResponse.json({ message: "Internal Server Error", success: false }, { status: 500 })
     }
 }

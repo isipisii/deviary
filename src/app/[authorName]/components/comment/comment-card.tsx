@@ -32,6 +32,10 @@ export default function CommentCard({ comment }: { comment: TComment }) {
             className: "h-[35px] w-[35px]",
           }}
           className="self-start transition-transform"
+          classNames={{
+            description: "text-navTextColor",
+            name: "font-medium",
+          }}
           name={comment.user.name}
           description={comment?.user.email}
         />
@@ -48,7 +52,7 @@ export default function CommentCard({ comment }: { comment: TComment }) {
           initialValue={comment.content}
         />
       ) : (
-        <p className="whitespace-pre-wrap break-words">{comment.content}</p>
+        <p className="whitespace-pre-wrap break-words text-sm">{comment.content}</p>
       )}
     </div>
   );

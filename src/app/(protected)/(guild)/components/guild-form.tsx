@@ -10,7 +10,6 @@ import { CustomRadio } from "@/components/ui/custom-radio";
 import { useState } from "react";
 import { useCreateGuild, useEditGuild } from "@/lib/services/guild.api";
 import z from "zod";
-import useExtractColor from "@/lib/hooks/useExtractColor";
 
 type TGuildSchema = z.infer<typeof guildSchema>;
 
@@ -111,12 +110,15 @@ export default function GuildForm({ isEditing, guildToEdit }: IGuildForm) {
 
         <div className="flex w-full flex-col gap-4">
           <h3 className="text-[1.1rem] font-semibold">Privacy</h3>
-          <RadioGroup value={privacy} onValueChange={setPrivacy}>
+          <RadioGroup value={privacy} onValueChange={setPrivacy} >
             <CustomRadio
               className="max-w-full md:max-w-[90%]"
               value="public"
               size="sm"
               color="secondary"
+              classNames={{
+                description: "text-light"
+              }}
               description="Everyone can see the guild's content and can join without requesting for permission."
             >
               Public
@@ -125,6 +127,9 @@ export default function GuildForm({ isEditing, guildToEdit }: IGuildForm) {
               className="max-w-full md:max-w-[90%]"
               value="private"
               size="sm"
+              classNames={{
+                description: "text-navTextColor"
+              }}
               color="secondary"
               description="Only the accepted users are able to see the guild's content."
             >

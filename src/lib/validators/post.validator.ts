@@ -22,5 +22,5 @@ export const diarySchema = z.object({
     .max(100, { message: "Title should not exceed to 100 characters"}),
     codeSnippet: z.string().min(1, { message: "Solution is required" }),
     description: z.string().min(1, { message: "Title is required" }),
-    solution: z.string().nullable()
+    solution: z.string()
 })

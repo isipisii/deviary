@@ -24,6 +24,9 @@ body {
     background-color: rgba(232, 231, 231, 0.507);
 }
 
+/* this is for guild details, flex directions arent working properly with media query in tailwind.
+life's been stressing me out, fuck. */
+
 .guild-details {
     text-align: start;
 }
@@ -36,6 +39,14 @@ body {
     flex-direction: row;
     gap: 1.1rem;
 }
+
+.guild-details-skeleton-container{
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+ 
+
 @media (max-width: 1024px) {
     .guild-details {
         text-align: center;
@@ -43,4 +54,7 @@ body {
     .guild-lower {
         flex-direction: column;
     }
-  }
+    .guild-details-skeleton-container {
+        align-items: center;
+    }
+}

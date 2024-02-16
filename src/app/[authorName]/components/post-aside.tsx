@@ -31,6 +31,10 @@ export default function PostAside({ post }: { post: TPost }) {
                 src: post.author.image ?? "",
               }}
               className="self-start transition-transform"
+              classNames={{
+                description: "text-navTextColor",
+                name: "font-medium",
+              }}
               description={post.author.email}
               name={post.author.name}
             />

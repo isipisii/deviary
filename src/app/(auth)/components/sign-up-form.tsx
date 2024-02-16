@@ -16,7 +16,8 @@ export type TSignUpSchema = z.infer<typeof signUpSchema>;
 
 export default function SignUpForm() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] = useState(false);
+  const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] =
+    useState(false);
   const {
     register,
     handleSubmit,
@@ -24,24 +25,24 @@ export default function SignUpForm() {
     formState: { errors },
   } = useForm<TSignUpSchema>({
     resolver: zodResolver(signUpSchema),
-  });  
-  const { mutate: signUpMutation, isPending } = useSignUp()
+  });
+  const { mutate: signUpMutation, isPending } = useSignUp();
   const isButtonDisabled = !(
-    !!watch("email") && 
-    !!watch("password") && 
+    !!watch("email") &&
+    !!watch("password") &&
     !!watch("confirmPassword")
-  ) 
+  );
 
   function handleSignUp(formData: TSignUpSchema) {
-    signUpMutation(formData)
+    signUpMutation(formData);
   }
 
   return (
     <form
-      className="max-w-[500px] w-full flex flex-col gap-4 mx-4"
+      className="mx-4 flex w-full max-w-[500px] flex-col gap-4"
       onSubmit={handleSubmit(handleSignUp)}
     >
-      <h2 className="font-semibold text-2xl">Create an account</h2>
+      <h2 className="text-2xl font-semibold">Create an account</h2>
       <div className="flex flex-col gap-3">
         <Input
           type="email"
@@ -72,9 +73,9 @@ export default function SignUpForm() {
               onClick={() => setIsPasswordVisible((prevState) => !prevState)}
             >
               {isPasswordVisible ? (
-                <FaEyeSlash className="text-lg text-default-400 pointer-events-none" />
+                <FaEyeSlash className="pointer-events-none text-lg text-default-400" />
               ) : (
-                <FaEye className="text-lg text-default-400 pointer-events-none" />
+                <FaEye className="pointer-events-none text-lg text-default-400" />
               )}
             </button>
           }
@@ -94,40 +95,46 @@ export default function SignUpForm() {
             <button
               className="focus:outline-none"
               type="button"
-              onClick={() => setIsConfirmPasswordVisible((prevState) => !prevState)}
+              onClick={() =>
+                setIsConfirmPasswordVisible((prevState) => !prevState)
+              }
             >
               {isConfirmPasswordVisible ? (
-                <FaEyeSlash className="text-lg text-default-400 pointer-events-none" />
+                <FaEyeSlash className="pointer-events-none text-lg text-default-400" />
               ) : (
-                <FaEye className="text-lg text-default-400 pointer-events-none" />
+                <FaEye className="pointer-events-none text-lg text-default-400" />
               )}
             </button>
           }
         />
 
         <Button
+          type="submit"
           color="secondary"
           size="md"
           variant="solid"
           isLoading={isPending}
-          className="text-white font-semibold"
+          className="font-semibold text-white"
           isDisabled={isButtonDisabled}
         >
           Sign up
         </Button>
       </div>
 
-      <div className="flex gap-4 w-full items-center">
-        <Divider className="w-[35%]" />
-        <p className="w-full text-center opacity-60 text-sm">
+      <div className="flex w-full items-center gap-4">
+        <Divider className="w-[30%] sm:w-[35%]" />
+        <p className="w-full text-center text-[.75rem] opacity-60  md:text-[.875rem]">
           Or sign up with
         </p>
-        <Divider className="w-[35%]" />
+        <Divider className="w-[30%] sm:w-[35%]" />
       </div>
 
       <GoogleButton />
       <p className="text-center text-sm">
-        Have an account? <Link href="/sign-in" className="text-primary-500">Sign in</Link>
+        Have an account?{" "}
+        <Link href="/sign-in" className="text-primary-500">
+          Sign in
+        </Link>
       </p>
     </form>
   );
