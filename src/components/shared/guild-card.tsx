@@ -4,25 +4,33 @@
 import Link from "next/link";
 import { Avatar, Button } from "@nextui-org/react";
 import CustomAvatarGroup from "../ui/custom-avatar-group";
-import { useJoinGuild, useJoinRequestGuild } from "@/lib/services/guild.api";
+import { useJoinGuild, useJoinRequestGuild, useRemoveJoinRequest } from "@/lib/services/guild.api";
 
 export default function GuildCard({ guild }: { guild: TGuild }) {
   const { mutate: joinGuildMutation, isPending: joiningGuild } = useJoinGuild()
   const { mutate: joinRequestGuildMutation, isPending: sendingJoiningRequest } = useJoinRequestGuild()
-  const isPending = joiningGuild || sendingJoiningRequest
+  const { mutate: removeJoinRequestMutation, isPending: removingJoiningRequest } = useRemoveJoinRequest()
+
+  const isPending = joiningGuild || sendingJoiningRequest || removingJoiningRequest
 
   function handleJoinGuild() {
     if(!guild.isPrivate) {
       joinGuildMutation(guild.id)
-
       return
     }
+
+    if(guild.hasAnExistingJoinRequest) {
+      removeJoinRequestMutation(guild.id)
+      return
+    }
+    
     joinRequestGuildMutation(guild.id)
   }
 
   return (
     <Link href={`/guilds/${guild.id}`} className="w-full max-w-[350px]">
       <div className="relative flex h-[400px] w-full max-w-[350px] items-end justify-center overflow-hidden rounded-3xl border-2 border-borderColor bg-cardBg p-4 shadow-xl">
+        {/* gradients */}
         <div
           className="absolute -right-[10rem] -top-[20rem] z-0 h-[600px] w-[800px] opacity-20"
           style={{
@@ -36,7 +44,8 @@ export default function GuildCard({ guild }: { guild: TGuild }) {
           }}
         />
         <div className="absolute left-0 top-0 z-[4] h-full w-full bg-background opacity-30 backdrop-blur-xl" />
-
+        
+        {/* card details */}
         <div className="z-[5] flex h-full w-full flex-col justify-between gap-4">
           <div className="flex w-full flex-col">
             <CustomAvatarGroup
