@@ -9,6 +9,7 @@ export const userSelectedFields = {
   image: true,
 }
 
+// get authenticated user's notifs
 export const GET = async (request: NextRequest) => {
   const session = await getServerSideSession();
 
@@ -40,6 +41,16 @@ export const GET = async (request: NextRequest) => {
               },
             }
           },
+        },
+        joinRequest: {
+          include: {
+            sender: {
+              select: {
+                ...userSelectedFields
+              }
+            },
+            guild: true
+          }
         },
         comment: {
           select: {
