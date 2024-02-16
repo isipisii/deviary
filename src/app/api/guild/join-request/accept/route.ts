@@ -9,6 +9,8 @@ export const POST = async (req: NextRequest) => {
   const session = await getServerSideSession();
   const authenticatedUserId = session?.user.id;
 
+  console.log(joinRequestId)
+
   try {
     if (!session) {
       return NextResponse.json(
@@ -17,6 +19,16 @@ export const POST = async (req: NextRequest) => {
           message: "Unauthenticated",
         },
         { status: 401 },
+      );
+    }
+
+    if (!joinRequestId) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Missing join request id",
+        },
+        { status: 400 },
       );
     }
 
@@ -47,7 +59,7 @@ export const POST = async (req: NextRequest) => {
       return NextResponse.json(
         {
           success: false,
-          message: "You cant remove this request",
+          message: "You cant accept this request",
         },
         { status: 403 },
       );
