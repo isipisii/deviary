@@ -6,7 +6,6 @@ import { LuUsers2 } from "react-icons/lu";
 export default function Home() {
   return (
     <main className="bg-[#00060C]">
-
       {/* Hero Section */}
       <section className="relative flex h-[80vh] w-full items-center justify-center">
         {/* pattern */}
@@ -67,8 +66,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="flex w-full justify-center relative py-[4rem]">
-
+      <section className="relative flex w-full justify-center py-[4rem]">
         <div className="absolute right-0 top-0 z-0 h-[350px] w-[300px] rounded-bl-[8rem] rounded-tl-[8rem] bg-gradient-to-l from-[#dd0dba2f] to-[#dd0dc125] blur-[70px] filter md:h-[500px] md:w-[450px]" />
         <div className="absolute -bottom-10 -left-[18rem] z-0  h-[500px] w-[500px]  rounded-full bg-gradient-to-l from-[#0d8add25] to-[#0d8add29] blur-[80px] filter md:h-[600px] md:w-[600px]" />
         {/* 2nd Section Container */}
@@ -129,13 +127,9 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="h-[500px]">
+      <section className="h-[500px]"></section>
 
-      </section>
-
-      <footer>
-
-      </footer>
+      <footer></footer>
     </main>
   );
 }
