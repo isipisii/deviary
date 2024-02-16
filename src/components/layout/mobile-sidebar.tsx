@@ -166,6 +166,7 @@ export default function MobileSidebar() {
                 body: "Are you sure you want to log out?",
               }}
               isDelete={false}
+              buttonText="Log out"
             />
           </div>
         </div>
