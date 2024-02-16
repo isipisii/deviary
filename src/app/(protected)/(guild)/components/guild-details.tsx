@@ -3,19 +3,25 @@ import { Avatar, Button } from "@nextui-org/react";
 import GuildContextMenu from "./guild-context-menu";
 import { AiOutlineUserAdd } from "react-icons/ai";
 import CustomAvatarGroup from "@/components/ui/custom-avatar-group";
-import { useJoinGuild, useJoinRequestGuild } from "@/lib/services/guild.api";
+import { useJoinGuild, useJoinRequestGuild, useRemoveJoinRequest } from "@/lib/services/guild.api";
 
 export default function GuildDetails({ guild }: { guild: TGuild }) {
   const { mutate: joinGuildMutation, isPending: joiningGuild } = useJoinGuild()
   const { mutate: joinRequestGuildMutation, isPending: sendingJoiningRequest } = useJoinRequestGuild()
-  const isPending = joiningGuild || sendingJoiningRequest
+  const { mutate: removeJoinRequestMutation, isPending: removingJoiningRequest } = useRemoveJoinRequest()
+  const isPending = joiningGuild || sendingJoiningRequest || removingJoiningRequest
 
   function handleJoinGuild() {
     if(!guild.isPrivate) {
       joinGuildMutation(guild.id)
-
       return
     }
+
+    if(guild.hasAnExistingJoinRequest) {
+      removeJoinRequestMutation(guild.id)
+      return
+    }
+    
     joinRequestGuildMutation(guild.id)
   }
 
@@ -77,7 +83,7 @@ export default function GuildDetails({ guild }: { guild: TGuild }) {
             isIconOnly
             startContent={<AiOutlineUserAdd className="text-[1.2rem]" />}
           />
-          <GuildContextMenu />
+          <GuildContextMenu guild={guild} />
         </div>
       </div>
     </div>
