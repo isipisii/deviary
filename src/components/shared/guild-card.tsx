@@ -8,10 +8,9 @@ import { useJoinGuild, useJoinRequestGuild, useRemoveJoinRequest } from "@/lib/s
 
 export default function GuildCard({ guild }: { guild: TGuild }) {
   const { mutate: joinGuildMutation, isPending: joiningGuild } = useJoinGuild()
-  const { mutate: joinRequestGuildMutation, isPending: sendingJoiningRequest } = useJoinRequestGuild()
-  const { mutate: removeJoinRequestMutation, isPending: removingJoiningRequest } = useRemoveJoinRequest()
-
-  const isPending = joiningGuild || sendingJoiningRequest || removingJoiningRequest
+  const { mutate: joinRequestGuildMutation, isPending: isSendingRequest } = useJoinRequestGuild()
+  const { mutate: removeJoinRequestMutation, isPending: isRemovingRequest } = useRemoveJoinRequest()
+  const isPending = joiningGuild || isSendingRequest || isRemovingRequest
 
   function handleJoinGuild() {
     if(!guild.isPrivate) {
