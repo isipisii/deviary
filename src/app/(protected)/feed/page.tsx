@@ -13,7 +13,7 @@ export default async function Feed() {
     queryKey: [QueryKeys.Posts],
     initialPageParam: "",
     queryFn: ({ pageParam: lastCursor }) => getFeedPosts(5, lastCursor),
-    getNextPageParam: (lastPage: TPage<TPost[]>) => lastPage.metaData ? lastPage?.metaData.lastCursor : null,
+    getNextPageParam: (lastPage) => lastPage.metaData ? lastPage?.metaData.lastCursor : null,
     pages: 3
   })
 
