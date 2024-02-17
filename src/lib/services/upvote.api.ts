@@ -91,8 +91,9 @@ function getCachedDataSnapshot(queryClient: QueryClient, searchQuery?: string, t
   const previousBookmarks = queryClient.getQueryData([QueryKeys.Bookmarks]);
   const previousPostsByTag = queryClient.getQueryData([QueryKeys.PostsByTag, tagName]);
   const previousSearchedPosts = queryClient.getQueryData([QueryKeys.SearchedPosts, searchQuery]);
+  const previousPopularPosts = queryClient.getQueryData([QueryKeys.PopularPosts]);
 
-  return { previousBookmarks, previousPostsByTag, previousPosts, previousSearchedPosts }
+  return { previousBookmarks, previousPostsByTag, previousPosts, previousSearchedPosts, previousPopularPosts }
 }
 
 async function cancelQueries(queryClient: QueryClient, searchQuery?: string, tagName?: string) {
@@ -100,6 +101,7 @@ async function cancelQueries(queryClient: QueryClient, searchQuery?: string, tag
   await queryClient.cancelQueries({ queryKey: [QueryKeys.Bookmarks] });
   await queryClient.cancelQueries({ queryKey: [QueryKeys.SearchedPosts, searchQuery] });
   await queryClient.cancelQueries({ queryKey: [QueryKeys.PostsByTag, tagName] });
+  await queryClient.cancelQueries({ queryKey: [QueryKeys.PopularPosts] });
 }
 
 async function invalidateQueries(queryClient: QueryClient, searchQuery?: string, tagName?: string) {
@@ -113,6 +115,7 @@ async function invalidateQueries(queryClient: QueryClient, searchQuery?: string,
     queryKey: [QueryKeys.SearchedPosts, searchQuery],
   });
   await queryClient.invalidateQueries({ queryKey: [QueryKeys.PostsByTag, tagName] });
+  await queryClient.invalidateQueries({ queryKey: [QueryKeys.PopularPosts] });
 }
 
 function upvoteOptismiticUpdate(
@@ -125,7 +128,7 @@ function upvoteOptismiticUpdate(
   const cachedBookmarks = queryClient.getQueryData([QueryKeys.Bookmarks]);
   const cachedSearchedPosts = queryClient.getQueryData([QueryKeys.SearchedPosts, searchQuery]);
 
-  //optimistic update for post
+  // posts in feed page
   queryClient.setQueryData<InfiniteData<TPage<TPost[]>>>(
     [QueryKeys.Posts],
     (oldData) => {
@@ -161,7 +164,7 @@ function upvoteOptismiticUpdate(
     },
   );
 
-  //optimistic update for bookmarks
+  // posts in bookmarks page
   if (cachedBookmarks) {
     queryClient.setQueryData<InfiniteData<TPage<TBookmark[]>>>(
       [QueryKeys.Bookmarks],
@@ -202,6 +205,7 @@ function upvoteOptismiticUpdate(
     );
   }
 
+  // posts in search post page
   if(cachedSearchedPosts && searchQuery) {
     queryClient.setQueryData<TPost[]>([QueryKeys.SearchedPosts, searchQuery], (oldData) => {
       const newData = oldData
@@ -222,8 +226,45 @@ function upvoteOptismiticUpdate(
     });
   }
 
+  // posts in tag page
   queryClient.setQueryData<InfiniteData<TPage<TPost[]>>>(
     [QueryKeys.PostsByTag, tagPageParam],
+    (oldData) => {
+      const newData = oldData
+        ? {
+            ...oldData,
+            pages: oldData.pages.map((page) => {
+              if (page) {
+                return {
+                  ...page,
+                  data: page.data
+                    ? page.data.map((post) =>
+                        post.id === postId
+                          ? {
+                              ...post,
+                              upvoteCount: upvoted
+                                ? post.upvoteCount + 1
+                                : post.upvoteCount - 1,
+                              isUpvoted: upvoted,
+                            }
+                          : post,
+                      )
+                    : [],
+                };
+              }
+
+              return page;
+            }),
+          }
+        : oldData;
+
+      return newData;
+    },
+  );
+
+  // posts in popular page
+  queryClient.setQueryData<InfiniteData<TPage<TPost[]>>>(
+    [QueryKeys.PopularPosts],
     (oldData) => {
       const newData = oldData
         ? {
