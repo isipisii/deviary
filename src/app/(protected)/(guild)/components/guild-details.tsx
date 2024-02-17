@@ -79,7 +79,8 @@ export default function GuildDetails({ guild }: { guild: TGuild }) {
           <Button
             size="md"
             color="secondary"
-            className="w-full max-w-[2.5rem] rounded-xl font-medium text-white"
+            variant="bordered"
+            className="w-full max-w-[2.5rem] rounded-xl font-medium "
             isIconOnly
             startContent={<AiOutlineUserAdd className="text-[1.2rem]" />}
           />
