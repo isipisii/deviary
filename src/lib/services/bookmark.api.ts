@@ -68,6 +68,9 @@ export function useCreateBookmark() {
       await queryClient.invalidateQueries({
         queryKey: [QueryKeys.Bookmarks],
       });
+      await queryClient.invalidateQueries({
+        queryKey: [QueryKeys.PopularPosts],
+      });
     },
   });
 }
@@ -91,6 +94,7 @@ export function useRemoveBookmark() {
       const previousBookmarks = queryClient.getQueryData([QueryKeys.Bookmarks]);
 
       optimisticUpdatePostBookmarkStatus(queryClient, false, postId, undefined);
+      removeBookmarkOptimisticUpdate(queryClient, postId)
 
       toast.success("Removed from bookmarks");
       return { previousPosts, previousBookmarks };
@@ -115,6 +119,9 @@ export function useRemoveBookmark() {
         queryKey: [QueryKeys.Posts],
       });
       await queryClient.invalidateQueries({
+        queryKey: [QueryKeys.PopularPosts],
+      });
+      await queryClient.invalidateQueries({
         queryKey: [QueryKeys.Bookmarks],
       });
     },
@@ -127,8 +134,8 @@ function optimisticUpdatePostBookmarkStatus(
   postId: string,
   path?: string
 ) {
-
-  if(path) updateRoute(path);
+  // TODO: this should only invoke in post page
+  // if(path) updateRoute(path);
 
   return queryClient.setQueryData<InfiniteData<TPage<TPost[]>>>(
     [QueryKeys.Posts],
@@ -188,3 +195,31 @@ function addBookmarkOptimisticUpdate(
     },
   );
 }
+
+function removeBookmarkOptimisticUpdate(
+  queryClient: QueryClient,
+  postId: string,
+) {
+  return queryClient.setQueryData<InfiniteData<TPage<TBookmark[]>>>(
+    [QueryKeys.Bookmarks],
+    (oldData) => {
+      const newData = oldData
+        ? {
+            ...oldData,
+            pages: oldData.pages.map((page) => {
+              if (page) {
+                return {
+                  ...page,
+                  data: page.data ? page.data.filter((bookmark) => bookmark.postId !== postId) : []
+                };
+              }
+              return page;
+            }),
+          }
+        : oldData;
+
+      return newData;
+    },
+  );
+}
+
