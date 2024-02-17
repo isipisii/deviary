@@ -32,7 +32,8 @@ export const QueryKeys = {
   PostsByTag: "postsByTag",
   MyGuilds: "myGuilds",
   Guild: "guild",
-  Guilds: "guilds"
+  Guilds: "guilds",
+  PopularPosts: "popularPosts"
 };
 
 export const sideBarNavs: ISideBarNav[] = [
