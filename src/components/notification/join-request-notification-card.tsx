@@ -32,7 +32,7 @@ export default function JoinRequesNotificationCard({
         {/* sender's avatar */}
       <div className="relative h-[30px] w-[30px] md:h-[35px] md:w-[35px]">
         <Avatar
-          src={sender.image ?? ""}
+          src={sender.image}
           showFallback
           isBordered
           className="h-[30px] w-[30px] md:h-[35px] md:w-[35px]"
