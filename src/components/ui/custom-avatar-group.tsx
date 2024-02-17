@@ -1,5 +1,9 @@
-import { Avatar, AvatarGroup } from "@nextui-org/react";
-import React from "react";
+import {
+  Avatar,
+  AvatarGroup,
+  User,
+} from "@nextui-org/react";
+import CustomTooltip from "./custom-tooltip";
 
 export default function CustomAvatarGroup({
   members,
@@ -22,7 +26,25 @@ export default function CustomAvatarGroup({
       isBordered
     >
       {members.map(({ user }) => (
-        <Avatar src={user.image ?? ""} key={user.id} showFallback />
+        <CustomTooltip key={user.id} placement="bottom" content={
+          <div className="flex gap-3 px-3 py-4 items-center ">
+            <User
+              avatarProps={{
+                src: user?.image,
+                isBordered: true
+              }}
+              classNames={{
+                description: "text-navTextColor",
+                name: "font-medium",
+              }}
+              className="transition-transform"
+              description={user.email}
+              name={user.name}
+            />
+          </div>
+        }>
+           <Avatar src={user.image} key={user.id} showFallback />
+        </CustomTooltip>
       ))}
     </AvatarGroup>
   );
