@@ -14,16 +14,29 @@ import { QueryKeys } from "../constants";
 import { updateRoute } from "../actions";
 import formatPostHref from "@/utils/formatPostHref";
 
-export async function getFeedPosts(
-  take: number,
-  lastCursor: string,
-  filter?: string[],
-) {
+export async function getFeedPosts(take: number, lastCursor: string) {
   const response = await axios.get("/api/post", {
     //the filter will only attach to the params if its truthy value
-    params: { take, lastCursor, ...(filter && { filter: filter?.join(",") }) },
+    params: { take, lastCursor },
   });
   return response.data.data as TPage<TPost[]>;
+}
+
+export async function getPopularPosts(take: number, lastCursor: string) {
+  const response = await axios.get("/api/post/popular", {
+    params: { take, lastCursor },
+  });
+  return response.data.data as TPage<TPost[]>;
+}
+
+export function useGetPopularPosts() {
+  return useInfiniteQuery({
+    queryKey: [QueryKeys.PopularPosts],
+    initialPageParam: "",
+    queryFn: ({ pageParam: lastCursor }) => getPopularPosts(5, lastCursor),
+    getNextPageParam: (lastPage) =>
+      lastPage.metaData ? lastPage?.metaData.lastCursor : null,
+  });
 }
 
 export function useGetFeedPosts(filter?: string[]) {
@@ -150,6 +163,9 @@ export function useDeletePost(closeModal?: () => void) {
       await queryClient.invalidateQueries({
         queryKey: [QueryKeys.Bookmarks],
       });
+      await queryClient.invalidateQueries({
+        queryKey: [QueryKeys.PopularPosts],
+      });
       toast.success("Post deleted successfully");
     },
     onError: (error: AxiosError<ErrorResponse>) => {
@@ -157,7 +173,7 @@ export function useDeletePost(closeModal?: () => void) {
     },
     onSettled: () => {
       if (closeModal) closeModal();
-    }
+    },
   });
 }
 
