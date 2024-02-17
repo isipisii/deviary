@@ -49,7 +49,7 @@ export default function GuildContextMenu({ guild }: { guild: TGuild }) {
             variant="bordered"
             size="md"
             isIconOnly
-            className="z-[5] rounded-xl border-1 border-borderColor text-[1.2rem]"
+            className="z-[5] rounded-xl border-2 border-borderColor text-[1.2rem]"
             startContent={<GoKebabHorizontal />}
           />
         </DropdownTrigger>
