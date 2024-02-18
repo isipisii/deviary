@@ -2,6 +2,7 @@
 "use client";
 
 import {
+  Avatar,
   Button,
   CircularProgress,
   User,
@@ -92,22 +93,22 @@ export default function MobileSidebar() {
       >
         <div
           className=" flex h-full w-full flex-col items-start 
-          justify-between p-5"
+          gap-8 p-5 "
         >
-          <div className="flex w-full flex-col gap-12">
-            {/* upper part */}
-            <div className="flex w-full items-center justify-between">
-              <Logo />
-              <Button
-                variant="light"
-                isIconOnly
-                className="rounded-xl text-[1.3rem]"
-                onClick={closeMenu}
-              >
-                <LuX />
-              </Button>
-            </div>
+          {/* upper part */}
+          <div className="flex w-full items-center justify-between">
+            <Logo />
+            <Button
+              variant="light"
+              isIconOnly
+              className="rounded-xl text-[1.3rem]"
+              onClick={closeMenu}
+            >
+              <LuX />
+            </Button>
+          </div>
 
+          <div className="flex w-full flex-col gap-8 justify-between overflow-auto h-full">
             {/* lower part */}
             <div className="w-full">
               {/* menu navs  */}
@@ -122,52 +123,54 @@ export default function MobileSidebar() {
                 ))}
               </div>
             </div>
-          </div>
 
-          <div className="flex w-full items-center justify-between">
-            {data?.user ? (
-              <User
-                as="button"
-                avatarProps={{
-                  src: data?.user.image ?? "",
-                  size: "sm",
+            <div className="flex w-full items-center justify-between p-1">
+              {data?.user ? (
+                <User
+                  as="button"
+                  avatarProps={{
+                    src: data?.user.image ?? "",
+                    className: "h-[30px] w-[30px]",
+                    size: "sm",
+                    isBordered: true,
+                  }}
+                  description={data?.user.email}
+                  name={data?.user.name}
+                  classNames={{
+                    name: "text-[.75rem]",
+                    description: "text-[.7rem] text-navTextColor",
+                  }}
+                />
+              ) : (
+                <AccountSkeleton />
+              )}
+
+              <Button
+                isIconOnly
+                color="danger"
+                variant="light"
+                radius="lg"
+                onClick={() => {
+                  closeMenu();
+                  onOpen();
                 }}
-                description={data?.user.email}
-                name={data?.user.name}
-                classNames={{
-                  name: "text-[.75rem]",
-                  description: "text-[.7rem]",
+              >
+                <PiSignOutBold className="rotate-180 text-[1.3rem]" />
+              </Button>
+
+              <ConfirmationModal
+                isOpen={isOpen}
+                onOpenChange={onOpenChange}
+                action={handleLogout}
+                isPending={isPending}
+                modalTextContent={{
+                  header: "Log out?",
+                  body: "Are you sure you want to log out?",
                 }}
+                isDelete={false}
+                buttonText="Log out"
               />
-            ) : (
-              <AccountSkeleton />
-            )}
-
-            <Button
-              isIconOnly
-              color="danger"
-              variant="light"
-              radius="lg"
-              onClick={() => {
-                closeMenu();
-                onOpen();
-              }}
-            >
-              <PiSignOutBold className="rotate-180 text-[1.3rem]" />
-            </Button>
-
-            <ConfirmationModal
-              isOpen={isOpen}
-              onOpenChange={onOpenChange}
-              action={handleLogout}
-              isPending={isPending}
-              modalTextContent={{
-                header: "Log out?",
-                body: "Are you sure you want to log out?",
-              }}
-              isDelete={false}
-              buttonText="Log out"
-            />
+            </div>
           </div>
         </div>
       </aside>
@@ -280,10 +283,11 @@ function MobileSidebarNavItem({
           {Icon && <Icon />}
         </p>
       ) : (
-        <div className="bg-background p-2 rounded-[.8rem]">
-          <img
+        <div className="rounded-[.8rem] bg-background p-2">
+          <Avatar
             src={imageUrl}
             alt={title}
+            isBordered
             className="h-[1.4rem] w-[1.4rem] rounded-full bg-background object-cover"
           />
         </div>
