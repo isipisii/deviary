@@ -37,7 +37,7 @@ export default function BlogPostCard({ post }: IBlogPostCard) {
           <div className="absolute bottom-4 left-1/2 flex w-[90%] -translate-x-1/2 flex-col justify-center gap-3">
             <div className="flex flex-col gap-1">
               <div className="flex justify-between">
-                <Avatar src={image as string} className="h-[40px] w-[40px]" />
+                <Avatar src={image as string} className="h-[40px] w-[40px]" isBordered />
                 <PostContextMenu
                   className="bg-background"
                   postType="BLOG_POST"

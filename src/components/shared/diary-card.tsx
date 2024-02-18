@@ -21,12 +21,13 @@ export default function DiaryCard({ post }: IDiaryCard) {
         flex-col justify-between gap-2 rounded-3xl border-2 
         border-borderColor bg-cardBg p-4 shadow-xl"
       >
-        <div className="grid gap-2">
+        <div className="grid gap-3">
           <div className="flex justify-between">
             <div className="flex items-center gap-2">
               <Avatar
                 src={post.author?.image as string}
                 className="h-[40px] w-[40px]"
+                isBordered
               />
               <div>
                 <p className="text-sm font-semibold">{post.author?.name}</p>
