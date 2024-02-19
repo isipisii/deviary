@@ -10,6 +10,7 @@ export const PATCH = async (request: NextRequest, { params }: { params: { userId
     const userId = params.userId
 
     const name = body.get("name")
+    const bio = body.get("bio")
     const imageFile = body.get("imageFile")
     const githubProfileLink = body.get("githubLink")
     const facebookProfileLink = body.get("facebookLink")
@@ -19,7 +20,8 @@ export const PATCH = async (request: NextRequest, { params }: { params: { userId
     const parsedOnboardingData = onboardingSchema.safeParse({
         githubLink: githubProfileLink,
         facebookLink: facebookProfileLink,
-        name: name
+        name,
+        bio
     })
 
     try {
@@ -78,8 +80,9 @@ export const PATCH = async (request: NextRequest, { params }: { params: { userId
                 id: existingUser.id,
             },
             data: {
-                name: name as string ||  existingUser?.name,
-                image: uploadedImage || existingUser?.image,
+                name: parsedOnboardingData.data.name || existingUser?.name,
+                bio: parsedOnboardingData.data.bio ,
+                ...(uploadedImage && { image: uploadedImage}),
                 onboarded: true,
             },  
             select: {
