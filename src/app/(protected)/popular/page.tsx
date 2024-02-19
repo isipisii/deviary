@@ -22,7 +22,7 @@ export default async function PopularPage() {
 
   return (
     <div className="p-6 md:p-12">
-      <PageTitle>Popular</PageTitle>
+      <PageTitle>Popular🔥</PageTitle>
       <HydrationBoundary state={dehydrate(queryClient)}>
        <PopularPostsContainer />
       </HydrationBoundary>
