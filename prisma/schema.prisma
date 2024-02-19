@@ -57,6 +57,7 @@ model User {
   name                  String?
   email                 String? @unique
   password              String?
+  bio                   String?
   emailVerified         DateTime?
   image                 String?
   onboarded             Boolean?  @default(false)
@@ -73,8 +74,6 @@ model User {
 
   sentNotifications     Notification[] @relation("SentNotifications")
   receivedNotifications Notification[] @relation("ReceivedNotifications")
-
-  guildsCreatedId       String[] @db.ObjectId
   guildsCreated         Guild[] @relation("GuildCreator")
   // try
   // guildsModeratedId     String[] @db.ObjectId
