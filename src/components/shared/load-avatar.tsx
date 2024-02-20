@@ -41,7 +41,7 @@ export default function LoadAvatar({
           radius="full"
           className="h-[130px] w-[130px]"
           src={selectedImage || initialImage}
-          classNames={{ base: "border-borderColor border hover:bg-light bg-transparent" }}
+          classNames={{ base: "border-borderColor border hover:bg-light bg-transparent cursor-pointer" }}
         />
       </label>
       <input
