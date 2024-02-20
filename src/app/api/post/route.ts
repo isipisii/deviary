@@ -12,7 +12,7 @@ export const GET = async (request: NextRequest) => {
 
     const take = Number(url.searchParams.get("take"));
     const lastCursor = url.searchParams.get("lastCursor") as string;
-    const filter = url.searchParams.get("filter")?.toString().split(",");
+    // const filter = url.searchParams.get("filter")?.toString().split(",");
 
     if (!session) {
       return NextResponse.json(
@@ -24,13 +24,18 @@ export const GET = async (request: NextRequest) => {
       );
     }
 
+    const user = await db.user.findUnique({
+      where: {
+        id: session.user.id,
+      },
+    });
+    const userPostTypeFilter = user?.feedFilter?.postType
+
     const posts = await db.post.findMany({
       //puts the where clause if there's a filter from the search params
-      ...(filter && {
+      ...(userPostTypeFilter && {
         where: {
-          tags: {
-            hasSome: filter,
-          },
+          type: userPostTypeFilter,
         },
       }),
       take: take ? Number(take) : 10,
@@ -88,6 +93,11 @@ export const GET = async (request: NextRequest) => {
     const cursor = lastPostInResults?.id;
 
     const nextPage = await db.post.findMany({
+      ...(userPostTypeFilter && {
+        where: {
+          type: userPostTypeFilter,
+        },
+      }),
       orderBy: {
         createdAt: "desc",
       },
