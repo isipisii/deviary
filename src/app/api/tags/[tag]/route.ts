@@ -2,9 +2,13 @@ import { NextResponse, NextRequest } from "next/server";
 import { db } from "@/lib/prisma";
 import { getServerSideSession } from "@/lib/auth";
 
+type TParams = { 
+  params: { tag: string }
+}
+
 export const GET = async (
   request: NextRequest,
-  { params }: { params: { tag: string } },
+  { params }: TParams,
 ) => {
   const session = await getServerSideSession();
   const userId = session?.user.id as string;
