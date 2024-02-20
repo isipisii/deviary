@@ -39,7 +39,7 @@ export function useGetPopularPosts() {
   });
 }
 
-export function useGetFeedPosts(filter?: string[]) {
+export function useGetFeedPosts() {
   return useInfiniteQuery({
     queryKey: [QueryKeys.Posts],
     initialPageParam: "",
