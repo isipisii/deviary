@@ -8,6 +8,7 @@ type TUser = {
   email: string;
   onboarded?: boolean;
   name: string;
+  bio?: string
   image: string;
 };
 
