@@ -205,10 +205,10 @@ model Comment {
   userId       String @db.ObjectId
   user         User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  // parentId     String?  @db.ObjectId
-  // parent       Comment?   @relation("ParentComment", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  parentId     String?  @db.ObjectId
+  parent       Comment?   @relation("ParentComment", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
-  // childReplies   Comment[]  @relation("ParentComment")
+  childReplies Comment[]  @relation("ParentComment")
   notification Notification[]
 
   postId       String @db.ObjectId
