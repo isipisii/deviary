@@ -20,7 +20,7 @@ export default function UpvoteNotificationCard({
 
   return (
     <Link href={formatPostHref(post as TPost)} className="w-full" onClick={() => viewNotificationMutation(notification.id)}>
-       <div className="relative flex w-full gap-4 p-4 hover:bg-[#a8a7a716] transition-all duration-1000 ease-in-out ">
+       <div className="relative flex w-full gap-4 p-5 hover:bg-[#a8a7a716] transition-all duration-1000 ease-in-out ">
         {!notification.viewed && (
           <div className="absolute left-6 top-1/2 h-[10px] w-[10px] rounded-full bg-secondary" />
         )}

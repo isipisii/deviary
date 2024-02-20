@@ -23,7 +23,7 @@ export default function JoinRequesNotificationCard({
   return (
     <div
       key={notificationId}
-      className="relative flex w-full gap-4 p-4 transition-all duration-1000 ease-in-out hover:bg-[#a8a7a716] "
+      className="relative flex w-full gap-4 p-5 transition-all duration-1000 ease-in-out hover:bg-[#a8a7a716] "
     >
       {!viewed && (
         <div className="absolute left-6 top-1/2 h-[10px] w-[10px] rounded-full bg-secondary" />
