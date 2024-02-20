@@ -62,6 +62,8 @@ model User {
   image                 String?
   onboarded             Boolean?  @default(false)
   social                Social?
+  followedTags          String[] @default([])
+  feedFilter            Filter?
 
   accounts              Account[]
   sessions              Session[]
@@ -278,7 +280,7 @@ enum PostType  {
   CODE_DIARY
 }
 
-enum  GuildMemberRole {
+enum GuildMemberRole {
   MEMBER
   CREATOR
   MODERATOR
@@ -289,3 +291,6 @@ type Image {
   imageUrl String
 }
 
+type Filter {
+  postType PostType
+}
