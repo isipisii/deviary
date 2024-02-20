@@ -121,6 +121,7 @@ export const GET = async (req: NextRequest, { params }: TParams) => {
     name: true,
     email: true,
     image: true,
+    bio: true
   };
 
   try {
