@@ -36,6 +36,7 @@ export async function getPostById(postId: string, authenticatedUserId: string) {
           name: true,
           email: true,
           image: true,
+          bio: true
         },
       },
       _count: {
