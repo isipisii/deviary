@@ -30,7 +30,7 @@ export function useGetCurrentFeedFilter() {
     queryKey: [QueryKeys.CurrentFeedFilter],
     queryFn: async () => {
       const res = await axios.get("/api/users/filter-feed-posts");
-      return res.data.currentFeedFilter as string;
+      return res.data.currentFeedFilter.toLowerCase() as TFeedFilter
     },
   });
 }
