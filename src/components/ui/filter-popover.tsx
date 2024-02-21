@@ -30,13 +30,17 @@ const radioItems = [
   },
 ];
 
+
+
 export default function FilterPopover() {
   const { data: currentFeedFilter, isLoading } = useGetCurrentFeedFilter()
   const { mutate: applyFeedFilterMutation, isPending } = useApplyFeedFilter()
-  const [selected, setSelected] = useState("")
+  const [selected, setSelected] = useState<TFeedFilter>(currentFeedFilter ?? "all")
+
+  console.log(currentFeedFilter)
 
   useEffect(() => {
-    if(!isLoading && currentFeedFilter) setSelected(currentFeedFilter.toLowerCase() ?? "all")
+    if(!isLoading && currentFeedFilter) setSelected(currentFeedFilter)
   },[isLoading, currentFeedFilter])
 
   function handleApplyChanges() {
@@ -66,7 +70,7 @@ export default function FilterPopover() {
           <RadioGroup
             color="secondary"
             value={selected}
-            onValueChange={setSelected}
+            onValueChange={(value ) => setSelected(value as TFeedFilter)}
             className="flex flex-col gap-3"
           >
             {radioItems.map((radioItem, index) => (
