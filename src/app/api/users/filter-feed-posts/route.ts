@@ -81,7 +81,7 @@ export const GET = async (request: NextRequest) => {
     }
 
     return NextResponse.json(
-      { currentFeedFilter: user?.feedFilter?.postType },
+      { currentFeedFilter: user?.feedFilter?.postType ?? "all" },
       { status: 200 },
     );
   } catch (error) {
