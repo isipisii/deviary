@@ -61,6 +61,7 @@ type TComment = {
   userId: string;
   user: TUser;
   post: TPost;
+  childReplies: TComment[]
   postId: string;
   createdAt: Date;
   updatedAt: Date;
@@ -116,3 +117,5 @@ type TJoinRequest = {
   guild: TGuild
   guildId: readonly string;
 }
+
+type TFeedFilter = "all" | "blog_post" | "code_diary"
