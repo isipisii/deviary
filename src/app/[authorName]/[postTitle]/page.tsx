@@ -10,6 +10,7 @@ import {
 import { QueryKeys } from "@/lib/constants";
 import { getPostComments } from "@/lib/services/comments.api";
 import DiaryPost from "../components/diary-post";
+import BackButton from "../components/back-button";
 
 export default async function PostPage({
   params,
@@ -24,7 +25,8 @@ export default async function PostPage({
   await queryClient.prefetchInfiniteQuery({
     queryKey: [QueryKeys.Comments, postId],
     initialPageParam: "",
-    queryFn: ({ pageParam: lastCursor }) => getPostComments(5, lastCursor, postId),
+    queryFn: ({ pageParam: lastCursor }) =>
+      getPostComments(5, lastCursor, postId),
     getNextPageParam: (lastPage: TPage<TComment[]>) =>
       lastPage.metaData ? lastPage?.metaData.lastCursor : null,
     pages: 3,
@@ -35,6 +37,7 @@ export default async function PostPage({
       <TopNav />
       <HydrationBoundary state={dehydrate(queryClient)}>
         <div className="relative mt-[73px] flex items-center justify-center">
+          <BackButton />
           {post?.type === "BLOG_POST" && <BlogPost post={post} />}
           {post?.type === "CODE_DIARY" && <DiaryPost post={post} />}
         </div>
