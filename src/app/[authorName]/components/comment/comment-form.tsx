@@ -131,7 +131,7 @@ export default function CommentForm({
           isDisabled={isUpdatingComment || isCreatingComment}
           isLoading={isUpdatingComment || isCreatingComment}
         >
-          {getButtonText()}
+          {isUpdatingComment &&  "Updating" || isEditing && "Update" || isCreatingComment && "Commenting" || "Comment"}
         </Button>
       </div>
     </form>
