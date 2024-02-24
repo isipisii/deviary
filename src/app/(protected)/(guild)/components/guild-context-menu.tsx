@@ -16,7 +16,7 @@ import { useLeaveGuild } from "@/lib/services/guild.api";
 export default function GuildContextMenu({ guild }: { guild: TGuild }) {
   const { isOpen, onOpenChange, onOpen, onClose } = useDisclosure();
   const { mutate: leaveGuildMutation, isPending } = useLeaveGuild(onClose);
-  
+
   const dropdownItems = [
     { text: "Share guild", key: "share", icon: TbShare3 },
     { text: "Leave guild", key: "leave", icon: PiSignOutBold },
@@ -39,11 +39,7 @@ export default function GuildContextMenu({ guild }: { guild: TGuild }) {
         isDelete={false}
         buttonText="Leave"
       />
-
-      <Dropdown
-        className="rounded-xl border border-borderColor bg-background"
-        placement="bottom-end"
-      >
+      <Dropdown className="rounded-xl bg-background" placement="bottom-end">
         <DropdownTrigger>
           <Button
             variant="bordered"
