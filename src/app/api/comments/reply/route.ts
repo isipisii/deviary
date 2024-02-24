@@ -6,7 +6,6 @@ export const POST = async (request: NextRequest) => {
     const session = await getServerSideSession();
     const url = new URL(request.url);
     const commentId = url.searchParams.get("commentId") as string;
-    const postId= url.searchParams.get("postId") as string;
     const body = (await request.json()) as { content: string };
     const { content } = body;
   
@@ -41,25 +40,8 @@ export const POST = async (request: NextRequest) => {
         );
       }
   
-      const post = await db.post.findUnique({
-        where: {
-          id: postId,
-        },
-      });
-  
-      if (!post) {
-        return NextResponse.json(
-          {
-            message: "Post not found",
-            success: false,
-          },
-          { status: 404 },
-        );
-      }
-  
       const newCommentReply = await db.comment.create({
         data: {
-          postId,
           parentId: commentId,
           userId: session.user.id,
           content,
@@ -72,6 +54,7 @@ export const POST = async (request: NextRequest) => {
               image: true,
             },
           },
+          post: true
         },
       });
   

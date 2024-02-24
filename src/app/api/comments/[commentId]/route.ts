@@ -88,11 +88,16 @@ export const DELETE = async (request: NextRequest, { params }: TParams) => {
       );
     }
 
-    await db.comment.delete({
+    const comment = await db.comment.findUnique({
       where: {
         id: commentId,
       },
+      include: {
+        childReplies: true,
+      },
     });
+
+    deleteChildReplies(comment);
 
     return NextResponse.json(
       {
@@ -112,3 +117,29 @@ export const DELETE = async (request: NextRequest, { params }: TParams) => {
     );
   }
 };
+
+/** recursively deletes the child replies of a reply */ 
+async function deleteChildReplies(comment: any) {
+  for (const childReply of comment.childReplies) {
+    const reply = await db.comment.findUnique({
+      where: { id: childReply.id },
+      include: { childReplies: true },
+    });
+
+    if (reply) {
+      await deleteChildReplies(reply);
+    }
+  }
+
+  await db.comment.deleteMany({
+    where: {
+      parentId: comment.id,
+    },
+  });
+
+  await db.comment.delete({
+    where: {
+      id: comment.id,
+    },
+  });
+}
