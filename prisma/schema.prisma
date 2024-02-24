@@ -211,8 +211,8 @@ model Comment {
   childReplies Comment[]  @relation("ParentComment")
   notification Notification[]
 
-  postId       String @db.ObjectId
-  post         Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId       String? @db.ObjectId
+  post         Post? @relation(fields: [postId], references: [id], onDelete: Cascade)
 
   createdAt    DateTime  @default(now()) @map(name: "created_at")
   updatedAt    DateTime  @updatedAt @map(name: "updated_at")
