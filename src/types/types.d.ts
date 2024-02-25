@@ -61,8 +61,11 @@ type TComment = {
   userId: string;
   user: TUser;
   post: TPost;
-  childReplies: TComment[]
+  rootCommentId: readonly string
+  commentReplies: TComment[]
   postId: string;
+  parentId: readonly string
+  parent: TComment
   createdAt: Date;
   updatedAt: Date;
 };
