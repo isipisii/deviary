@@ -10,7 +10,7 @@ import CommentForm from "./comment/comment-form";
 import { FaMedal } from "react-icons/fa";
 
 export default function PostAside({ post }: { post: TPost }) {
-  const [isCommentFormOpen, setIsCommentFormOpen] = useState(false);
+  const [isCommentFormOpen, setIsCommentFormOpen] = useState(true);
   const { data } = useSession();
 
   function toggleOpenCommentForm() {
@@ -60,15 +60,12 @@ export default function PostAside({ post }: { post: TPost }) {
         {/* comment form */}
         {isCommentFormOpen && (
           <CommentForm
-            isEditing={false}
             textAreaProps={{
-              labelPlacement: "inside",
-              label: "Write your comment",
+              placeholder: "Write your comment",
               radius: "lg",
               minRows: 3,
               maxRows: 20,
             }}
-            postId={post.id}
           />
         )}
         {/* comments */}
