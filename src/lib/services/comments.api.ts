@@ -103,34 +103,7 @@ export function useEditComment(closeEditForm?: () => void) {
       return res.data.updatedComment as TComment;
     },
     onSuccess: async (updatedComment, { postId }) => {
-      queryClient.setQueryData<InfiniteData<TPage<TComment[]>>>(
-        [QueryKeys.Comments, postId],
-        (oldData) => {
-          const newData = oldData
-            ? {
-                ...oldData,
-                pages: oldData.pages.map((page, index) => {
-                  if (page) {
-                    return {
-                      ...page,
-                      data: page.data
-                        ? page.data.map((comment) =>
-                            comment.id === updatedComment.id
-                              ? updatedComment
-                              : comment,
-                          )
-                        : [],
-                    };
-                  }
-                  return page;
-                }),
-              }
-            : oldData;
-
-          return newData;
-        },
-      );
-
+      await queryClient.invalidateQueries({ queryKey: [QueryKeys.Comments, postId] });
       if (closeEditForm) closeEditForm();
     },
     onError: (error: AxiosError<ErrorResponse>) => {
@@ -141,13 +114,14 @@ export function useEditComment(closeEditForm?: () => void) {
 
 export function useDeleteComment() {
   const queryClient = useQueryClient();
+
   return useMutation({
     mutationKey: ["deleteComment"],
-    mutationFn: async (commentId: string) => {
+    mutationFn: async ({ commentId }: { commentId: string, postId: string }) => {
       return await axios.delete(`/api/comments/${commentId}`);
     },
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: [QueryKeys.Comments] });
+    onSuccess: async (data, { postId }) => {
+      await queryClient.invalidateQueries({ queryKey: [QueryKeys.Comments, postId] });
     },
     onError: (error: AxiosError<ErrorResponse>) => {
       toast.error("An error occured while deleting a comment");
@@ -155,27 +129,29 @@ export function useDeleteComment() {
   });
 }
 
-export function useCreateReply() {
+export function useCreateReply(closeForm?: () => void) {
   const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ["createReply"],
     mutationFn: async ({
       content,
-      postId,
+      rootCommentId,
       commentId,
     }: {
       content: string;
-      postId: string;
+      rootCommentId: string;
       commentId: string;
+      postId: string
     }) => {
       return await axios.post(
-        `/api/comments/reply/${commentId}`,
+        "/api/comments/reply",
         { content },
-        { params: { commentId, postId } },
+        { params: { commentId, rootCommentId } },
       );
     },
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: [QueryKeys.Comments] });
+    onSuccess: async (data, { postId }) => {
+      await queryClient.invalidateQueries({ queryKey: [QueryKeys.Comments, postId] });
+      if(closeForm) closeForm()
     },
     onError: (error: AxiosError<ErrorResponse>) => {
       toast.error("An error occured while creating a comment");
