@@ -73,6 +73,7 @@ model User {
   upvotes               Upvote[]
   joinRequests          JoinRequest[]
   guildsBelong          GuildMember[]
+  guildShares           GuildShare[]
 
   sentNotifications     Notification[] @relation("SentNotifications")
   receivedNotifications Notification[] @relation("ReceivedNotifications")
@@ -102,6 +103,7 @@ model Guild {
   // moderator       User[]  @relation("GuildModerators", fields: [moderatorsId], references: [id])
   members         GuildMember[]
   joinRequests    JoinRequest[]
+  guildShares     GuildShare[]
 
   createdAt       DateTime  @default(now()) @map(name: "created_at")
   updatedAt       DateTime  @updatedAt @map(name: "updated_at")
@@ -163,6 +165,7 @@ model Post {
   diary         Diary? 
   blog          Blog?
   notifications Notification[]
+  guildShares   GuildShare[]
        
   createdAt     DateTime  @default(now()) @map(name: "created_at")
   updatedAt     DateTime  @updatedAt @map(name: "updated_at")
@@ -204,6 +207,10 @@ model Comment {
   
   userId       String @db.ObjectId
   user         User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  rootCommentId  String? @db.ObjectId
+  rootComment    Comment?   @relation("RootComment", fields: [rootCommentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  commentReplies Comment[]  @relation("RootComment")
 
   parentId     String?  @db.ObjectId
   parent       Comment?   @relation("ParentComment", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
@@ -267,6 +274,22 @@ model Tag {
   createdAt     DateTime  @default(now()) @map(name: "created_at")
   updatedAt     DateTime  @updatedAt @map(name: "updated_at")
   @@map("tags")
+}
+
+model GuildShare {
+  id          String @id @default(auto()) @map("_id") @db.ObjectId
+  postId      String @db.ObjectId
+  post        Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  userId      String @db.ObjectId
+  user        User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  guildId     String @db.ObjectId
+  guild       Guild @relation(fields: [guildId], references: [id], onDelete: Cascade)
+
+  createdAt     DateTime  @default(now()) @map(name: "created_at")
+  updatedAt     DateTime  @updatedAt @map(name: "updated_at")
+  @@map("guild-shares")
 }
 
 enum NotificationType  {
