@@ -9,6 +9,8 @@ import CustomTooltip from "../ui/custom-tooltip";
 import { useState } from "react";
 import { useUpvote, useRemoveUpvote } from "@/lib/services/upvote.api";
 import formatPostHref from "@/utils/formatPostHref";
+import { useDisclosure } from "@nextui-org/react";
+import ShareModal from "../ui/share-modal";
 
 export default function PostActions({
   post,
@@ -25,6 +27,7 @@ export default function PostActions({
   const { mutate: upvoteMutation } = useUpvote();
   const { mutate: removeUpvoteMutation } = useRemoveUpvote();
   const [postPageState, setPostPageState] = useState<TPost>(post);
+  const { onOpen, onOpenChange, isOpen } = useDisclosure()
 
   // this is for card components
   function handleToggleUpvote() {
@@ -55,111 +58,118 @@ export default function PostActions({
   }
 
   return (
-    <div
-      className="flex w-full items-center justify-between"
-    >
-      <div className="flex items-center gap-1">
+    <> 
+      <ShareModal isOpen={isOpen} onOpenChange={onOpenChange}/>
+      <div className="flex w-full items-center justify-between">
+        <div className="flex items-center gap-1">
+          <CustomTooltip
+            placement="bottom"
+            content={
+              isInPostPage
+                ? postPageState.isUpvoted
+                  ? "Remove Upvote"
+                  : "Upvote"
+                : post.isUpvoted
+                  ? "Remove Upvote"
+                  : "Upvote"
+            }
+          >
+            <Button
+              isIconOnly
+              className={cn(
+                `rounded-xl bg-[#fff0] text-2xl text-[#A1A1AA]
+             hover:bg-[#34b6003b] hover:text-[#34FF00]`,
+                {
+                  "text-[#34FF00]": isInPostPage
+                    ? postPageState.isUpvoted
+                    : post.isUpvoted,
+                  "text-[#A1A1AA]": isInPostPage
+                    ? !postPageState.isUpvoted
+                    : !post.isUpvoted,
+                },
+              )}
+              onClick={(e) => {
+                e.preventDefault();
+                e.nativeEvent.stopImmediatePropagation();
+                isInPostPage
+                  ? handleToggleUpvoteInPostPage()
+                  : handleToggleUpvote();
+              }}
+            >
+              {isInPostPage ? (
+                postPageState.isUpvoted ? (
+                  <TbArrowBigUpFilled />
+                ) : (
+                  <TbArrowBigUp />
+                )
+              ) : post.isUpvoted ? (
+                <TbArrowBigUpFilled />
+              ) : (
+                <TbArrowBigUp />
+              )}
+            </Button>
+          </CustomTooltip>
+          <p className="font-bold text-[#A1A1AA]">
+            {isInPostPage ? postPageState.upvoteCount : post.upvoteCount}
+          </p>
+        </div>
+
         <CustomTooltip
           placement="bottom"
           content={
             isInPostPage
-              ? postPageState.isUpvoted
-                ? "Remove Upvote"
-                : "Upvote"
-              : post.isUpvoted
-                ? "Remove Upvote"
-                : "Upvote"
+              ? isCommentFormOpen
+                ? "Close comment form"
+                : "Show comment form"
+              : "Comments"
           }
         >
           <Button
             isIconOnly
             className={cn(
-              `rounded-xl bg-[#fff0] text-2xl text-[#A1A1AA]
-             hover:bg-[#34b6003b] hover:text-[#34FF00]`,
+              `rounded-xl bg-[#fff0] text-2xl text-[#A1A1AA] 
+          hover:bg-[#003db647] hover:text-[#639cff]`,
               {
-                "text-[#34FF00]": isInPostPage
-                  ? postPageState.isUpvoted
-                  : post.isUpvoted,
-                "text-[#A1A1AA]": isInPostPage
-                  ? !postPageState.isUpvoted
-                  : !post.isUpvoted,
+                "text-[#4f85e2]": isCommentFormOpen,
+                "text-[#A1A1AA]": !isCommentFormOpen,
               },
             )}
             onClick={(e) => {
               e.preventDefault();
-              e.nativeEvent.stopImmediatePropagation();
-              isInPostPage
-                ? handleToggleUpvoteInPostPage()
-                : handleToggleUpvote();
+              e.stopPropagation();
+              isInPostPage && toggleOpenCommentForm
+                ? toggleOpenCommentForm()
+                : router.push(formatPostHref(post));
             }}
           >
             {isInPostPage ? (
-              postPageState.isUpvoted ? (
-                <TbArrowBigUpFilled />
+              isCommentFormOpen ? (
+                <FaComments />
               ) : (
-                <TbArrowBigUp />
+                <FaRegComments />
               )
-            ) : post.isUpvoted ? (
-              <TbArrowBigUpFilled />
             ) : (
-              <TbArrowBigUp />
+              <FaRegComments />
             )}
           </Button>
         </CustomTooltip>
-        <p className="text-[#A1A1AA] font-bold">
-          {isInPostPage ? postPageState.upvoteCount : post.upvoteCount}
-        </p>
-      </div>
 
-      <CustomTooltip
-        placement="bottom"
-        content={
-          isInPostPage
-            ? isCommentFormOpen
-              ? "Close comment form"
-              : "Show comment form"
-            : "Comments"
-        }
-      >
-        <Button
-          isIconOnly
-          className={cn(
-            `rounded-xl bg-[#fff0] text-2xl text-[#A1A1AA] 
-          hover:bg-[#003db647] hover:text-[#639cff]`,
-            {
-              "text-[#4f85e2]": isCommentFormOpen,
-              "text-[#A1A1AA]": !isCommentFormOpen,
-            },
-          )}
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            isInPostPage && toggleOpenCommentForm
-              ? toggleOpenCommentForm()
-              : router.push(formatPostHref(post));
-          }}
-        >
-          {isInPostPage ? (
-            isCommentFormOpen ? (
-              <FaComments />
-            ) : (
-              <FaRegComments />
-            )
-          ) : (
-            <FaRegComments />
-          )}
-        </Button>
-      </CustomTooltip>
-
-      <CustomTooltip placement="bottom" content="Share">
-        <Button
-          isIconOnly
-          className="rounded-xl bg-[#fff0] text-2xl text-[#A1A1AA] 
+        <CustomTooltip placement="bottom" content="Share">
+          <Button
+            isIconOnly
+            className="rounded-xl bg-[#fff0] text-2xl text-[#A1A1AA] 
           hover:bg-[#dd0dba3c] hover:text-[#DD0DB9]"
-        >
-          <TbShare3 />
-        </Button>
-      </CustomTooltip>
-    </div>
+          onClick={(e) => {
+            e.stopPropagation();
+            e.preventDefault();
+            e.nativeEvent.stopImmediatePropagation();
+            onOpen()
+          }}
+          >
+            <TbShare3 />
+          </Button>
+        </CustomTooltip>
+      </div>
+    </>
   );
 }
