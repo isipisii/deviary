@@ -43,7 +43,7 @@ export const GET = async (request: NextRequest) => {
             image: true,
           },
         },
-        childReplies: {
+        parent: {
           include: {
             user: {
               select: {
@@ -52,8 +52,28 @@ export const GET = async (request: NextRequest) => {
                 image: true,
               },
             },
-            post: true,
-            childReplies: true
+          }
+        },
+        commentReplies: {
+          include: {
+            user: {
+              select: {
+                name: true,
+                email: true,
+                image: true,
+              },
+            },
+            parent: {
+              include: {
+                user: {
+                  select: {
+                    name: true,
+                    email: true,
+                    image: true,
+                  },
+                },
+              }
+            },
           },
         },
         post: true,
@@ -188,6 +208,7 @@ export const POST = async (request: NextRequest) => {
             image: true,
           },
         },
+        post: true,
       },
     });
 
