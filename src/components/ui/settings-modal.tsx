@@ -26,7 +26,7 @@ export default function SettingsModal({
       onOpenChange={onOpenChange}
       classNames={{
         backdrop: "bg-[#292f46]/50 backdrop-opacity-30",
-        base: "border-[#292f46] bg-cardBg rounded-3xl mx-4 py-3",
+        base: "border-[#292f46] bg-cardBg rounded-2xl mx-4 py-3",
       }}
       size="3xl"
     >
