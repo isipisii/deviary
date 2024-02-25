@@ -5,7 +5,11 @@ import { NextRequest, NextResponse } from "next/server";
 export const POST = async (request: NextRequest) => {
     const session = await getServerSideSession();
     const url = new URL(request.url);
-    const commentId = url.searchParams.get("commentId") as string;
+
+    /** the comment or reply where the user wants to reply */ 
+    const commentId = url.searchParams.get("commentId")
+     /** the base comment id of a certain post */ 
+    const rootCommentId = url.searchParams.get("rootCommentId")
     const body = (await request.json()) as { content: string };
     const { content } = body;
   
@@ -13,7 +17,7 @@ export const POST = async (request: NextRequest) => {
       if (!commentId) { 
         return NextResponse.json(
           {
-            message: "Missing post id",
+            message: "Missing comment id",
             successs: false,
           },
           { status: 400 },
@@ -23,7 +27,7 @@ export const POST = async (request: NextRequest) => {
       if (!content) {
         return NextResponse.json(
           {
-            message: "Missing comment content",
+            message: "Missing reply content",
             successs: false,
           },
           { status: 400 },
@@ -44,6 +48,7 @@ export const POST = async (request: NextRequest) => {
         data: {
           parentId: commentId,
           userId: session.user.id,
+          rootCommentId,
           content,
         },
         include: {
