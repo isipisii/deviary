@@ -50,6 +50,7 @@ export const PATCH = async (request: NextRequest, { params }: TParams) => {
             image: true,
           },
         },
+        post: true
       },
     });
 
@@ -94,10 +95,33 @@ export const DELETE = async (request: NextRequest, { params }: TParams) => {
       },
       include: {
         childReplies: true,
+        commentReplies: true
       },
     });
 
-    deleteChildReplies(comment);
+    if (!comment) {
+      return NextResponse.json(
+        {
+          message: "Comment not found",
+          success: false,
+        },
+        { status: 404 },
+      );
+    }
+
+    if(!comment?.rootCommentId) {
+      await db.comment.deleteMany({
+        where: {
+          rootCommentId: comment.id,
+        },
+      });
+    }
+    
+    await db.comment.delete({
+      where: {
+        id: comment.id,
+      },
+    });
 
     return NextResponse.json(
       {
@@ -117,29 +141,3 @@ export const DELETE = async (request: NextRequest, { params }: TParams) => {
     );
   }
 };
-
-/** recursively deletes the child replies of a reply */ 
-async function deleteChildReplies(comment: any) {
-  for (const childReply of comment.childReplies) {
-    const reply = await db.comment.findUnique({
-      where: { id: childReply.id },
-      include: { childReplies: true },
-    });
-
-    if (reply) {
-      await deleteChildReplies(reply);
-    }
-  }
-
-  await db.comment.deleteMany({
-    where: {
-      parentId: comment.id,
-    },
-  });
-
-  await db.comment.delete({
-    where: {
-      id: comment.id,
-    },
-  });
-}
