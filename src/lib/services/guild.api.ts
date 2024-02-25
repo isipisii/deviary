@@ -87,7 +87,7 @@ export function useEditGuild() {
   });
 }
 
-// get guilds where the authenticated user belongs
+/** get guilds where the authenticated user belongs */ 
 export function useGetMyGuilds() {
   return useQuery({
     queryKey: [QueryKeys.MyGuilds],
@@ -98,7 +98,7 @@ export function useGetMyGuilds() {
   });
 }
 
-// for public guilds
+/** for automatically joining public guilds */
 export function useJoinGuild(){
   const queryClient = useQueryClient()
 
@@ -145,7 +145,7 @@ export function useLeaveGuild(closeModal: () => void){
   })
 }
 
-// send join request for private guilds
+/** send join request for private guilds */ 
 export function useJoinRequestGuild(){
   const queryClient = useQueryClient()
 
@@ -167,7 +167,7 @@ export function useJoinRequestGuild(){
   })
 }
 
-// remove join request, this is used by the user who made the request
+/** remove join request, this is used by the user who made the request */ 
 export function useRemoveJoinRequest(){
   const queryClient = useQueryClient()
 
