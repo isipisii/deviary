@@ -6,9 +6,10 @@ import { Button } from "@nextui-org/react";
 import { FaRegComments } from "react-icons/fa6";
 import { TbArrowBigUp, TbArrowBigUpFilled, TbShare3 } from "react-icons/tb";
 
-export default function CommentActions() {
+// TODO: CREATE A UPVOTE FNTY FOR COMMENTS
+export default function CommentActions({ toggleReplyForm }: { toggleReplyForm: () => void }) {
   return (
-    <div className="flex gap-12 items-center">
+    <div className="flex gap-9 items-center">
       <div className="flex items-center gap-1">
         <CustomTooltip placement="bottom" content="Upvote">
           <Button
@@ -39,10 +40,7 @@ export default function CommentActions() {
             `rounded-xl bg-[#fff0] text-xl text-[#A1A1AA] 
         hover:bg-[#003db647] hover:text-[#639cff]`,
           )}
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-          }}
+          onClick={toggleReplyForm}
         >
           <FaRegComments />
         </Button>
