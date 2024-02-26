@@ -6,6 +6,8 @@ import { ThemeProvider } from "next-themes";
 import { NextUIProvider } from "@nextui-org/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import ShareModal from "../ui/share-modal";
+
 
 export default function Providers({ children }: { children: ReactNode }) {
   const [queryClient] = useState(
@@ -24,6 +26,7 @@ export default function Providers({ children }: { children: ReactNode }) {
     <SessionProvider>
       <QueryClientProvider client={queryClient}>
         <ReactQueryDevtools initialIsOpen={false} />
+        <ShareModal />
         <NextUIProvider>
           <ThemeProvider
             attribute="class"
