@@ -278,6 +278,7 @@ model Tag {
 
 model GuildShare {
   id          String @id @default(auto()) @map("_id") @db.ObjectId
+  content     String?
   postId      String @db.ObjectId
   post        Post @relation(fields: [postId], references: [id], onDelete: Cascade)
 
