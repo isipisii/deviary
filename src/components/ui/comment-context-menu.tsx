@@ -55,6 +55,7 @@ export default function CommentContextMenu({ comment, showEditForm }: { comment:
           className="rounded-lg text-danger"
           color="danger"
           onClick={() => {
+            if(isDeleting) return
             deleteCommentMutation({ commentId: comment.id, postId })
           }}
         >
