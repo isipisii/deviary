@@ -37,3 +37,18 @@ export async function checkIfGuildModerator(userId: string, guildId: string) {
 
     return false
 }
+
+export async function checkIfGuildMember(userId: string, guildId: string) {
+    const existingMember = await db.guildMember.findFirst({
+        where: {
+            userId,
+            guildId
+        }
+    })
+
+    if(existingMember) {
+        return true
+    }
+
+    return false
+}
