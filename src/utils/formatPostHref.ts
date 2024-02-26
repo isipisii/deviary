@@ -1,3 +1,4 @@
+/** returns a formatted href that is primarily used for post */ 
 export default function formatPostHref(post: TPost) {
   const href = `/@${post.author.name.split(" ").join(".")}/${
     post.blog
