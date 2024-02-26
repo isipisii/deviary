@@ -121,4 +121,16 @@ type TJoinRequest = {
   guildId: readonly string;
 }
 
+type TGuildSharedPost = {
+  id: readonly string;
+  userId: readonly string;
+  user: TUser,
+  guild: TGuild
+  guildId: readonly string;
+  post: TPost
+  content: string
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 type TFeedFilter = "all" | "blog_post" | "code_diary"
