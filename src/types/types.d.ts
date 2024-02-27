@@ -50,7 +50,7 @@ type TBookmark = {
 
 type TDiary = {
   title: string;
-  codeSnippet?: string;
+  codeSnippet: string;
   description: string;
   solution: string;
 };
@@ -111,6 +111,8 @@ type TGuildMember = {
   guild: readonly string,
   user: TUser,
   role: "MEMBER" | "CREATOR" | "MODERATOR"
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 type TJoinRequest = {
@@ -128,7 +130,7 @@ type TGuildSharedPost = {
   guild: TGuild
   guildId: readonly string;
   post: TPost
-  content: string
+  content?: string
   createdAt: Date;
   updatedAt: Date;
 }
