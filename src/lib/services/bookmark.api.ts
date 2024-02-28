@@ -71,6 +71,9 @@ export function useCreateBookmark() {
       await queryClient.invalidateQueries({
         queryKey: [QueryKeys.PopularPosts],
       });
+      await queryClient.invalidateQueries({
+        queryKey: [QueryKeys.GuildSharedPosts],
+      });
     },
   });
 }
@@ -123,6 +126,9 @@ export function useRemoveBookmark() {
       });
       await queryClient.invalidateQueries({
         queryKey: [QueryKeys.Bookmarks],
+      });
+      await queryClient.invalidateQueries({
+        queryKey: [QueryKeys.GuildSharedPosts],
       });
     },
   });
