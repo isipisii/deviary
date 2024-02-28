@@ -26,7 +26,7 @@ export default function GuildDetails({ guild }: { guild: TGuild }) {
   }
 
   return (
-    <div className="z-[5] grid h-auto w-full place-items-center gap-4 border-b border-borderColor bg-background/30 p-6 backdrop-blur-xl md:p-12 lg:place-items-start ">
+    <div className="z-[5] grid h-auto w-full place-items-center gap-4 border-b border-borderColor bg-background/30 p-6 backdrop-blur-xl md:p-12 lg:place-items-start">
       <Avatar
         src={guild?.image.imageUrl}
         alt="guild-avatar"
@@ -47,6 +47,7 @@ export default function GuildDetails({ guild }: { guild: TGuild }) {
           </div>
 
           <CustomAvatarGroup
+            guildName={guild.name}
             members={guild.members}
             totalMembersCount={guild.membersCount}
           />
