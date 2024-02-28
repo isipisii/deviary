@@ -5,7 +5,7 @@ type TSideBarNavState = {
     openShareModal: () => void
     closeShareModal: () => void
     onOpenChangeShareModal: () => void
-    setPostToShare: (post: TPost) => void
+    setPostToShare: (post: TPost | null) => void
     postToShare: TPost | null
 }
 
@@ -16,5 +16,5 @@ export const useModalStore = create<TSideBarNavState>((set, get) => ({
     openShareModal: () => set({isShareModalOpen: true}),
     closeShareModal: () => set({isShareModalOpen: false}),
     onOpenChangeShareModal: () => set({ isShareModalOpen: !get().isShareModalOpen }),
-    setPostToShare: (post: TPost) => set({ postToShare: post })
+    setPostToShare: (post) => set({ postToShare: post })
 }))
