@@ -56,6 +56,7 @@ export default function GuildCard({ guild }: { guild: TGuild }) {
         <div className="z-[5] flex h-full w-full flex-col justify-between gap-4">
           <div className="flex w-full flex-col">
             <CustomAvatarGroup
+              guildName={guild.name}
               members={guild.members}
               totalMembersCount={guild.membersCount}
             />
