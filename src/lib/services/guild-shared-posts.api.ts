@@ -30,7 +30,7 @@ export function useGetGuildSharedPosts(guildId: string) {
   });
 }
 
-export function useSharePost() {
+export function useSharePost(closeModal: () => void) {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -53,6 +53,7 @@ export function useSharePost() {
       await queryClient.invalidateQueries({
         queryKey: [QueryKeys.GuildSharedPosts, guildId],
       });
+      closeModal()
     },
     onError: async (error: AxiosError<ErrorResponse>) => {
       toast.error("An error occured while sharing the post.");
