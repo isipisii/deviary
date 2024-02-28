@@ -4,13 +4,16 @@ import {
   User,
 } from "@nextui-org/react";
 import CustomTooltip from "./custom-tooltip";
+import formatDate from "@/utils/formatDate";
 
 export default function CustomAvatarGroup({
   members,
   totalMembersCount,
+  guildName
 }: {
   totalMembersCount: number;
-  members: { user: TUser }[];
+  members: TGuildMember[];
+  guildName: string
 }) {
   return (
     <AvatarGroup
@@ -25,7 +28,7 @@ export default function CustomAvatarGroup({
       className="self-end"
       isBordered
     >
-      {members.map(({ user }) => (
+      {members.map(({ user, createdAt}) => (
         <CustomTooltip key={user.id} placement="bottom" content={
           <div className="px-2 py-3 max-w-[250px]">
             <div className="flex gap-3 flex-col flex-start">
@@ -43,7 +46,12 @@ export default function CustomAvatarGroup({
                 description={user.email}
                 name={user.name}
               />
-              <p className="">{user.bio}</p>
+              {user.bio && <p className="">{user.bio}</p>}
+              <div className="flex flex-col">
+                <p className="text-[.7rem] text-navTextColor font-bold">{guildName} member since</p>
+                <p className="text-xs text-navTextColor">{formatDate(createdAt)}</p>
+              </div>
+             
             </div>
            
           </div>
