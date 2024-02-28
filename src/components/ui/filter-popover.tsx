@@ -28,16 +28,13 @@ const radioItems = [
     description: "Posts that were posted as code diary",
     label: "Code diary",
   },
-];
-
+] as const;
 
 
 export default function FilterPopover() {
   const { data: currentFeedFilter, isLoading } = useGetCurrentFeedFilter()
   const { mutate: applyFeedFilterMutation, isPending } = useApplyFeedFilter()
   const [selected, setSelected] = useState<TFeedFilter>(currentFeedFilter ?? "all")
-
-  console.log(currentFeedFilter)
 
   useEffect(() => {
     if(!isLoading && currentFeedFilter) setSelected(currentFeedFilter)
