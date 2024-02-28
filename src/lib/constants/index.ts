@@ -36,7 +36,7 @@ export const QueryKeys = {
   PopularPosts: "popularPosts",
   CurrentFeedFilter: "currentFeedFilter",
   GuildSharedPosts: "guildSharedPosts"
-};
+} as const;
 
 export const sideBarNavs: ISideBarNav[] = [
   {
