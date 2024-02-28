@@ -39,17 +39,17 @@ export default function GuildContextMenu({ guild }: { guild: TGuild }) {
         isDelete={false}
         buttonText="Leave"
       />
-      <Dropdown className="rounded-xl bg-background" placement="bottom-end">
+      <Dropdown className="rounded-xl bg-background border border-borderColor" placement="bottom-end">
         <DropdownTrigger>
           <Button
             variant="bordered"
             size="md"
             isIconOnly
-            className="z-[5] rounded-xl border-2 border-borderColor text-[1.2rem]"
+            className="z-[5] rounded-xl dark:border-white/60 border-black/60 text-[1.2rem]"
             startContent={<GoKebabHorizontal />}
           />
         </DropdownTrigger>
-        <DropdownMenu variant="flat" items={filteredItems}>
+        <DropdownMenu variant="flat" items={filteredItems} aria-label="guild dropdown">
           {(item) => {
             if (item.key === "share") {
               return (
