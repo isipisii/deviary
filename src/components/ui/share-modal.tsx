@@ -144,6 +144,7 @@ export default function ShareModal() {
                 <SharePostForm
                   postToShare={postToShare}
                   guildId={selectedGuild.id}
+                  guildName={selectedGuild.name}
                   closeModal={closeModal}
                 />
               )}
