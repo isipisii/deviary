@@ -10,10 +10,12 @@ export default function SharePostForm({
   postToShare,
   guildId,
   closeModal,
+  guildName
 }: {
   postToShare: TPost;
   guildId: string;
   closeModal: () => void;
+  guildName: string
 }) {
   const { mutate: sharePostMutation, isPending } = useSharePost(closeModal);
   const {
@@ -82,7 +84,7 @@ export default function SharePostForm({
         className="rounded-lg font-semibold text-white"
         isLoading={isPending}
       >
-        Share
+        Share to {guildName}
       </Button>
     </form>
   );
