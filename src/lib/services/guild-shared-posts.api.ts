@@ -53,7 +53,8 @@ export function useSharePost(closeModal: () => void) {
       await queryClient.invalidateQueries({
         queryKey: [QueryKeys.GuildSharedPosts, guildId],
       });
-      closeModal()
+      closeModal();
+      toast.success("Post has been shared.");
     },
     onError: async (error: AxiosError<ErrorResponse>) => {
       toast.error("An error occured while sharing the post.");
@@ -90,10 +91,11 @@ export function useUpdateSharedPost() {
   });
 }
 
-export function useDeleteSharedPost() {
+export function useDeleteSharedPost(closeModal: () => void) {
   const queryClient = useQueryClient();
 
   return useMutation({
+    mutationKey: ["deleteSharedPost"],
     mutationFn: async ({ shareId }: { shareId: string; guildId: string }) => {
       return await axios.delete("/api/share", { params: { shareId } });
     },
@@ -101,6 +103,7 @@ export function useDeleteSharedPost() {
       await queryClient.invalidateQueries({
         queryKey: [QueryKeys.GuildSharedPosts, guildId],
       });
+      toast.success("Shared post has been deleted.");
     },
     onError: async (error: AxiosError<ErrorResponse>) => {
       toast.error("An error occured while deleting the shared post.");
