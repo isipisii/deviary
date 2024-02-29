@@ -131,11 +131,6 @@ export const postContextMenuItems = [
     icon: FaRegBookmark,
   },
   {
-    label: "Copy link",
-    key: "copy-link",
-    icon: FiCopy,
-  },
-  {
     label: "Edit",
     key: "edit",
     icon: FaRegEdit,
