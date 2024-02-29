@@ -12,7 +12,7 @@ import { useParams, usePathname, useSearchParams } from "next/navigation";
 export function useUpvote() {
   const queryClient = useQueryClient();
   const controller = new AbortController();
-  const path = usePathname();
+  const params = useParams()
   const searchParams = useSearchParams()
   const searchQuery = searchParams?.get("query") as string
   const { tagName } = useParams() as { tagName: string }
@@ -28,8 +28,8 @@ export function useUpvote() {
     },
     onMutate: async (postId) => {
       await cancelQueries(queryClient, searchQuery, tagName)
-      const cachedDataSnapshot  = getCachedDataSnapshot(queryClient, searchQuery, tagName)
-      upvoteOptismiticUpdate(queryClient, postId, true, searchQuery, tagName);
+      const cachedDataSnapshot  = getCachedDataSnapshot(queryClient, searchQuery, tagName, params.guildId as string)
+      upvoteOptismiticUpdate(queryClient, postId, true, searchQuery, tagName, params.guildId as string);
 
       return cachedDataSnapshot
     },
@@ -40,9 +40,10 @@ export function useUpvote() {
         context?.previousBookmarks,
       );
       queryClient.setQueryData([QueryKeys.PostsByTag, tagName], context?.previousPostsByTag);
+      queryClient.setQueryData([QueryKeys.GuildSharedPosts, params.guildId ], context?.previousSharedPosts);
     },
     onSettled: async () => {
-      await invalidateQueries(queryClient, searchQuery, tagName)
+      await invalidateQueries(queryClient, searchQuery, tagName, params.guildId as string)
       // updateRoute(path as string);
     },
   });
@@ -51,7 +52,7 @@ export function useUpvote() {
 export function useRemoveUpvote() {
   const queryClient = useQueryClient();
   const controller = new AbortController();
-  const path = usePathname();
+  const params = useParams()
   const searchParams = useSearchParams()
   const searchQuery = searchParams?.get("query") as string
   const { tagName } = useParams() as { tagName: string }
@@ -67,7 +68,7 @@ export function useRemoveUpvote() {
     onMutate: async (postId) => {
       await cancelQueries(queryClient, searchQuery, tagName)
       const cachedDataSnapshot  = getCachedDataSnapshot(queryClient, searchQuery, tagName)
-      upvoteOptismiticUpdate(queryClient, postId, false, searchQuery, tagName);
+      upvoteOptismiticUpdate(queryClient, postId, false, searchQuery, tagName, params.guildId as string);
 
       return cachedDataSnapshot
     },
@@ -78,33 +79,36 @@ export function useRemoveUpvote() {
         context?.previousBookmarks,
       );
       queryClient.setQueryData([QueryKeys.PostsByTag, tagName], context?.previousPostsByTag);
+      queryClient.setQueryData([QueryKeys.GuildSharedPosts, params.guildId ], context?.previousSharedPosts);
     },
     onSettled: async () => {
-      await invalidateQueries(queryClient, searchQuery, tagName)
+      await invalidateQueries(queryClient, searchQuery, tagName, params.guildId as string)
       // updateRoute(path as string);
     },
   });
 }
 
-function getCachedDataSnapshot(queryClient: QueryClient, searchQuery?: string, tagName?: string) {
+function getCachedDataSnapshot(queryClient: QueryClient, searchQuery?: string, tagName?: string, guildId?: string) {
   const previousPosts = queryClient.getQueryData([QueryKeys.Posts]);
   const previousBookmarks = queryClient.getQueryData([QueryKeys.Bookmarks]);
   const previousPostsByTag = queryClient.getQueryData([QueryKeys.PostsByTag, tagName]);
   const previousSearchedPosts = queryClient.getQueryData([QueryKeys.SearchedPosts, searchQuery]);
   const previousPopularPosts = queryClient.getQueryData([QueryKeys.PopularPosts]);
+  const previousSharedPosts = queryClient.getQueryData([QueryKeys.GuildSharedPosts, guildId])
 
-  return { previousBookmarks, previousPostsByTag, previousPosts, previousSearchedPosts, previousPopularPosts }
+  return { previousBookmarks, previousPostsByTag, previousPosts, previousSearchedPosts, previousPopularPosts , previousSharedPosts }
 }
 
-async function cancelQueries(queryClient: QueryClient, searchQuery?: string, tagName?: string) {
+async function cancelQueries(queryClient: QueryClient, searchQuery?: string, tagName?: string, guildId?: string) {
   await queryClient.cancelQueries({ queryKey: [QueryKeys.Posts] });
   await queryClient.cancelQueries({ queryKey: [QueryKeys.Bookmarks] });
   await queryClient.cancelQueries({ queryKey: [QueryKeys.SearchedPosts, searchQuery] });
   await queryClient.cancelQueries({ queryKey: [QueryKeys.PostsByTag, tagName] });
   await queryClient.cancelQueries({ queryKey: [QueryKeys.PopularPosts] });
+  await queryClient.cancelQueries({ queryKey: [QueryKeys.GuildSharedPosts, guildId] });
 }
 
-async function invalidateQueries(queryClient: QueryClient, searchQuery?: string, tagName?: string) {
+async function invalidateQueries(queryClient: QueryClient, searchQuery?: string, tagName?: string, guildId?: string) {
   await queryClient.invalidateQueries({
     queryKey: [QueryKeys.Posts],
   });
@@ -116,6 +120,7 @@ async function invalidateQueries(queryClient: QueryClient, searchQuery?: string,
   });
   await queryClient.invalidateQueries({ queryKey: [QueryKeys.PostsByTag, tagName] });
   await queryClient.invalidateQueries({ queryKey: [QueryKeys.PopularPosts] });
+  await queryClient.invalidateQueries({ queryKey: [QueryKeys.GuildSharedPosts, guildId] });
 }
 
 function upvoteOptismiticUpdate(
@@ -123,10 +128,12 @@ function upvoteOptismiticUpdate(
   postId: string,
   upvoted: boolean,
   searchQuery?: string,
-  tagPageParam?: string
+  tagPageParam?: string,
+  guildId?: string
 ) {
   const cachedBookmarks = queryClient.getQueryData([QueryKeys.Bookmarks]);
   const cachedSearchedPosts = queryClient.getQueryData([QueryKeys.SearchedPosts, searchQuery]);
+  const cachedSharedPosts = queryClient.getQueryData([QueryKeys.GuildSharedPosts, guildId])
 
   // posts in feed page
   queryClient.setQueryData<InfiniteData<TPage<TPost[]>>>(
@@ -164,6 +171,47 @@ function upvoteOptismiticUpdate(
     },
   );
 
+  // posts that has been shared in guild's page
+  if (cachedSharedPosts) {
+    queryClient.setQueryData<InfiniteData<TPage<TGuildSharedPost[]>>>(
+      [QueryKeys.GuildSharedPosts, guildId],
+      (oldData) => {
+        const newData = oldData
+          ? {
+              ...oldData,
+              pages: oldData.pages.map((page) => {
+                if (page) {
+                  return {
+                    ...page,
+                    data: page.data
+                      ? page.data.map((sharedPost) =>
+                          sharedPost.post.id === postId
+                            ? {
+                                ...sharedPost,
+                                post: {
+                                  ...sharedPost.post,
+                                  upvoteCount: upvoted
+                                    ? sharedPost.post.upvoteCount + 1
+                                    : sharedPost.post.upvoteCount - 1,
+                                  isUpvoted: upvoted,
+                                },
+                              }
+                            : sharedPost,
+                        )
+                      : [],
+                  };
+                }
+
+                return page;
+              }),
+            }
+          : oldData;
+
+        return newData;
+      },
+    );
+  }
+
   // posts in bookmarks page
   if (cachedBookmarks) {
     queryClient.setQueryData<InfiniteData<TPage<TBookmark[]>>>(
@@ -177,19 +225,19 @@ function upvoteOptismiticUpdate(
                   return {
                     ...page,
                     data: page.data
-                      ? page.data.map((bookmark) =>
-                          bookmark.post.id === postId
+                      ? page.data.map((sharedPost) =>
+                          sharedPost.post.id === postId
                             ? {
-                                ...bookmark,
+                                ...sharedPost,
                                 post: {
-                                  ...bookmark.post,
+                                  ...sharedPost.post,
                                   upvoteCount: upvoted
-                                    ? bookmark.post.upvoteCount + 1
-                                    : bookmark.post.upvoteCount - 1,
+                                    ? sharedPost.post.upvoteCount + 1
+                                    : sharedPost.post.upvoteCount - 1,
                                   isUpvoted: upvoted,
                                 },
                               }
-                            : bookmark,
+                            : sharedPost,
                         )
                       : [],
                   };
