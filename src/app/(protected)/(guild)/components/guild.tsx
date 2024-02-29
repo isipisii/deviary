@@ -8,7 +8,7 @@ import GuildDetails from "./guild-details";
 import GuildSharedPostsContainer from "./guild-shared-posts-container";
 
 export default function Guild() {
-  const { guildId } = useParams() as { guildId: string };
+  const { guildId } = useParams<{ guildId: string }>();
   const { data: guild, isLoading, isError } = useGetGuildById(guildId);
 
   return (
