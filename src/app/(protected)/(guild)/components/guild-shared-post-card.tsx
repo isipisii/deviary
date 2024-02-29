@@ -6,8 +6,9 @@ import estimateReadingTime from "@/utils/estimateReadingTime";
 import formatDate from "@/utils/formatDate";
 import { Avatar, User } from "@nextui-org/react";
 import React from "react";
+import GuildSharedCardContextMenu from "./guild-shared-card-context-menu";
+import { useSession } from "next-auth/react";
 
-// TODO: MAKE A MENU FOR THIS CARD
 export default function GuildSharedPostCard({
   sharedPost,
 }: {
@@ -18,31 +19,42 @@ export default function GuildSharedPostCard({
     post,
     createdAt,
   } = sharedPost;
+  const { data } = useSession();
 
   return (
     <div
       className="flex h-auto w-full max-w-[350px] flex-col 
-        items-start gap-3 rounded-3xl border-2
-        border-borderColor bg-cardBg p-4 shadow-xl"
+      items-start gap-3 rounded-3xl border-2
+      border-borderColor bg-cardBg p-4 shadow-xl"
     >
-      <div className="relative">
-        <User
-          avatarProps={{
-            src: image,
-            isBordered: true,
-          }}
-          classNames={{
-            description: "text-navTextColor",
-            name: "font-medium",
-          }}
-          className="transition-transform"
-          name={name}
-          description={formatDate(createdAt)}
-        />
-        <Avatar
-          src={sharedPost.guild.image.imageUrl}
-          className="absolute -bottom-1 left-5 h-[25px] w-[25px] "
-        />
+      <div className="flex w-full justify-between">
+        <div className="relative">
+          <User
+            avatarProps={{
+              src: image,
+              isBordered: true,
+            }}
+            classNames={{
+              description: "text-navTextColor",
+              name: "font-medium",
+            }}
+            className="transition-transform"
+            name={name}
+            description={formatDate(createdAt)}
+          />
+          <Avatar
+            src={sharedPost.guild.image.imageUrl}
+            isBordered
+            className="absolute -bottom-1 left-5 h-[25px] w-[25px] "
+          />
+        </div>
+        {/* render if the shared post is from the authenticated user */}
+        {data?.user.id === sharedPost.userId && (
+          <GuildSharedCardContextMenu
+            guildId={sharedPost.guildId}
+            shareId={sharedPost.id}
+          />
+        )}
       </div>
       {sharedPost.content && (
         // <div className="max-h-[50px] overflow-hidden">
