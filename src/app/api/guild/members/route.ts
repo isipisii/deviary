@@ -13,7 +13,6 @@ export const GET = async (req: NextRequest) => {
         guildId,
       },
       take: take ? Number(take) : 10,
-      //same as with the filter
       ...(lastCursor && {
         skip: 1,
         cursor: {
