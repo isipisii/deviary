@@ -75,7 +75,7 @@ export default function PostContextMenu({
         isPending={isPending}
         modalTextContent={{
           header: "Delete post?",
-          body: "This action cannot be undone. Are you sure you want to delete this post?",
+          body: "This action is cannot be undone. Are you sure you want to delete this post?",
         }}
         buttonText="Delete"
       />
