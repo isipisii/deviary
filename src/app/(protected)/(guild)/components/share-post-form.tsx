@@ -1,6 +1,9 @@
 "use client";
 
-import { useSharePost } from "@/lib/services/guild-shared-posts.api";
+import {
+  useSharePost,
+  useUpdateSharedPost,
+} from "@/lib/services/guild-shared-posts.api";
 import { Button, Textarea, User } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 import { useForm } from "react-hook-form";
@@ -10,14 +13,24 @@ export default function SharePostForm({
   postToShare,
   guildId,
   closeModal,
-  guildName
+  guildName,
+  initialValue,
+  shareId,
+  isEditing,
 }: {
   postToShare: TPost;
   guildId: string;
   closeModal: () => void;
-  guildName: string
+  guildName?: string;
+  initialValue?: string;
+  shareId?: string;
+  isEditing?: boolean;
 }) {
-  const { mutate: sharePostMutation, isPending } = useSharePost(closeModal);
+  const { mutate: sharePostMutation, isPending: isSharing } =
+    useSharePost(closeModal);
+  const { mutate: updateSharedPostMutation, isPending: isUpdating } =
+    useUpdateSharedPost(closeModal);
+
   const {
     formState: { errors },
     register,
@@ -33,10 +46,22 @@ export default function SharePostForm({
     });
   }
 
+  function handleUpdateSharedPost(formData: { content: string }) {
+    console.log(shareId, formData)
+    if (!shareId) return;
+    updateSharedPostMutation({
+      content: formData.content,
+      guildId,
+      shareId,
+    });
+  }
+
   return (
     <form
-      className=" flex w-full flex-col gap-4"
-      onSubmit={handleSubmit(handleSharePost)}
+      className="flex w-full flex-col gap-4"
+      onSubmit={handleSubmit(
+        isEditing ? handleUpdateSharedPost : handleSharePost,
+      )}
     >
       <User
         avatarProps={{
@@ -71,6 +96,7 @@ export default function SharePostForm({
           label: "font-semibold",
           inputWrapper: `border-borderColor border-2 rounded-xl`,
         }}
+        defaultValue={initialValue || ""}
       />
       {postToShare?.type === "BLOG_POST" && (
         <SharedBlogPostCard post={postToShare} isPreview={true} />
@@ -82,9 +108,9 @@ export default function SharePostForm({
         type="submit"
         color="secondary"
         className="rounded-lg font-semibold text-white"
-        isLoading={isPending}
+        isLoading={isUpdating || isSharing}
       >
-        Share to {guildName}
+        {isEditing ? "Update" : `Share to ${guildName}`}
       </Button>
     </form>
   );
