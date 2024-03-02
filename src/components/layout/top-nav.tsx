@@ -18,11 +18,19 @@ export default function TopNav() {
           <MobileSidebar />
           <Logo />
         </div>
+
         <div className="flex items-center gap-4">
-          <Notification />
-          <div className="hidden md:flex">
-            {session.data ? <AccountDropdown /> : <AccountSkeleton />}
-          </div>
+          {session.status === "authenticated" && <Notification />}
+          {session.status === "loading" && (
+            <div className="hidden md:flex">
+              <AccountSkeleton />
+            </div>
+          )}
+          {session.status === "authenticated" && (
+            <div className="hidden md:flex">
+              <AccountDropdown />
+            </div>
+          )}
         </div>
       </div>
     </nav>

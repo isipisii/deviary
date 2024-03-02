@@ -1,11 +1,14 @@
+"use client"
+
 /* eslint-disable @next/next/no-img-element */
 import formatDate from "@/utils/formatDate";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { TbArrowBigUpFilled } from "react-icons/tb";
 import Link from "next/link";
 import NotificationContextMenu from "../ui/notification-context-menu";
 import formatPostHref from "@/utils/formatPostHref";
 import { Avatar } from "@nextui-org/react";
+import { useViewNotification } from "@/lib/services/notifications.api";
 
 export default function UpvoteNotificationCard({
   notification,
@@ -13,10 +16,11 @@ export default function UpvoteNotificationCard({
   notification: TNotification;
 }) {
   const { sender, post, createdAt } = notification;
+  const { mutate: viewNotificationMutation } = useViewNotification();
 
   return (
-    <Link href={formatPostHref(post as TPost)} className="w-full">
-       <div className="relative flex w-full gap-3 p-4 hover:bg-[#a8a7a716] transition-all duration-1000 ease-in-out ">
+    <Link href={formatPostHref(post as TPost)} className="w-full" onClick={() => viewNotificationMutation(notification.id)}>
+       <div className="relative flex w-full gap-4 p-5 hover:bg-[#a8a7a716] transition-all duration-1000 ease-in-out ">
         {!notification.viewed && (
           <div className="absolute left-6 top-1/2 h-[10px] w-[10px] rounded-full bg-secondary" />
         )}
@@ -25,6 +29,8 @@ export default function UpvoteNotificationCard({
         <div className="relative h-[30px] w-[30px] md:h-[35px] md:w-[35px]">
           <Avatar
             src={sender.image}
+            showFallback
+            isBordered
             className="h-[30px] w-[30px] md:h-[35px] md:w-[35px]"
           />
 

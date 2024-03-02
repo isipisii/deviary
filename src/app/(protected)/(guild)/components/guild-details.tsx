@@ -26,7 +26,7 @@ export default function GuildDetails({ guild }: { guild: TGuild }) {
   }
 
   return (
-    <div className="z-[5] grid h-auto w-full place-items-center gap-4 border-b border-borderColor bg-background/30 p-6 backdrop-blur-xl md:p-12 lg:place-items-start ">
+    <div className="z-[5] grid h-auto w-full place-items-center gap-4 border-b border-borderColor bg-background/30 p-6 backdrop-blur-xl md:p-12 lg:place-items-start">
       <Avatar
         src={guild?.image.imageUrl}
         alt="guild-avatar"
@@ -47,6 +47,7 @@ export default function GuildDetails({ guild }: { guild: TGuild }) {
           </div>
 
           <CustomAvatarGroup
+            guildName={guild.name}
             members={guild.members}
             totalMembersCount={guild.membersCount}
           />
@@ -79,7 +80,8 @@ export default function GuildDetails({ guild }: { guild: TGuild }) {
           <Button
             size="md"
             color="secondary"
-            className="w-full max-w-[2.5rem] rounded-xl font-medium text-white"
+            variant="bordered"
+            className="w-full max-w-[2.5rem] rounded-xl font-medium "
             isIconOnly
             startContent={<AiOutlineUserAdd className="text-[1.2rem]" />}
           />

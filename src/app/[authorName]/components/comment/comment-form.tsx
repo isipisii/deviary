@@ -1,35 +1,48 @@
 "use client";
 
-import { Button, Textarea, User, TextAreaProps } from "@nextui-org/react";
+import {
+  Button,
+  Textarea,
+  User,
+  TextAreaProps,
+  Avatar,
+} from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useCreateComment, useEditComment } from "@/lib/services/comments.api";
+import {
+  useCreateComment,
+  useEditComment,
+  useCreateReply,
+} from "@/lib/services/comments.api";
 import { cn } from "@/utils/cn";
-import z from "zod"
+import z from "zod";
+import { useParams } from "next/navigation";
 
 interface ICommentForm {
-  postId: string;
   isEditing?: boolean;
+  isReply?: boolean;
   comment?: TComment;
-  closeEditForm?: () => void;
+  closeForm?: () => void;
   textAreaProps?: TextAreaProps;
   initialValue?: string;
 }
 
 const commentSchema = z.object({
-  content: z.string().min(1, { message: "Comment is required" }),
+  content: z.string().min(1, { message: "Content is required" }),
 });
 type TCommentSchema = z.infer<typeof commentSchema>;
 
 export default function CommentForm({
   comment,
-  postId,
   isEditing,
-  closeEditForm,
+  isReply,
+  closeForm,
   textAreaProps,
   initialValue,
 }: ICommentForm) {
+  const params = useParams<{ authorName: string, postTitle: string}>()
+  const postId = params.postTitle.split("-").at(-1) as string
   const { data } = useSession();
   const {
     register,
@@ -42,8 +55,10 @@ export default function CommentForm({
   });
   const { mutate: createCommentMutation, isPending: isCreatingComment } =
     useCreateComment(reset);
+  const { mutate: createReplyMutation, isPending: isCreatingReply } =
+    useCreateReply(closeForm);
   const { mutate: editCommentMutation, isPending: isUpdatingComment } =
-    useEditComment(closeEditForm);
+    useEditComment(closeForm);
 
   function handleSubmitEditedComment(formData: TCommentSchema) {
     editCommentMutation({
@@ -57,62 +72,56 @@ export default function CommentForm({
     createCommentMutation({ content: formData.content, postId });
   }
 
-  function getButtonText() {
-    let text = "";
-    if (isEditing) {
-      if (isUpdatingComment) {
-        text = "Saving";
-      }
-      text = "Save";
-    } else {
-      if (isCreatingComment) {
-        text = "Commenting";
-      }
-      text = "Comment";
-    }
-    return text;
+  function handleSubmitReply(formData: TCommentSchema) {
+    if (!comment) return;
+    createReplyMutation({
+      content: formData.content,
+      commentId: comment?.id,
+      rootCommentId: comment?.rootCommentId ?? comment?.id,
+      postId
+    });
   }
 
   return (
     <form
       className={cn(
-        `flex flex-col gap-4 rounded-3xl 
-      border border-borderColor bg-background p-4`,
+        `flex flex-col gap-3 rounded-3xl 
+       bg-background p-3`,
         {
           "gap-2 border-none p-0": isEditing,
         },
       )}
       onSubmit={handleSubmit(
-        isEditing ? handleSubmitEditedComment : handleSubmitComment,
+        isReply ? handleSubmitReply : isEditing ? handleSubmitEditedComment : handleSubmitComment,
       )}
     >
-      {!isEditing && (
-        <User
-          as="button"
-          avatarProps={{
-            src: data?.user.image ?? "",
+      <div className="flex gap-3 justify-between">
+        {!isEditing && (
+          <Avatar
+            src={data?.user.image as string}
+            isBordered
+            className="h-[35px] w-[35px]"
+          />
+        )}
+        <Textarea
+          {...textAreaProps}
+          variant="bordered"
+          classNames={{
+            label: "font-semibold",
+            inputWrapper: `border-borderColor border-1 rounded-xl`,
           }}
-          className="self-start transition-transform"
-          description={data?.user.email}
-          name={data?.user.name}
+          className={isEditing ? "w-full" : "w-[90%]"}
+          {...register("content")}
+          defaultValue={initialValue}
+          errorMessage={errors.content?.message}
+          isInvalid={!!errors.content}
         />
-      )}
-      <Textarea
-        {...textAreaProps}
-        variant="bordered"
-        classNames={{
-          label: "font-semibold",
-          inputWrapper: `border-borderColor border-1 ${isEditing ? "rounded-xl" : "rounded-2xl"}`,
-        }}
-        {...register("content")}
-        defaultValue={initialValue}
-        errorMessage={errors.content?.message}
-        isInvalid={!!errors.content}
-      />
+      </div>
+
       <div className="flex items-center gap-2 self-end">
         {isEditing && (
           <Button
-            onClick={closeEditForm}
+            onClick={closeForm}
             size="sm"
             color="secondary"
             variant="light"
@@ -128,10 +137,16 @@ export default function CommentForm({
           color="secondary"
           radius="lg"
           className="font-semibold text-white"
-          isDisabled={isUpdatingComment || isCreatingComment}
-          isLoading={isUpdatingComment || isCreatingComment}
+          isDisabled={
+            isUpdatingComment || isCreatingComment || isCreatingReply
+          }
+          isLoading={isUpdatingComment || isCreatingComment || isCreatingReply}
         >
-          {getButtonText()}
+          {(isUpdatingComment && "Updating") ||
+            (isEditing && "Update") ||
+            (isCreatingComment && "Commenting") ||
+            (isReply && "Reply") ||
+            "Comment"}
         </Button>
       </div>
     </form>

@@ -32,8 +32,11 @@ export const QueryKeys = {
   PostsByTag: "postsByTag",
   MyGuilds: "myGuilds",
   Guild: "guild",
-  Guilds: "guilds"
-};
+  Guilds: "guilds",
+  PopularPosts: "popularPosts",
+  CurrentFeedFilter: "currentFeedFilter",
+  GuildSharedPosts: "guildSharedPosts"
+} as const;
 
 export const sideBarNavs: ISideBarNav[] = [
   {
@@ -126,11 +129,6 @@ export const postContextMenuItems = [
     key: "bookmark",
     activeIcon: FaBookmark,
     icon: FaRegBookmark,
-  },
-  {
-    label: "Copy link",
-    key: "copy-link",
-    icon: FiCopy,
   },
   {
     label: "Edit",

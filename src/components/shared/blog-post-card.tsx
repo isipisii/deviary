@@ -1,13 +1,12 @@
 /* eslint-disable @next/next/no-img-element */
-"use client";
 
 import { Avatar } from "@nextui-org/react";
 import PostActions from "./post-actions";
 import PostContextMenu from "../ui/post-context-menu";
 import Link from "next/link";
-import readingTime from "reading-time";
 import formatDate from "@/utils/formatDate";
 import formatPostHref from "@/utils/formatPostHref";
+import estimateReadingTime from "@/utils/estimateReadingTime";
 
 interface IBlogPostCard {
   post: TPost;
@@ -16,7 +15,6 @@ interface IBlogPostCard {
 export default function BlogPostCard({ post }: IBlogPostCard) {
   const { thumbnail, content, title } = post?.blog as TBlog;
   const { name, image } = post.author as TUser;
-  const { text: estimatedReadingTime } = readingTime(content);
 
   return (
     <Link href={formatPostHref(post)} className="w-full max-w-[350px]">
@@ -37,7 +35,7 @@ export default function BlogPostCard({ post }: IBlogPostCard) {
           <div className="absolute bottom-4 left-1/2 flex w-[90%] -translate-x-1/2 flex-col justify-center gap-3">
             <div className="flex flex-col gap-1">
               <div className="flex justify-between">
-                <Avatar src={image as string} className="h-[40px] w-[40px]" />
+                <Avatar src={image as string} className="h-[40px] w-[40px" isBordered />
                 <PostContextMenu
                   className="bg-background"
                   postType="BLOG_POST"
@@ -50,7 +48,7 @@ export default function BlogPostCard({ post }: IBlogPostCard) {
             </div>
             <div>
               <p className="text-[.8rem] text-[#A1A1AA]">
-                {formatDate(post.createdAt)} • {estimatedReadingTime}
+                {formatDate(post.createdAt)} • {estimateReadingTime(content)}
               </p>
             </div>
             {/* blog actions */}

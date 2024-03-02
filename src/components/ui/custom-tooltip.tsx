@@ -1,10 +1,11 @@
 import { Tooltip } from "@nextui-org/react";
 import { ReactNode } from "react";
 import { TooltipPlacement } from "@nextui-org/react";
+import { cn } from "@/utils/cn";
 
 interface ICustomTooltip {
   children: ReactNode
-  content: string
+  content:  ReactNode
   placement?: TooltipPlacement
 }
 export default function CustomTooltip({ children, content, placement }: ICustomTooltip) {
@@ -12,12 +13,13 @@ export default function CustomTooltip({ children, content, placement }: ICustomT
     <Tooltip
       placement={placement}
       content={content}
-      className="z-10 bg-background"
+      className="z-10 bg-cardBg rounded-2xl"
       showArrow
+      offset={10}
       classNames={{
         base: [
           // arrow color
-          "before:bg-background dark:before:bg-background",
+          "before:bg-cardBg dark:before:bg-cardBg",
         ],
       }}
     >

@@ -8,6 +8,7 @@ type TUser = {
   email: string;
   onboarded?: boolean;
   name: string;
+  bio?: string
   image: string;
 };
 
@@ -49,7 +50,7 @@ type TBookmark = {
 
 type TDiary = {
   title: string;
-  codeSnippet?: string;
+  codeSnippet: string;
   description: string;
   solution: string;
 };
@@ -60,7 +61,11 @@ type TComment = {
   userId: string;
   user: TUser;
   post: TPost;
+  rootCommentId: readonly string
+  commentReplies: TComment[]
   postId: string;
+  parentId: readonly string
+  parent: TComment
   createdAt: Date;
   updatedAt: Date;
 };
@@ -71,6 +76,7 @@ type TNotification = {
   senderId: readonly string;
   recipientId: readonly string;
   comment?: Partial<TComment>
+  joinRequest: TJoinRequest
   post?: TPost;
   type: "UPVOTE" | "JOIN_REQUEST" | "COMMENT";
   viewed: boolean;
@@ -105,4 +111,28 @@ type TGuildMember = {
   guild: readonly string,
   user: TUser,
   role: "MEMBER" | "CREATOR" | "MODERATOR"
+  createdAt: Date;
+  updatedAt: Date;
 }
+
+type TJoinRequest = {
+  id: readonly string;
+  senderId: readonly string;
+  sender: TUser,
+  guild: TGuild
+  guildId: readonly string;
+}
+
+type TGuildSharedPost = {
+  id: readonly string;
+  userId: readonly string;
+  user: TUser,
+  guild: TGuild
+  guildId: readonly string;
+  post: TPost
+  content?: string
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+type TFeedFilter = "all" | "blog_post" | "code_diary"

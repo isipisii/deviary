@@ -77,94 +77,94 @@ export default function PostContextMenu({
           header: "Delete post?",
           body: "This action cannot be undone. Are you sure you want to delete this post?",
         }}
-        isDelete
+        buttonText="Delete"
       />
-        <Dropdown
-          className={cn("rounded-xl bg-cardBg", className)}
-          placement="bottom-end"
+      <Dropdown
+        className={cn("rounded-xl bg-cardBg border border-borderColor", className)}
+        placement="bottom-end"
+      >
+        <DropdownTrigger
+          onClick={(e) => {
+            e.preventDefault();
+            e.nativeEvent.stopImmediatePropagation();
+          }}
         >
-          <DropdownTrigger
-            onClick={(e) => {
-              e.preventDefault();
-              e.nativeEvent.stopImmediatePropagation();
-            }}
-          >
-            <Button
-              variant="light"
-              size="sm"
-              isIconOnly
-              className={cn("z-[5] rounded-lg text-[1.2rem]", {
-                "text-white": postType === "BLOG_POST",
-              })}
-              startContent={<GoKebabHorizontal />}
-            />
-          </DropdownTrigger>
-          <DropdownMenu
-            aria-label="Dynamic Actions"
-            items={contextMenuItems}
-            variant="flat"
-            disabledKeys={
-              isAddingBookmark || isRemovingBookmark ? ["bookmark"] : undefined
-            }
-          >
-            {(item) => {
-              if (item.key === "edit") {
-                return (
-                  <DropdownItem
-                    key={item.key}
-                    onClick={() => router.push(`/post/edit/${post.id}`)}
-                    startContent={<item.icon />}
-                    className="rounded-lg"
-                  >
-                    {item.label}
-                  </DropdownItem>
-                );
-              }
-
-              if (item.key === "delete") {
-                return (
-                  <DropdownItem
-                    key={item.key}
-                    color="danger"
-                    className="rounded-lg text-danger"
-                    startContent={<item.icon />}
-                    onPress={onOpen}
-                  >
-                    {item.label}
-                  </DropdownItem>
-                );
-              }
-
-              if (item.key === "bookmark") {
-                return (
-                  <DropdownItem
-                    key={item.key}
-                    color="warning"
-                    className={`rounded-lg ${
-                      isBookmarked ? "text-warning" : null
-                    }`}
-                    startContent={
-                      isBookmarked ? <item.activeIcon /> : <item.icon />
-                    }
-                    onClick={handleToggleBookmark}
-                  >
-                    {isBookmarked ? "Bookmarked" : item.label}
-                  </DropdownItem>
-                );
-              }
-
+          <Button
+            variant="light"
+            size="sm"
+            isIconOnly
+            className={cn("z-[5] rounded-lg text-[1.2rem]", {
+              "text-white": postType === "BLOG_POST",
+            })}
+            startContent={<GoKebabHorizontal />}
+          />
+        </DropdownTrigger>
+        <DropdownMenu
+          aria-label="Dynamic Actions"
+          items={contextMenuItems}
+          variant="flat"
+          disabledKeys={
+            isAddingBookmark || isRemovingBookmark ? ["bookmark"] : undefined
+          }
+        >
+          {(item) => {
+            if (item.key === "edit") {
               return (
                 <DropdownItem
                   key={item.key}
+                  onClick={() => router.push(`/post/edit/${post.id}`)}
                   startContent={<item.icon />}
                   className="rounded-lg"
                 >
                   {item.label}
                 </DropdownItem>
               );
-            }}
-          </DropdownMenu>
-        </Dropdown>
+            }
+
+            if (item.key === "delete") {
+              return (
+                <DropdownItem
+                  key={item.key}
+                  color="danger"
+                  className="rounded-lg text-danger"
+                  startContent={<item.icon />}
+                  onPress={onOpen}
+                >
+                  {item.label}
+                </DropdownItem>
+              );
+            }
+
+            if (item.key === "bookmark") {
+              return (
+                <DropdownItem
+                  key={item.key}
+                  color="warning"
+                  className={`rounded-lg ${
+                    isBookmarked ? "text-warning" : null
+                  }`}
+                  startContent={
+                    isBookmarked ? <item.activeIcon /> : <item.icon />
+                  }
+                  onClick={handleToggleBookmark}
+                >
+                  {isBookmarked ? "Bookmarked" : item.label}
+                </DropdownItem>
+              );
+            }
+
+            return (
+              <DropdownItem
+                key={item.key}
+                startContent={<item.icon />}
+                className="rounded-lg"
+              >
+                {item.label}
+              </DropdownItem>
+            );
+          }}
+        </DropdownMenu>
+      </Dropdown>
     </>
   );
 }

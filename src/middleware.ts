@@ -60,7 +60,7 @@ export const config = {
     "/post/:path*",
     "/search",
     "/profile",
-    "/guilds//:path*",
+    "/guilds/:path*",
     "/new-guild",
     "/edit-guild/:path*",
     "/search",

@@ -43,6 +43,40 @@ export const GET = async (request: NextRequest) => {
             image: true,
           },
         },
+        parent: {
+          include: {
+            user: {
+              select: {
+                name: true,
+                email: true,
+                image: true,
+              },
+            },
+          }
+        },
+        commentReplies: {
+          include: {
+            user: {
+              select: {
+                name: true,
+                email: true,
+                image: true,
+              },
+            },
+            parent: {
+              include: {
+                user: {
+                  select: {
+                    name: true,
+                    email: true,
+                    image: true,
+                  },
+                },
+              }
+            },
+          },
+        },
+        post: true,
       },
       orderBy: {
         createdAt: "desc",
@@ -68,9 +102,10 @@ export const GET = async (request: NextRequest) => {
     const nextPage = await db.comment.findMany({
       where: {
         postId,
+        parentId: null,
       },
       orderBy: {
-        createdAt: "desc"
+        createdAt: "desc",
       },
       take: take ? Number(take) : 10,
       skip: 1,
@@ -173,6 +208,7 @@ export const POST = async (request: NextRequest) => {
             image: true,
           },
         },
+        post: true,
       },
     });
 
@@ -187,7 +223,7 @@ export const POST = async (request: NextRequest) => {
         include: {
           sender: {
             select: {
-              ...userSelectedFields
+              ...userSelectedFields,
             },
           },
           comment: {
@@ -199,11 +235,11 @@ export const POST = async (request: NextRequest) => {
                   diary: true,
                   author: {
                     select: {
-                      ...userSelectedFields
-                    }
-                  }
-                }
-              }
+                      ...userSelectedFields,
+                    },
+                  },
+                },
+              },
             },
           },
         },

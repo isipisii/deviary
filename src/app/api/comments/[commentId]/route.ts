@@ -50,6 +50,7 @@ export const PATCH = async (request: NextRequest, { params }: TParams) => {
             image: true,
           },
         },
+        post: true
       },
     });
 
@@ -88,9 +89,37 @@ export const DELETE = async (request: NextRequest, { params }: TParams) => {
       );
     }
 
-    await db.comment.delete({
+    const comment = await db.comment.findUnique({
       where: {
         id: commentId,
+      },
+      include: {
+        childReplies: true,
+        commentReplies: true
+      },
+    });
+
+    if (!comment) {
+      return NextResponse.json(
+        {
+          message: "Comment not found",
+          success: false,
+        },
+        { status: 404 },
+      );
+    }
+
+    if(!comment?.rootCommentId) {
+      await db.comment.deleteMany({
+        where: {
+          rootCommentId: comment.id,
+        },
+      });
+    }
+    
+    await db.comment.delete({
+      where: {
+        id: comment.id,
       },
     });
 

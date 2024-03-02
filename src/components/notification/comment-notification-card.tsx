@@ -16,16 +16,16 @@ export default function CommentNotificationCard({
 
   return (
     <Link href={formatPostHref(comment?.post as TPost)} className="w-full">
-      <div className="relative flex w-full gap-3 p-4 hover:bg-[#a8a7a716] transition-all duration-1000 ease-in-out ">
+      <div className="relative flex w-full gap-4 p-5 hover:bg-[#a8a7a716] transition-all duration-1000 ease-in-out ">
         {!notification.viewed && (
           <div className="absolute left-6 top-1/2 h-[10px] w-[10px] rounded-full bg-secondary" />
         )}
-
         {/* sender's avatar */}
         <div className="relative h-[30px] w-[30px] md:h-[35px] md:w-[35px]">
           <Avatar
-            src={sender.image ?? ""}
+            src={sender.image}
             showFallback
+            isBordered
             className="h-[30px] w-[30px] md:h-[35px] md:w-[35px]"
           />
           <div className="absolute -bottom-2 -right-2 bg-background p-1 rounded-full">

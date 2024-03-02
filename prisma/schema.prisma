@@ -57,10 +57,13 @@ model User {
   name                  String?
   email                 String? @unique
   password              String?
+  bio                   String?
   emailVerified         DateTime?
   image                 String?
   onboarded             Boolean?  @default(false)
   social                Social?
+  followedTags          String[] @default([])
+  feedFilter            Filter?
 
   accounts              Account[]
   sessions              Session[]
@@ -70,11 +73,10 @@ model User {
   upvotes               Upvote[]
   joinRequests          JoinRequest[]
   guildsBelong          GuildMember[]
+  guildShares           GuildShare[]
 
   sentNotifications     Notification[] @relation("SentNotifications")
   receivedNotifications Notification[] @relation("ReceivedNotifications")
-
-  guildsCreatedId       String[] @db.ObjectId
   guildsCreated         Guild[] @relation("GuildCreator")
   // try
   // guildsModeratedId     String[] @db.ObjectId
@@ -101,6 +103,7 @@ model Guild {
   // moderator       User[]  @relation("GuildModerators", fields: [moderatorsId], references: [id])
   members         GuildMember[]
   joinRequests    JoinRequest[]
+  guildShares     GuildShare[]
 
   createdAt       DateTime  @default(now()) @map(name: "created_at")
   updatedAt       DateTime  @updatedAt @map(name: "updated_at")
@@ -162,6 +165,7 @@ model Post {
   diary         Diary? 
   blog          Blog?
   notifications Notification[]
+  guildShares   GuildShare[]
        
   createdAt     DateTime  @default(now()) @map(name: "created_at")
   updatedAt     DateTime  @updatedAt @map(name: "updated_at")
@@ -204,14 +208,18 @@ model Comment {
   userId       String @db.ObjectId
   user         User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  // parentId     String?  @db.ObjectId
-  // parent       Comment?   @relation("ParentComment", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  rootCommentId  String? @db.ObjectId
+  rootComment    Comment?   @relation("RootComment", fields: [rootCommentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  commentReplies Comment[]  @relation("RootComment")
 
-  // childReplies   Comment[]  @relation("ParentComment")
+  parentId     String?  @db.ObjectId
+  parent       Comment?   @relation("ParentComment", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  childReplies Comment[]  @relation("ParentComment")
   notification Notification[]
 
-  postId       String @db.ObjectId
-  post         Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId       String? @db.ObjectId
+  post         Post? @relation(fields: [postId], references: [id], onDelete: Cascade)
 
   createdAt    DateTime  @default(now()) @map(name: "created_at")
   updatedAt    DateTime  @updatedAt @map(name: "updated_at")
@@ -268,6 +276,23 @@ model Tag {
   @@map("tags")
 }
 
+model GuildShare {
+  id          String @id @default(auto()) @map("_id") @db.ObjectId
+  content     String?
+  postId      String @db.ObjectId
+  post        Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  userId      String @db.ObjectId
+  user        User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  guildId     String @db.ObjectId
+  guild       Guild @relation(fields: [guildId], references: [id], onDelete: Cascade)
+
+  createdAt     DateTime  @default(now()) @map(name: "created_at")
+  updatedAt     DateTime  @updatedAt @map(name: "updated_at")
+  @@map("guild-shares")
+}
+
 enum NotificationType  {
   UPVOTE
   JOIN_REQUEST
@@ -279,7 +304,7 @@ enum PostType  {
   CODE_DIARY
 }
 
-enum  GuildMemberRole {
+enum GuildMemberRole {
   MEMBER
   CREATOR
   MODERATOR
@@ -290,3 +315,6 @@ type Image {
   imageUrl String
 }
 
+type Filter {
+  postType PostType
+}

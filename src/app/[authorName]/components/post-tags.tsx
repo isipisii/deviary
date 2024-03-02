@@ -12,7 +12,8 @@ export default function PostTags({ tags }: { tags: string[] }) {
             color="secondary"
             variant="flat"
             classNames={{
-              base: "border-none font-semibold",
+              base: "border-none",
+              content: "font-semibold"
             }}
             key={index}
           >

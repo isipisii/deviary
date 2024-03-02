@@ -108,7 +108,7 @@ export const GET = async (req: NextRequest) => {
     if (!session) {
       return NextResponse.json(
         {
-          message: "Unauthenticard, please log in first",
+          message: "Unauthenticated, please log in first",
           success: false,
         },
         { status: 401 },
@@ -141,6 +141,7 @@ export const GET = async (req: NextRequest) => {
                 name: true,
                 email: true,
                 image: true,
+                bio: true
               },
             },
           },

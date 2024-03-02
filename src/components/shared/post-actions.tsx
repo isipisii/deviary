@@ -9,6 +9,9 @@ import CustomTooltip from "../ui/custom-tooltip";
 import { useState } from "react";
 import { useUpvote, useRemoveUpvote } from "@/lib/services/upvote.api";
 import formatPostHref from "@/utils/formatPostHref";
+import { useDisclosure } from "@nextui-org/react";
+import ShareModal from "../ui/share-modal";
+import { useModalStore } from "@/lib/store/useModalStore";
 
 export default function PostActions({
   post,
@@ -25,6 +28,8 @@ export default function PostActions({
   const { mutate: upvoteMutation } = useUpvote();
   const { mutate: removeUpvoteMutation } = useRemoveUpvote();
   const [postPageState, setPostPageState] = useState<TPost>(post);
+  const { onOpen, onOpenChange, isOpen } = useDisclosure();
+  const { openShareModal, setPostToShare }  = useModalStore((state) => state)
 
   // this is for card components
   function handleToggleUpvote() {
@@ -55,9 +60,7 @@ export default function PostActions({
   }
 
   return (
-    <div
-      className="flex w-full items-center justify-between"
-    >
+    <div className="flex w-full items-center justify-between">
       <div className="flex items-center gap-1">
         <CustomTooltip
           placement="bottom"
@@ -106,7 +109,7 @@ export default function PostActions({
             )}
           </Button>
         </CustomTooltip>
-        <p className="text-[#A1A1AA] font-bold">
+        <p className="font-bold text-[#A1A1AA]">
           {isInPostPage ? postPageState.upvoteCount : post.upvoteCount}
         </p>
       </div>
@@ -156,6 +159,13 @@ export default function PostActions({
           isIconOnly
           className="rounded-xl bg-[#fff0] text-2xl text-[#A1A1AA] 
           hover:bg-[#dd0dba3c] hover:text-[#DD0DB9]"
+          onClick={(e) => {
+            e.stopPropagation();
+            e.preventDefault();
+            e.nativeEvent.stopImmediatePropagation();
+            openShareModal()
+            setPostToShare(post)
+          }}
         >
           <TbShare3 />
         </Button>

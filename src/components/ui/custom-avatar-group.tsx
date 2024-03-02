@@ -1,12 +1,19 @@
-import { Avatar, AvatarGroup } from "@nextui-org/react";
-import React from "react";
+import {
+  Avatar,
+  AvatarGroup,
+  User,
+} from "@nextui-org/react";
+import CustomTooltip from "./custom-tooltip";
+import formatDate from "@/utils/formatDate";
 
 export default function CustomAvatarGroup({
   members,
   totalMembersCount,
+  guildName
 }: {
   totalMembersCount: number;
-  members: { user: TUser }[];
+  members: TGuildMember[];
+  guildName: string
 }) {
   return (
     <AvatarGroup
@@ -21,8 +28,36 @@ export default function CustomAvatarGroup({
       className="self-end"
       isBordered
     >
-      {members.map(({ user }) => (
-        <Avatar src={user.image ?? ""} key={user.id} showFallback />
+      {members.map(({ user, createdAt}) => (
+        <CustomTooltip key={user.id} placement="bottom" content={
+          <div className="px-2 py-3 max-w-[250px]">
+            <div className="flex gap-3 flex-col flex-start">
+              <User
+                avatarProps={{
+                  src: user?.image,
+                  isBordered: true,
+                  className: "h-[30px] w-[30px]"
+                }}
+                classNames={{
+                  description: "text-navTextColor",
+                  name: "font-medium",
+                }}
+                className="transition-transform w-[170px]"
+                description={user.email}
+                name={user.name}
+              />
+              {user.bio && <p className="">{user.bio}</p>}
+              <div className="flex flex-col">
+                <p className="text-[.7rem] text-navTextColor font-bold">{guildName} member since</p>
+                <p className="text-xs text-navTextColor">{formatDate(createdAt)}</p>
+              </div>
+             
+            </div>
+           
+          </div>
+        }>
+           <Avatar src={user.image} key={user.id} showFallback />
+        </CustomTooltip>
       ))}
     </AvatarGroup>
   );

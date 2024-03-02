@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
-import { Input, Button, Avatar } from "@nextui-org/react";
+import { Input, Button, Textarea } from "@nextui-org/react";
 import { useForm } from "react-hook-form";
 import { onboardingSchema } from "@/lib/validators/auth.validator";
 import z from "zod";
@@ -43,12 +43,13 @@ export default function OnBoardingForm({ user }: IOnboardingForm) {
   const isButtonDisabled = !(!!watch("name")) || isPending
 
   function handleOnboard(formValues: TOnBoardingSchema) {
-    const { name } = formValues;
+    const { name, githubLink, facebookLink, bio } = formValues;
     const form = new FormData();
   
     form.append("name", name);
-    form.append("githubLink", formValues.githubLink as string)
-    form.append("facebookLink", formValues.facebookLink as string)
+    form.append("bio", bio as string);
+    form.append("githubLink", githubLink as string)
+    form.append("facebookLink", facebookLink as string)
     if (selectedImageFile) form.append("imageFile", selectedImageFile);
   
     onBoardingMutation({ formData: form, userId: user?.id });
@@ -61,7 +62,7 @@ export default function OnBoardingForm({ user }: IOnboardingForm) {
     >  
       <div className="grid gap-2">
         <h2 className="font-bold text-3xl text-center">Profile</h2>
-        <p className="text-center">Customize your deviary profile</p>
+        <p className="text-center">Customize your <span className="text-secondary font-bold">deviary</span>  profile</p>
       </div>
       
       <div className="flex flex-col gap-3">
@@ -75,7 +76,6 @@ export default function OnBoardingForm({ user }: IOnboardingForm) {
         <p className="text-lg font-semibold text-center">{user.email}</p>
         <Input
           label="Name"
-          labelPlacement="outside"
           placeholder="Enter your name"
           size="md"
           radius="lg"
@@ -85,7 +85,18 @@ export default function OnBoardingForm({ user }: IOnboardingForm) {
           errorMessage={errors.name?.message}
           isInvalid={!!errors.name}
           {...register("name")}
-        /> 
+        />
+        <Textarea
+          label="Bio"
+          placeholder="Short description about yourself"
+          variant="bordered"
+          radius="lg"
+          minRows={5}
+          maxRows={10}
+          {...register("bio")}
+          errorMessage={errors.bio?.message}
+          isInvalid={!!errors.bio}
+        />
 
         <div className="flex flex-col gap-2">
           <p className="font-semibold">Socials</p>

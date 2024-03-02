@@ -34,10 +34,10 @@ export default function CommentList({
               page.data?.map((comment, index) =>
                 index + 1 === page.data.length ? (
                   <div ref={ref} key={comment.id}>
-                    <CommentCard comment={comment} />
+                    <CommentCard comment={comment} postAuthorId={comment.post.authorId as string} />
                   </div>
                 ) : (
-                  <CommentCard key={comment.id} comment={comment} />
+                  <CommentCard key={comment.id} comment={comment} postAuthorId={comment.post.authorId as string}/>
                 ),
               ),
           )}

@@ -72,8 +72,8 @@ export default function Notification() {
         </Button>
       </PopoverTrigger>
       <PopoverContent>
-        <div className="flex w-[400px] flex-col gap-5 py-4 sm:w-[500px] md:w-[600px]">
-          <h3 className="px-4 text-xl font-semibold">Notifications</h3>
+        <div className="flex w-[400px] flex-col gap-5 py-5 sm:w-[500px] md:w-[600px]">
+          <h3 className="px-5 text-xl font-semibold">Notifications</h3>
           {/* // skeleton loader of notifs */}
           {isLoading && (
             <div className="flex w-full flex-col gap-4 px-4">

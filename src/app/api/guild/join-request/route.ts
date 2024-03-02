@@ -55,29 +55,29 @@ export const POST = async (req: NextRequest) => {
       );
     }
 
-     await db.joinRequest.create({
+    const createdJoinRequest = await db.joinRequest.create({
       data: {
         senderId: session.user.id,
         guildId,
       },
     });
 
-    // send notification to the creator of guild
-    // const notification = await db.notification.create({
-    //   data: {
-    //     joinRequestId: createdJoinRequest.id,
-    //     recipientId: guild.creatorId,
-    //     type: "JOIN_REQUEST",
-    //     senderId: session.user.id,
-    //   },
-    // });
+    //send notification to the creator of guild
+    const notification = await db.notification.create({
+      data: {
+        joinRequestId: createdJoinRequest.id,
+        recipientId: guild.creatorId,
+        type: "JOIN_REQUEST",
+        senderId: session.user.id,
+      },
+    });
 
-    // const channel = `channel_user_${notification.recipientId}`;
-    // const event = "new-notification";
+    const channel = `channel_user_${notification.recipientId}`;
+    const event = "new-notification";
 
-    // await pusherServer.trigger(channel, event, {
-    //   notification,
-    // });
+    await pusherServer.trigger(channel, event, {
+      notification,
+    });
 
     return NextResponse.json(
       {

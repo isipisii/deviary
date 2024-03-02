@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { ScrollShadow } from "@nextui-org/react";
 import UpvoteNotificationCard from "./upvote-notification-card";
 import CommentNotificationCard from "./comment-notification-card";
+import JoinRequesNotificationCard from "./join-request-notification-card";
 
 export default function NotificationList({
   notifications,
@@ -21,7 +22,7 @@ export default function NotificationList({
       <div className="flex w-full flex-col gap-4">
         {notifications && (
           <div className="flex w-full flex-col">
-            {notifications.map((notification, index) => {
+            {notifications.map((notification) => {
               if (notification.type === "UPVOTE") {
                 return (
                   <UpvoteNotificationCard
@@ -34,6 +35,15 @@ export default function NotificationList({
               if (notification.type === "COMMENT") {
                 return (
                   <CommentNotificationCard
+                    notification={notification}
+                    key={notification.id}
+                  />
+                );
+              }
+
+              if (notification.type === "JOIN_REQUEST") {
+                return (
+                  <JoinRequesNotificationCard
                     notification={notification}
                     key={notification.id}
                   />

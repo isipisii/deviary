@@ -19,14 +19,20 @@ export default function GuildDetailsSkeleton() {
           </div>
 
           <div className="flex">
-            <Skeleton className="h-[2rem] w-[2rem] rounded-full" />
-            <Skeleton className="-ml-[.8rem] h-[2rem] w-[2rem] rounded-full" />
-            <Skeleton className="-ml-[.8rem] h-[2rem] w-[2rem] rounded-full" />
-            <Skeleton className="-ml-[.8rem] h-[2rem] w-[2rem] rounded-full" />
+            <div className="flex self-end">
+              {[...new Array(4)].map((_, index) => (
+                <Skeleton
+                  className={`${
+                    index === 0 ? "ml-0" : "-ml-[.8rem]"
+                  }  h-[2rem] w-[2rem] rounded-full border border-background`}
+                  key={index}
+                />
+              ))}
+            </div>
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
           <Skeleton className="h-[2.5rem] w-[10rem] rounded-xl" />
           <Skeleton className="h-[2.5rem] w-[2.5rem] rounded-xl" />
           <Skeleton className="h-[2.5rem] w-[2.5rem] rounded-xl" />

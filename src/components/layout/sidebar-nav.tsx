@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import { LuChevronDown, LuChevronLeft } from "react-icons/lu";
 import type { IconType } from "react-icons";
 import { useSideBarNavStore } from "@/lib/store/useSideBarNavStore";
-import { Button, CircularProgress, useDisclosure } from "@nextui-org/react";
+import { Avatar, Button, CircularProgress, useDisclosure } from "@nextui-org/react";
 import { cn } from "@/utils/cn";
 import CustomTooltip from "../ui/custom-tooltip";
 import { useIsActive } from "@/lib/hooks/useIsActive";
@@ -200,8 +200,9 @@ export function SideBarNavItem({
         </p>
       ) : (
         <div className="rounded-2xl bg-background p-2">
-          <img
+          <Avatar
             src={imageUrl}
+            isBordered
             className="h-[25px] w-[25px] rounded-full object-cover"
             alt="guild logo"
           />
