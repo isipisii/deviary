@@ -34,7 +34,6 @@ export default function AccountDropdown() {
           header: "Log out?",
           body: "Are you sure you want to log out?",
         }}
-        isDelete={false}
         buttonText="Log out"
       />
 
