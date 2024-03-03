@@ -20,7 +20,7 @@ export const GET = async (req: NextRequest) => {
         },
       }),
       orderBy: {
-        createdAt: "desc",
+        createdAt: "asc",
       },
       include: {
         user: {
@@ -56,7 +56,7 @@ export const GET = async (req: NextRequest) => {
         guildId,
       },
       orderBy: {
-        createdAt: "desc",
+        createdAt: "asc",
       },
       take: take ? Number(take) : 10,
       skip: 1,
