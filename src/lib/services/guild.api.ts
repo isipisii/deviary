@@ -128,9 +128,9 @@ export function useJoinGuild(){
       }});
     },
     onSuccess: async (data, guildId) => {
+      await queryClient.invalidateQueries({queryKey: [QueryKeys.Guild, guildId]}) 
       await queryClient.invalidateQueries({queryKey: [QueryKeys.MyGuilds]}) 
       await queryClient.invalidateQueries({queryKey: [QueryKeys.Guilds]}) 
-      await queryClient.invalidateQueries({queryKey: [QueryKeys.Guild, guildId]}) 
     },
     onError: (error: AxiosError<ErrorResponse>) => {
       toast.error(error.response?.data.message);
@@ -149,9 +149,9 @@ export function useLeaveGuild(closeModal: () => void){
       }});
     },
     onSuccess: async (data, guildId) => {
+      await queryClient.invalidateQueries({queryKey: [QueryKeys.Guild, guildId]}) 
       await queryClient.invalidateQueries({queryKey: [QueryKeys.MyGuilds]}) 
       await queryClient.invalidateQueries({queryKey: [QueryKeys.Guilds]}) 
-      await queryClient.invalidateQueries({queryKey: [QueryKeys.Guild, guildId]}) 
     },
     onError: (error: AxiosError<ErrorResponse>) => {
       console.log(error)
@@ -246,3 +246,27 @@ export function useDeclineJoinRequest(){
   })
 }
 
+export function useRemoveGuildMember(){
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationKey: ["removeGuildMember"],
+    mutationFn: async ({ memberId, guildId }: {memberId: string, guildId: string}) => {
+      return await axios.delete("/api/guild/members/remove", { params: {
+        memberId
+      }});
+    },
+    onSuccess: async (data, { guildId }) => {
+      await queryClient.invalidateQueries({queryKey: [QueryKeys.GuildMembers, guildId]}) 
+      await queryClient.invalidateQueries({queryKey: [QueryKeys.Guild, guildId]}) 
+      await queryClient.invalidateQueries({queryKey: [QueryKeys.Guilds]}) 
+    },
+    onError: (error: AxiosError<ErrorResponse>) => {
+      console.log(error)
+      toast.error(error.response?.data.message);
+    },
+    // onSettled: () => {
+    //   if (closeModal) closeModal();
+    // }
+  })
+}
