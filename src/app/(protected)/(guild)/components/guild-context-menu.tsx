@@ -7,17 +7,20 @@ import {
   Button,
 } from "@nextui-org/react";
 import { GoKebabHorizontal } from "react-icons/go";
-import { PiSignOutBold } from "react-icons/pi";
-import { TbShare3 } from "react-icons/tb";
+import { PiSignOutBold, } from "react-icons/pi";
+import { TbShare3, TbUsers } from "react-icons/tb";
 import { useDisclosure } from "@nextui-org/react";
 import ConfirmationModal from "@/components/ui/confirmation-modal";
 import { useLeaveGuild } from "@/lib/services/guild.api";
+import { useModalStore } from "@/lib/store/useModalStore";
 
 export default function GuildContextMenu({ guild }: { guild: TGuild }) {
   const { isOpen, onOpenChange, onOpen, onClose } = useDisclosure();
   const { mutate: leaveGuildMutation, isPending } = useLeaveGuild(onClose);
+  const { openGuildMembersModal } = useModalStore((state) => state);
 
   const dropdownItems = [
+    { text: "Members", key: "members", icon: TbUsers },
     { text: "Share guild", key: "share", icon: TbShare3 },
     { text: "Leave guild", key: "leave", icon: PiSignOutBold },
   ];
@@ -36,7 +39,6 @@ export default function GuildContextMenu({ guild }: { guild: TGuild }) {
           header: "Leave guild?",
           body: "Are you sure you want to leave this guild?",
         }}
-        isDelete={false}
         buttonText="Leave"
       />
       <Dropdown className="rounded-xl bg-background border border-borderColor" placement="bottom-end">
@@ -62,6 +64,20 @@ export default function GuildContextMenu({ guild }: { guild: TGuild }) {
                 </DropdownItem>
               );
             }
+
+            if (item.key === "members") {
+              return (
+                <DropdownItem
+                  key={item.key}
+                  className="rounded-lg"
+                  startContent={<item.icon />}
+                  onClick={openGuildMembersModal}
+                >
+                  {item.text}
+                </DropdownItem>
+              );
+            }
+
             return (
               <DropdownItem
                 key={item.key}
