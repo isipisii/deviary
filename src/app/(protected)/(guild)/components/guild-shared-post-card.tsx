@@ -52,7 +52,7 @@ export default function GuildSharedPostCard({
         {data?.user.id === sharedPost.userId && (
           <GuildSharedCardContextMenu
             guildId={sharedPost.guildId}
-            shareId={sharedPost.id}
+            sharedPost={sharedPost}
           />
         )}
       </div>
