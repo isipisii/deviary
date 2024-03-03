@@ -102,7 +102,7 @@ export default function Notification() {
                   <h3 className="text-center text-lg font-semibold text-navTextColor md:text-xl">
                     No notifications.
                   </h3>
-                  <p className="text-center  text-xs font-medium text-navTextColor md:text-sm">
+                  <p className="text-center text-xs font-medium text-navTextColor/80 md:text-sm">
                     Don&apos;t worry, we&apos;ll let you know.
                   </p>
                 </div>
