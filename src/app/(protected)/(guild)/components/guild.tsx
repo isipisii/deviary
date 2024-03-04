@@ -30,8 +30,12 @@ export default function Guild() {
       {isLoading && <GuildDetailsSkeleton />}
       {/* guild details */}
       {guild && <GuildDetails guild={guild} />}
-      {guild?.isBelong && <GuildSharedPostsContainer guildId={guildId} />}
-      {!guild?.isBelong && guild && (
+
+      {/* show the guild shared posts if it is not private or if the user belongs to it*/}
+      {(guild?.isBelong || !guild?.isPrivate) && <GuildSharedPostsContainer guildId={guildId} />}
+        
+      {/* otherwise show an indication that it is a private guild*/}
+      {(!guild?.isBelong && guild?.isPrivate && guild) && (
         <div className="flex h-[300px] w-full items-center justify-center">
           <div className="flex flex-col items-center gap-4">
             <p className="text-[4rem] text-navTextColor">
