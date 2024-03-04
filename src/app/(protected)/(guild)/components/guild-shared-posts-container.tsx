@@ -7,6 +7,7 @@ import CardContainer from "@/components/layout/card-container";
 
 import { useGetGuildSharedPosts } from "@/lib/services/guild-shared-posts.api";
 import GuildSharedPostCard from "./guild-shared-post-card";
+import SharedPostCardSkeletons from "@/components/skeleton-loaders/shared-post-card-skeletons";
 
 // TODO: MAKE A SKELETON LOADER OF SHARE CARD
 export default function GuildSharedPostsContainer({
@@ -41,11 +42,10 @@ export default function GuildSharedPostsContainer({
               ),
             ),
         )}
-        {/* {isLoading && <GuildCardsSkeleton />}
-        {isFetchingNextPage && <GuildCardsSkeleton />} */}
+        {isLoading && <SharedPostCardSkeletons />}
+        {isFetchingNextPage && <SharedPostCardSkeletons />}
+      
       </CardContainer>
     </div>
   );
 }
-
-
