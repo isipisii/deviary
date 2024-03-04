@@ -3,13 +3,17 @@
 import formatDate from "@/utils/formatDate";
 import { Avatar, Button } from "@nextui-org/react";
 import { useRemoveGuildMember } from "@/lib/services/guild.api";
+import { useQueryClient } from "@tanstack/react-query";
+import { QueryKeys } from "@/lib/constants";
 
 export default function MemberCard({
   guildMember,
 }: {
   guildMember: TGuildMember;
 }) {
+  const queryClient = useQueryClient()
   const { user, id, createdAt, role, guildId } = guildMember;
+  const currentGuild = queryClient.getQueryData<TGuild>([QueryKeys.Guild, guildId])
   const { mutate: removeMemberMutation, isPending: isRemovingMember } =
     useRemoveGuildMember();
 
@@ -42,8 +46,9 @@ export default function MemberCard({
           </div>
         </div>
       </div>
+
       <div className="flex gap-2">
-        {role === "MEMBER" && (
+        {role === "MEMBER" && currentGuild?.isBelong && (
           <Button
             color="secondary"
             size="sm"
@@ -54,7 +59,7 @@ export default function MemberCard({
             Assign Mod
           </Button>
         )}
-        {role !== "CREATOR" && (
+        {role !== "CREATOR" && currentGuild?.isBelong && (
           <Button
             onClick={() => removeMemberMutation({ guildId, memberId: id })}
             color="danger"
