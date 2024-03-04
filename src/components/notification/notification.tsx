@@ -21,7 +21,7 @@ import { useViewAllNotifications } from "@/lib/services/notifications.api";
 export default function Notification() {
   const { data: sessionData } = useSession();
   const [isOpen, setIsOpen] = useState(false);
-  const { mutate: viewAllNotificationsMutation } = useViewAllNotifications()
+  const { mutate: viewAllNotificationsMutation } = useViewAllNotifications();
   const [hasNewNotification, setHasNewNotification] = useState(false);
   const { data: notifications, isLoading } = useGetNotifications();
   const queryClient = useQueryClient();
@@ -50,6 +50,10 @@ export default function Notification() {
     setHasNewNotification(false);
   }
 
+  function hasUnviewedNotification(notifications: TNotification[]) {
+    return notifications?.some((notification) => !notification.viewed);
+  }
+
   return (
     <Popover
       placement="bottom-end"
@@ -65,7 +69,7 @@ export default function Notification() {
           isIconOnly
           className="relative rounded-xl border-1 border-borderColor text-[1.3rem]"
         >
-          {notifications?.some((notification) => !notification.viewed) && (
+          {notifications && hasUnviewedNotification(notifications) && (
             <span className="absolute right-2 top-[.4rem] h-[10px] w-[10px] rounded-full bg-red-500"></span>
           )}
           {isOpen ? <FaBell /> : <FaRegBell />}
@@ -111,16 +115,19 @@ export default function Notification() {
           )}
 
           <div className="flex w-full items-end justify-end px-4">
-            {notifications && notifications?.length > 0 && <Button
-              color="secondary"
-              variant="light"
-              size="sm"
-              className="rounded-lg"
-              startContent={<FaRegEye />}
-              onClick={() => viewAllNotificationsMutation()}
-            >
-              Mark all as viewed
-            </Button>}
+            {notifications && notifications?.length > 0 && (
+              <Button
+                color="secondary"
+                variant="light"
+                size="sm"
+                className="rounded-lg"
+                startContent={<FaRegEye />}
+                isDisabled={!hasUnviewedNotification(notifications)}
+                onClick={() => viewAllNotificationsMutation()}
+              >
+                Mark all as viewed
+              </Button>
+            )}
           </div>
         </div>
       </PopoverContent>
