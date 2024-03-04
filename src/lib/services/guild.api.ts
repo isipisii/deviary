@@ -131,6 +131,7 @@ export function useJoinGuild(){
       await queryClient.invalidateQueries({queryKey: [QueryKeys.Guild, guildId]}) 
       await queryClient.invalidateQueries({queryKey: [QueryKeys.MyGuilds]}) 
       await queryClient.invalidateQueries({queryKey: [QueryKeys.Guilds]}) 
+      await queryClient.invalidateQueries({queryKey: [QueryKeys.GuildMembers, guildId]}) 
     },
     onError: (error: AxiosError<ErrorResponse>) => {
       toast.error(error.response?.data.message);
@@ -152,6 +153,7 @@ export function useLeaveGuild(closeModal: () => void){
       await queryClient.invalidateQueries({queryKey: [QueryKeys.Guild, guildId]}) 
       await queryClient.invalidateQueries({queryKey: [QueryKeys.MyGuilds]}) 
       await queryClient.invalidateQueries({queryKey: [QueryKeys.Guilds]}) 
+      await queryClient.invalidateQueries({queryKey: [QueryKeys.GuildMembers, guildId]}) 
     },
     onError: (error: AxiosError<ErrorResponse>) => {
       console.log(error)
@@ -212,14 +214,15 @@ export function useAcceptJoinRequest(){
 
   return useMutation({
     mutationKey: ["acceptJoinRequest"],
-    mutationFn: async (joinRequestId: string) => {
+    mutationFn: async ({joinRequestId, guildId} :{joinRequestId: string, guildId: string }) => {
       return await axios.post("/api/guild/join-request/accept", null, { params: {
         joinRequestId
       }});
     },
     // TODO: invalidate cached members if theres alrdy an api
-    onSuccess: async () => {
+    onSuccess: async (data, { guildId }) => {
       await queryClient.invalidateQueries({queryKey: [QueryKeys.Notifications]})
+      await queryClient.invalidateQueries({queryKey: [QueryKeys.GuildMembers, guildId]}) 
     },
     onError: (error: AxiosError<ErrorResponse>) => {
       toast.error(error.response?.data.message);
