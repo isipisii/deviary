@@ -9,8 +9,13 @@ import GuildCardsSkeleton from "@/components/skeleton-loaders/guild-cards-skelet
 
 export default function GuildsContainer() {
   const { ref, inView } = useInView();
-  const { fetchNextPage, hasNextPage, isFetchingNextPage, data, isLoading } =
-    useGetGuilds();
+  const { 
+    fetchNextPage, 
+    hasNextPage, 
+    isFetchingNextPage, 
+    data, 
+    isLoading 
+  } = useGetGuilds();
 
   useEffect(() => {
     // checks if the last element that has the ref and if theres next page in order to
@@ -25,7 +30,7 @@ export default function GuildsContainer() {
       <CardContainer>
         {data?.pages.map(
           (page) =>
-            page.data?.map((guild, index) =>
+            page?.data?.map((guild, index) =>
               index + 1 === page.data.length ? (
                 <div key={index} ref={ref} className="w-full max-w-[350px]">
                   <GuildCard guild={guild} />

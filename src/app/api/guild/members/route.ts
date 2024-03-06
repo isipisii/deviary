@@ -13,7 +13,6 @@ export const GET = async (req: NextRequest) => {
         guildId,
       },
       take: take ? Number(take) : 10,
-      //same as with the filter
       ...(lastCursor && {
         skip: 1,
         cursor: {
@@ -21,7 +20,7 @@ export const GET = async (req: NextRequest) => {
         },
       }),
       orderBy: {
-        createdAt: "desc",
+        createdAt: "asc",
       },
       include: {
         user: {
@@ -57,7 +56,7 @@ export const GET = async (req: NextRequest) => {
         guildId,
       },
       orderBy: {
-        createdAt: "desc",
+        createdAt: "asc",
       },
       take: take ? Number(take) : 10,
       skip: 1,

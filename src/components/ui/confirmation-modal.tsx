@@ -13,7 +13,6 @@ interface IConfirmationModal {
   action: () => void;
   isPending: boolean;
   modalTextContent: { header: string; body: string };
-  isDelete?: boolean;
   buttonText: string
 }
 
@@ -23,7 +22,6 @@ export default function ConfirmationModal({
   action,
   isPending,
   modalTextContent,
-  isDelete = true,
   buttonText
 }: IConfirmationModal) {
 

@@ -108,7 +108,7 @@ type TGuild = {
 type TGuildMember = {
   id: readonly string;
   userId: readonly string,
-  guild: readonly string,
+  guildId: readonly string,
   user: TUser,
   role: "MEMBER" | "CREATOR" | "MODERATOR"
   createdAt: Date;

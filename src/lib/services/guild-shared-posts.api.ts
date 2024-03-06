@@ -62,7 +62,7 @@ export function useSharePost(closeModal: () => void) {
   });
 }
 
-export function useUpdateSharedPost() {
+export function useUpdateSharedPost(closeModal: () => void) {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -84,6 +84,7 @@ export function useUpdateSharedPost() {
       await queryClient.invalidateQueries({
         queryKey: [QueryKeys.GuildSharedPosts, guildId],
       });
+      closeModal();
     },
     onError: async (error: AxiosError<ErrorResponse>) => {
       toast.error("An error occured while updating the shared post.");

@@ -6,6 +6,7 @@ import { useParams } from "next/navigation";
 import GuildDetailsSkeleton from "@/components/skeleton-loaders/guild-details-skeleton";
 import GuildDetails from "./guild-details";
 import GuildSharedPostsContainer from "./guild-shared-posts-container";
+import { CiLock } from "react-icons/ci";
 
 export default function Guild() {
   const { guildId } = useParams<{ guildId: string }>();
@@ -29,7 +30,28 @@ export default function Guild() {
       {isLoading && <GuildDetailsSkeleton />}
       {/* guild details */}
       {guild && <GuildDetails guild={guild} />}
-      <GuildSharedPostsContainer guildId={guildId} />
+
+      {/* show the guild shared posts if it is not private or if the user belongs to it*/}
+      {(guild?.isBelong || !guild?.isPrivate) && <GuildSharedPostsContainer guildId={guildId} />}
+        
+      {/* otherwise show an indication that it is a private guild*/}
+      {(!guild?.isBelong && guild?.isPrivate && guild) && (
+        <div className="flex h-[300px] w-full items-center justify-center">
+          <div className="flex flex-col items-center gap-4">
+            <p className="text-[4rem] text-navTextColor">
+              <CiLock />
+            </p>
+            <div className="space-y-2">
+              <h3 className="text-center text-lg font-semibold text-navTextColor md:text-xl">
+                This guild is private
+              </h3>
+              <p className="text-center  text-xs font-medium text-navTextColor/80 md:text-sm">
+                Request to join.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

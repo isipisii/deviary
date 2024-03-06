@@ -7,12 +7,13 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { QueryClient } from "@tanstack/query-core";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { UseFormReturn } from "react-hook-form";
 import { QueryKeys } from "../constants";
 import { updateRoute } from "../actions";
 import formatPostHref from "@/utils/formatPostHref";
+import { usePathname } from "next/navigation";
 
 export async function getFeedPosts(take: number, lastCursor: string) {
   const response = await axios.get("/api/post", {
@@ -150,6 +151,9 @@ export function useUpdateDiary() {
 
 export function useDeletePost(closeModal?: () => void) {
   const queryClient = useQueryClient();
+  const pathname = usePathname()
+  const isInGuild = pathname.includes("guilds")
+  const params = useParams()
 
   return useMutation({
     mutationFn: async (postId: string) => {
@@ -166,6 +170,12 @@ export function useDeletePost(closeModal?: () => void) {
       await queryClient.invalidateQueries({
         queryKey: [QueryKeys.PopularPosts],
       });
+      if(isInGuild) {
+        await queryClient.invalidateQueries({
+          queryKey: [QueryKeys.GuildSharedPosts, params.guildId as string],
+        });
+      }
+      
       toast.success("Post deleted successfully");
     },
     onError: (error: AxiosError<ErrorResponse>) => {

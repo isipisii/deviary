@@ -6,7 +6,6 @@ import {
   Button,
   DropdownMenu,
   DropdownItem,
-  Spinner,
 } from "@nextui-org/react";
 import { FaEdit, FaRegEdit } from "react-icons/fa";
 import { GoKebabHorizontal } from "react-icons/go";
@@ -14,21 +13,28 @@ import { LuTrash } from "react-icons/lu";
 import { useDeleteSharedPost } from "@/lib/services/guild-shared-posts.api";
 import ConfirmationModal from "@/components/ui/confirmation-modal";
 import { useDisclosure } from "@nextui-org/react";
+import { useModalStore } from "@/lib/store/useModalStore";
 
-// TODO: CREATE A MODAL FOR EDITING THE CONTENT OF THE SHARED POST
 export default function GuildSharedCardContextMenu({
-  shareId,
+  sharedPost,
   guildId,
 }: {
-  shareId: string;
+  sharedPost: TGuildSharedPost;
   guildId: string;
 }) {
   const { isOpen, onOpenChange, onClose, onOpen } = useDisclosure();
-  const { mutate: deleteSharedPostMutation, isPending: isDeleting } =
-    useDeleteSharedPost(onClose);
+  const { mutate: deleteSharedPostMutation, isPending: isDeleting } = useDeleteSharedPost(onClose);
+  const { openEditSharedPostModal, setSharedPostToEdit } = useModalStore(
+    (state) => state,
+  );
 
   function handleDeleteSharedPost() {
-    deleteSharedPostMutation({ shareId, guildId });
+    deleteSharedPostMutation({ shareId: sharedPost.id, guildId });
+  }
+
+  function handleOpenEditSharedPostModal() {
+    openEditSharedPostModal();
+    setSharedPostToEdit(sharedPost);
   }
 
   return (
@@ -57,14 +63,12 @@ export default function GuildSharedCardContextMenu({
             startContent={<GoKebabHorizontal />}
           />
         </DropdownTrigger>
-        <DropdownMenu
-          variant="flat"
-          aria-label="shared-post-dropdown"
-        >
+        <DropdownMenu variant="flat" aria-label="shared-post-dropdown">
           <DropdownItem
             key="edit"
             startContent={<FaEdit />}
             className="rounded-lg"
+            onPress={handleOpenEditSharedPostModal}
           >
             Edit
           </DropdownItem>

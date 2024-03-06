@@ -29,7 +29,7 @@ export default function JoinRequesNotificationCard({
         <div className="absolute left-6 top-1/2 h-[10px] w-[10px] rounded-full bg-secondary" />
       )}
 
-        {/* sender's avatar */}
+      {/* sender's avatar */}
       <div className="relative h-[30px] w-[30px] md:h-[35px] md:w-[35px]">
         <Avatar
           src={sender.image}
@@ -67,10 +67,15 @@ export default function JoinRequesNotificationCard({
         {/* actions */}
         <div className="flex gap-2">
           <Button
-            isLoading={ isAccepting}
+            isLoading={isAccepting}
             variant="solid"
             color="secondary"
-            onClick={() => acceptJoinRequestMutation(joinRequest.id)}
+            onClick={() =>
+              acceptJoinRequestMutation({
+                joinRequestId: joinRequest.id,
+                guildId: joinRequest.guildId,
+              })
+            }
             className="text-white"
             size="sm"
             radius="lg"
