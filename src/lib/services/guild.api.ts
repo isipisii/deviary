@@ -255,8 +255,9 @@ export function useRemoveGuildMember(){
   return useMutation({
     mutationKey: ["removeGuildMember"],
     mutationFn: async ({ memberId, guildId }: {memberId: string, guildId: string}) => {
-      return await axios.delete("/api/guild/members/remove", { params: {
-        memberId
+      return await axios.patch("/api/guild/members/assign-moderator", {}, { params: {
+        memberId,
+        guildId
       }});
     },
     onSuccess: async (data, { guildId }) => {
@@ -271,5 +272,27 @@ export function useRemoveGuildMember(){
     // onSettled: () => {
     //   if (closeModal) closeModal();
     // }
+  })
+}
+
+
+export function useAssignModerator(){
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationKey: ["assignModerator"],
+    mutationFn: async ({ memberId, guildId }: {memberId: string, guildId: string}) => {
+      return await axios.delete("/api/guild/members/remove", { params: {
+        memberId
+      }});
+    },
+    onSuccess: async (data, { guildId }) => {
+      await queryClient.invalidateQueries({queryKey: [QueryKeys.GuildMembers, guildId]}) 
+      await queryClient.invalidateQueries({queryKey: [QueryKeys.Guild, guildId]}) 
+      await queryClient.invalidateQueries({queryKey: [QueryKeys.Guilds]}) 
+    },
+    onError: (error: AxiosError<ErrorResponse>) => {
+      toast.error(error.response?.data.message);
+    },
   })
 }
