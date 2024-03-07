@@ -43,7 +43,6 @@ export const PATCH = async (req: NextRequest) => {
             }, { status: 403 })
         }
 
-
         const existingMember = await db.guildMember.findUnique({
             where: {
                 id: memberId
@@ -52,16 +51,9 @@ export const PATCH = async (req: NextRequest) => {
         
         if(!existingMember) {
             return NextResponse.json({
-                message: "Member not found",
+                message: "This user is not a member of the guild",
                 success: false
             }, { status: 404 })
-        }
-
-        if(existingMember.guildId !== guildId) {
-            return NextResponse.json({
-                message: "Member is not a member of the guild",
-                success: false
-            }, { status: 400 })
         }
 
         await db.guildMember.update({
