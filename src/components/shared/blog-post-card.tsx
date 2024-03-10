@@ -7,6 +7,7 @@ import Link from "next/link";
 import formatDate from "@/utils/formatDate";
 import formatPostHref from "@/utils/formatPostHref";
 import estimateReadingTime from "@/utils/estimateReadingTime";
+import { Image } from "@nextui-org/react";
 
 interface IBlogPostCard {
   post: TPost;
@@ -21,21 +22,27 @@ export default function BlogPostCard({ post }: IBlogPostCard) {
       <div className="h-[400px] w-full max-w-[350px] rounded-3xl border-2 border-borderColor shadow-lg">
         <div className="relative h-full w-full">
           {/* image and bg gradient */}
-          <img
+          <Image
+            isBlurred
             src={thumbnail?.imageUrl}
             alt="thumbnail"
-            className="h-full w-full rounded-3xl object-cover"
+            removeWrapper
+            className="absolute left-0 top-0 z-[5] h-full w-full rounded-3xl object-cover"
           />
           <div
-            className="absolute bottom-0 left-0 h-full w-full rounded-b-3xl bg-gradient-to-t from-[#0C1319]
+            className="absolute bottom-0 left-0 z-[6] h-full w-full rounded-b-3xl bg-gradient-to-t from-[#0C1319]
          via-[#0c1319c8] to-[#24253300]"
           />
 
           {/* blog details */}
-          <div className="absolute bottom-4 left-1/2 flex w-[90%] -translate-x-1/2 flex-col justify-center gap-3">
+          <div className="absolute bottom-4 left-1/2 z-[6] flex w-[90%] -translate-x-1/2 flex-col justify-center gap-3">
             <div className="flex flex-col gap-1">
               <div className="flex justify-between">
-                <Avatar src={image as string} className="h-[40px] w-[40px" isBordered />
+                <Avatar
+                  src={image as string}
+                  className="w-[40px h-[40px]"
+                  isBordered
+                />
                 <PostContextMenu
                   className="bg-background"
                   postType="BLOG_POST"
