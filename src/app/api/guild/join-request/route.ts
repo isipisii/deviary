@@ -86,7 +86,6 @@ export const POST = async (req: NextRequest) => {
       },
       { status: 200 },
     );
-
   } catch (error) {
     return NextResponse.json(
       {
@@ -120,8 +119,8 @@ export const DELETE = async (req: NextRequest) => {
     const existingRequest = await db.joinRequest.findFirst({
       where: {
         senderId: authenticatedUserId,
-        guildId
-      }
+        guildId,
+      },
     });
 
     if (!existingRequest) {
@@ -136,7 +135,7 @@ export const DELETE = async (req: NextRequest) => {
 
     await db.joinRequest.delete({
       where: {
-        id: existingRequest.id
+        id: existingRequest.id,
       },
     });
 
@@ -147,7 +146,108 @@ export const DELETE = async (req: NextRequest) => {
       },
       { status: 200 },
     );
+  } catch (error) {
+    return NextResponse.json(
+      {
+        success: false,
+        message: "Internal Server Error",
+      },
+      { status: 500 },
+    );
+  }
+};
 
+export const GET = async (req: NextRequest) => {
+  const url = new URL(req.nextUrl);
+  const guildId = url.searchParams.get("guildId");
+  const lastCursor = url.searchParams.get("lastCursor");
+  const take = url.searchParams.get("take");
+
+  try {
+    if (!guildId) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Missing guild id",
+        },
+        { status: 400 },
+      );
+    }
+
+    const joinRequests = await db.joinRequest.findMany({
+      where: {
+        guildId,
+      },
+      take: take ? Number(take) : 10,
+      ...(lastCursor && {
+        cursor: {
+          id: lastCursor,
+        },
+        skip: 1,
+      }),
+      orderBy: {
+        createdAt: "desc",
+      },
+      include: {
+        sender: {
+          select: {
+            name: true,
+            id: true,
+            createdAt: true,
+            image: true,
+            email: true,
+          },
+        },
+      },
+    });
+
+    if (joinRequests.length === 0) {
+      return NextResponse.json(
+        {
+          data: [],
+          metaData: {
+            lastCursor: null,
+            hasNextPage: false,
+          },
+        },
+        { status: 200 },
+      );
+    }
+
+    const lastJoinRequest = joinRequests.at(-1);
+    const cursor = lastJoinRequest?.id;
+
+    const nextPage = await db.joinRequest.findMany({
+      where: {
+        guildId,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+      take: take ? Number(take) : 10,
+      skip: 1,
+      cursor: {
+        id: cursor,
+      },
+    });
+
+    const data = {
+      data: joinRequests,
+      metaData: {
+        lastCursor: cursor,
+        hasNextPage: nextPage.length > 0,
+      },
+    };
+
+    return NextResponse.json(
+      {
+        data,
+        success: true,
+      },
+      {
+        status: 200,
+      },
+    );
   } catch (error) {
     return NextResponse.json(
       {
