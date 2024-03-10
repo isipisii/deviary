@@ -8,7 +8,6 @@ import {
 import { QueryKeys } from "@/lib/constants";
 import { getGuildById } from "@/lib/services/guild.api";
 import { getGuildSharedPosts } from "@/lib/services/guild-shared-posts.api";
-import GuildSharedPostsContainer from "../../components/guild-shared-posts-container";
 
 export default async function GuildPage({
   params,
