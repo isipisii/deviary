@@ -17,16 +17,21 @@ type TModalStoreState = {
   sharedPostToEdit: TGuildSharedPost | null;
   setSharedPostToEdit: (sharedPostToEdit: TGuildSharedPost | null) => void;
 
+  //for guild members modal 
   isGuildMembersModalOpen: boolean
   openGuildMembersModal: () => void;
   onOpenChangeGuildMembersModal: () => void;
+
+   //for guild join-requests modal 
+   isGuildJoinRequestsModalOpen: boolean
+   openGuildJoinRequestsModal: () => void;
+   onOpenChangeGuildJoinRequestsModal: () => void;
 };
 
 export const useModalStore = create<TModalStoreState>((set, get) => ({
   // for share post modal 
   isShareModalOpen: false,
   postToShare: null,
-
   openShareModal: () => set({ isShareModalOpen: true }),
   closeShareModal: () => set({ isShareModalOpen: false }),
   onOpenChangeShareModal: () => set({ isShareModalOpen: !get().isShareModalOpen }),
@@ -35,14 +40,17 @@ export const useModalStore = create<TModalStoreState>((set, get) => ({
   // for editing shared post modal 
   sharedPostToEdit: null,
   isEditSharedPostModalOpen: false,
-
   openEditSharedPostModal: () => set({ isEditSharedPostModalOpen: true }),
   onOpenChangeEditSharedPostModal: () => set({ isEditSharedPostModalOpen: !get().isEditSharedPostModalOpen }),
   setSharedPostToEdit: (sharedPostToEdit) => set({ sharedPostToEdit }),
 
   //for guild members modal 
   isGuildMembersModalOpen: false,
-
   openGuildMembersModal: () => set({ isGuildMembersModalOpen: true }),
   onOpenChangeGuildMembersModal: () => set({ isGuildMembersModalOpen: !get().isGuildMembersModalOpen }),
+
+  //for guild join-requests modal 
+  isGuildJoinRequestsModalOpen: false,
+  openGuildJoinRequestsModal: () => set({isGuildJoinRequestsModalOpen: true}),
+  onOpenChangeGuildJoinRequestsModal: () => set({isGuildJoinRequestsModalOpen: !get().isGuildJoinRequestsModalOpen})
 }));
