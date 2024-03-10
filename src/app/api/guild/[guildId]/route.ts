@@ -148,6 +148,23 @@ export const GET = async (req: NextRequest, { params }: TParams) => {
       }
     }) > 0
 
+    const isModerator = await db.guildMember.count({
+      where: {
+        guildId,
+        userId: session.user.id,
+        role: "MODERATOR"
+      }
+    }) > 0
+
+    const isGuildCreator = await db.guildMember.count({
+      where: {
+        guildId,
+        userId: session.user.id,
+        role: "CREATOR"
+      }
+    }) > 0
+
+
     const hasAnExistingJoinRequest = await db.joinRequest.count({
       where: {
         guildId,
@@ -192,7 +209,9 @@ export const GET = async (req: NextRequest, { params }: TParams) => {
       ...guild,
       isBelong: isUserAGuildMember,
       membersCount: guildMembersCount,
-      hasAnExistingJoinRequest
+      hasAnExistingJoinRequest,
+      isGuildCreator,
+      isModerator
     } 
 
     return NextResponse.json(
