@@ -4,7 +4,7 @@ import SyntaxHighlighter from "@/components/shared/syntax-highlighter";
 import PostContextMenu from "@/components/ui/post-context-menu";
 import estimateReadingTime from "@/utils/estimateReadingTime";
 import formatDate from "@/utils/formatDate";
-import { Avatar, User } from "@nextui-org/react";
+import { Avatar, Image, User } from "@nextui-org/react";
 import React from "react";
 import GuildSharedCardContextMenu from "./guild-shared-card-context-menu";
 import { useSession } from "next-auth/react";
@@ -85,17 +85,19 @@ export function SharedBlogPostCard({
     <div className="h-[350px] w-full rounded-2xl border-2 border-borderColor">
       <div className="relative h-full w-full">
         {/* image and bg gradient */}
-        <img
+        <Image
+          isBlurred
           src={thumbnail?.imageUrl}
           alt="thumbnail"
-          className="h-full min-h-[250px] w-full rounded-2xl object-cover"
+          removeWrapper
+          className="absolute left-0 top-0 z-[5] h-full w-full rounded-3xl object-cover"
         />
         <div
-          className="absolute bottom-0 left-0 h-full w-full rounded-2xl bg-gradient-to-t from-[#0C1319]
+          className="absolute bottom-0 left-0 z-[6] h-full w-full rounded-2xl bg-gradient-to-t from-[#0C1319]
               via-[#0c1319c8] to-[#24253300]"
         />
         {/* blog details */}
-        <div className="absolute bottom-4 left-1/2 flex w-[90%] -translate-x-1/2 flex-col justify-center gap-3">
+        <div className="absolute bottom-4 left-1/2 z-[6] flex w-[90%] -translate-x-1/2 flex-col justify-center gap-3">
           <div className="flex flex-col gap-1">
             <div className="flex justify-between">
               <Avatar src={image} className="w-[40px h-[40px]" isBordered />
