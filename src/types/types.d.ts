@@ -101,6 +101,8 @@ type TGuild = {
   hasAnExistingJoinRequest: boolean
   description?: string
   creatorId: readonly string
+  isModerator: boolean
+  isGuildCreator: boolean
   createdAt: Date;
   updatedAt: Date;
 }
@@ -121,6 +123,7 @@ type TJoinRequest = {
   sender: TUser,
   guild: TGuild
   guildId: readonly string;
+  createdAt: Date;
 }
 
 type TGuildSharedPost = {
