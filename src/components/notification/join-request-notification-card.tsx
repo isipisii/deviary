@@ -85,7 +85,7 @@ export default function JoinRequesNotificationCard({
           <Button
             isLoading={isDeclining}
             variant="bordered"
-            onClick={() => declineJoinRequestMutation(joinRequest.id)}
+            onClick={() => declineJoinRequestMutation( {joinRequestId: joinRequest.id, guildId: joinRequest.guildId })}
             size="sm"
             radius="lg"
             className="border-2 border-borderColor"
