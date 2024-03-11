@@ -70,6 +70,29 @@ export const POST = async (req: NextRequest) => {
         type: "JOIN_REQUEST",
         senderId: session.user.id,
       },
+      include: {
+        sender: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            image: true,
+          },
+        },
+        joinRequest: {
+          include: {
+            sender: {
+              select: {
+                id: true,
+                name: true,
+                email: true,
+                image: true,
+              },
+            },
+            guild: true,
+          },
+        },
+      },
     });
 
     const channel = `channel_user_${notification.recipientId}`;
