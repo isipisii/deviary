@@ -29,8 +29,9 @@ export default function GuildContextMenu({ guild }: { guild: TGuild }) {
     { text: "Leave guild", key: "leave", icon: PiSignOutBold },
   ];
 
-  const filteredItems =
-    guild.isGuildCreator || guild.isModerator
+  const filteredItems = !guild.isPrivate
+    ? dropdownItems.filter((item) => item.key !== "join-requests")
+    : guild.isGuildCreator || guild.isModerator
       ? dropdownItems
       : guild.isBelong
         ? dropdownItems.filter((item) => item.key !== "join-requests")
