@@ -104,6 +104,7 @@ model Guild {
   members         GuildMember[]
   joinRequests    JoinRequest[]
   guildShares     GuildShare[]
+  notifications   Notification[]
 
   createdAt       DateTime  @default(now()) @map(name: "created_at")
   updatedAt       DateTime  @updatedAt @map(name: "updated_at")
@@ -251,6 +252,9 @@ model Notification {
 
   postId        String? @db.ObjectId 
   post          Post? @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  guildId       String? @db.ObjectId
+  guild         Guild? @relation(fields: [guildId], references: [id], onDelete: Cascade)
 
   joinRequestId String? @db.ObjectId
   joinRequest   JoinRequest? @relation(fields: [joinRequestId], references: [id], onDelete: Cascade)
