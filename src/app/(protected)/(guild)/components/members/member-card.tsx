@@ -72,7 +72,7 @@ export default function MemberCard({
       {sessionData?.user.id !== user.id &&
         (currentGuild?.isModerator || currentGuild?.isGuildCreator) && (
           <div className="flex gap-2">
-            {currentGuild?.isBelong && currentGuild?.isGuildCreator && (
+            {currentGuild?.isGuildCreator && (
               <Button
                 color="secondary"
                 size="sm"
@@ -85,9 +85,7 @@ export default function MemberCard({
                 {role === "MODERATOR" ? "Remove Mod" : "Assign Mod"}
               </Button>
             )}
-            {role !== "CREATOR" &&
-              currentGuild?.isBelong &&
-              currentGuild?.isModerator || currentGuild?.isGuildCreator && (
+            { role !== "CREATOR" && (currentGuild?.isModerator || currentGuild?.isGuildCreator) && (
                 <Button
                   onClick={() => removeMemberMutation({ guildId, memberId })}
                   color="danger"
