@@ -183,17 +183,16 @@ export function useLeaveGuild(closeModal: () => void) {
       });
     },
     onSuccess: async (data, guildId) => {
-      await queryClient.invalidateQueries({
-        queryKey: [QueryKeys.Guild, guildId],
-      });
-      await queryClient.invalidateQueries({ queryKey: [QueryKeys.MyGuilds] });
       await queryClient.invalidateQueries({ queryKey: [QueryKeys.Guilds] });
       await queryClient.invalidateQueries({
         queryKey: [QueryKeys.GuildMembers, guildId],
       });
+      await queryClient.invalidateQueries({
+        queryKey: [QueryKeys.Guild, guildId],
+      });
+      await queryClient.invalidateQueries({ queryKey: [QueryKeys.MyGuilds] });
     },
     onError: (error: AxiosError<ErrorResponse>) => {
-      console.log(error);
       toast.error(error.response?.data.message);
     },
     onSettled: () => {
@@ -280,6 +279,9 @@ export function useAcceptJoinRequest() {
         queryKey: [QueryKeys.GuildMembers, guildId],
       });
       await queryClient.invalidateQueries({
+        queryKey: [QueryKeys.Guild, guildId],
+      });
+      await queryClient.invalidateQueries({
         queryKey: [QueryKeys.GuildJoinRequests, guildId],
       });
     },
@@ -306,9 +308,6 @@ export function useDeclineJoinRequest() {
         queryKey: [QueryKeys.Notifications],
       });
       await queryClient.invalidateQueries({
-        queryKey: [QueryKeys.GuildMembers, guildId],
-      });
-      await queryClient.invalidateQueries({
         queryKey: [QueryKeys.GuildJoinRequests, guildId],
       });
     },
@@ -331,13 +330,11 @@ export function useRemoveGuildMember() {
       memberId: string;
       guildId: string;
     }) => {
-      return await axios.patch(
-        "/api/guild/members/assign-moderator",
-        {},
+      return await axios.delete(
+        "/api/guild/members/remove",
         {
           params: {
             memberId,
-            guildId,
           },
         },
       );
