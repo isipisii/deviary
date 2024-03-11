@@ -17,6 +17,7 @@ import NotificationList from "./notification-list";
 import NotificationSkeleton from "../skeleton-loaders/notification-skeleton";
 import { FaRegEye } from "react-icons/fa6";
 import { useViewAllNotifications } from "@/lib/services/notifications.api";
+import { QueryKeys } from "@/lib/constants";
 
 export default function Notification() {
   const { data: sessionData } = useSession();
@@ -37,6 +38,7 @@ export default function Notification() {
 
           //append the upcoming notification to the cached notifications
           await newNotificationOptimisticUpdate(queryClient, newNotification);
+          queryClient.invalidateQueries({queryKey: [QueryKeys.GuildJoinRequests, newNotification.joinRequest.guildId]})
           setHasNewNotification(true);
         },
       );
