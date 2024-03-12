@@ -75,10 +75,12 @@ type TNotification = {
   sender: TUser;
   senderId: readonly string;
   recipientId: readonly string;
+  guild: TGuild
+  guildId: readonly string
   comment?: Partial<TComment>
   joinRequest: TJoinRequest
   post?: TPost;
-  type: "UPVOTE" | "JOIN_REQUEST" | "COMMENT";
+  type: "UPVOTE" | "JOIN_REQUEST" | "COMMENT" | "JOIN_REQUEST_ACCEPTED" | "ASSIGN_MOD";
   viewed: boolean;
   postId: string;
   createdAt: Date;
