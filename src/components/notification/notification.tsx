@@ -17,13 +17,11 @@ import NotificationList from "./notification-list";
 import NotificationSkeleton from "../skeleton-loaders/notification-skeleton";
 import { FaRegEye } from "react-icons/fa6";
 import { useViewAllNotifications } from "@/lib/services/notifications.api";
-import { QueryKeys } from "@/lib/constants";
 
 export default function Notification() {
   const { data: sessionData } = useSession();
   const [isOpen, setIsOpen] = useState(false);
   const { mutate: viewAllNotificationsMutation } = useViewAllNotifications();
-  const [hasNewNotification, setHasNewNotification] = useState(false);
   const { data: notifications, isLoading } = useGetNotifications();
   const queryClient = useQueryClient();
 
@@ -38,8 +36,6 @@ export default function Notification() {
 
           //append the upcoming notification to the cached notifications
           await newNotificationOptimisticUpdate(queryClient, newNotification);
-          queryClient.invalidateQueries({queryKey: [QueryKeys.GuildJoinRequests, newNotification.joinRequest.guildId]})
-          setHasNewNotification(true);
         },
       );
 
@@ -47,10 +43,6 @@ export default function Notification() {
       channel.unbind();
     };
   }, [sessionData?.user.id, queryClient]);
-
-  function setAsViewed() {
-    setHasNewNotification(false);
-  }
 
   function hasUnviewedNotification(notifications: TNotification[]) {
     return notifications?.some((notification) => !notification.viewed);
@@ -93,7 +85,6 @@ export default function Notification() {
           {notifications && notifications?.length > 0 && (
             <NotificationList
               notifications={notifications}
-              setAsViewed={setAsViewed}
             />
           )}
 
