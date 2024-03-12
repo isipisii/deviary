@@ -22,7 +22,6 @@ export default function JoinRequesNotificationCard({
 
   return (
     <div
-      key={notificationId}
       className="relative flex w-full gap-4 p-5 transition-all duration-1000 ease-in-out hover:bg-[#a8a7a716] "
     >
       {!viewed && (
@@ -32,7 +31,7 @@ export default function JoinRequesNotificationCard({
       {/* sender's avatar */}
       <div className="relative h-[30px] w-[30px] md:h-[35px] md:w-[35px]">
         <Avatar
-          src={sender.image}
+          src={sender?.image}
           showFallback
           isBordered
           className="h-[30px] w-[30px] md:h-[35px] md:w-[35px]"
