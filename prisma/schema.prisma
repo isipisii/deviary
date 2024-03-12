@@ -301,6 +301,8 @@ enum NotificationType  {
   UPVOTE
   JOIN_REQUEST
   COMMENT
+  JOIN_REQUEST_ACCEPTED
+  ASSIGN_MOD
 }
 
 enum PostType  {
