@@ -68,6 +68,7 @@ export const GET = async (request: NextRequest) => {
             }
           },
         },
+        guild: true
       },
       orderBy: {
         createdAt: "desc"
