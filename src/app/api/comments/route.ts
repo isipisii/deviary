@@ -7,6 +7,7 @@ import { userSelectedFields } from "../notifications/route";
 const pusherServer = getPusherInstance();
 
 export const GET = async (request: NextRequest) => {
+  const session = await getServerSideSession();
   const url = new URL(request.url);
   const postId = url.searchParams.get("postId") as string;
   const take = url.searchParams.get("take");
@@ -43,16 +44,12 @@ export const GET = async (request: NextRequest) => {
             image: true,
           },
         },
-        parent: {
-          include: {
-            user: {
-              select: {
-                name: true,
-                email: true,
-                image: true,
-              },
+        _count: {
+          select: {
+            upvotes: {
+              where: { userId: session?.user.id },
             },
-          }
+          },
         },
         commentReplies: {
           include: {
@@ -72,11 +69,18 @@ export const GET = async (request: NextRequest) => {
                     image: true,
                   },
                 },
-              }
+              },
+            },
+            _count: {
+              select: {
+                upvotes: {
+                  where: { userId: session?.user.id },
+                },
+              },
             },
           },
         },
-        post: true,
+        post: true
       },
       orderBy: {
         createdAt: "desc",
@@ -102,7 +106,6 @@ export const GET = async (request: NextRequest) => {
     const nextPage = await db.comment.findMany({
       where: {
         postId,
-        parentId: null,
       },
       orderBy: {
         createdAt: "desc",
@@ -114,8 +117,24 @@ export const GET = async (request: NextRequest) => {
       },
     });
 
+    const commentsWithoutAggregateField = comments.map((comment) => {
+      const { _count, ...commentRestFields } = comment;
+
+      return {
+        ...commentRestFields,
+        isUpvoted: _count.upvotes > 0,
+        commentReplies: comment.commentReplies.map((commentReply) => {
+          const { _count, ...commentReplyRestFields } = commentReply;
+          return {
+            ...commentReplyRestFields,
+            isUpvoted: _count.upvotes > 0,
+          };
+        }),
+      };
+    });
+
     const data = {
-      data: comments,
+      data: commentsWithoutAggregateField,
       metaData: {
         lastCursor: cursor,
         hasNextPage: nextPage.length > 0,
@@ -208,7 +227,14 @@ export const POST = async (request: NextRequest) => {
             image: true,
           },
         },
-        post: true,
+        _count: {
+          select: {
+            upvotes: {
+              where: { userId: session?.user.id },
+            },
+          },
+        },
+        post: true
       },
     });
 
@@ -253,9 +279,15 @@ export const POST = async (request: NextRequest) => {
       });
     }
 
+    const {_count, ...rest} = newComment
+    const newCommentWithoutAggregateField = {
+      ...rest,
+      isUpvoted: _count.upvotes > 0 
+    }
+
     return NextResponse.json(
       {
-        newComment,
+        newComment: newCommentWithoutAggregateField,
         success: true,
         message: "Comment created",
       },
