@@ -21,7 +21,7 @@ export default async function Feed() {
     <div className="p-6 md:p-12">
       <div className="flex items-center justify-between">
         <PageTitle>Feed</PageTitle>
-        <FilterPopover />
+        <FilterPopover type="FEED_POSTS" />
       </div>
       <HydrationBoundary state={dehydrate(queryClient)}>
         <FeedContainer />
