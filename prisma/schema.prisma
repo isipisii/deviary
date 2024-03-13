@@ -63,7 +63,8 @@ model User {
   onboarded             Boolean?  @default(false)
   social                Social?
   followedTags          String[] @default([])
-  feedFilter            Filter?
+  feedFilter            FeedFilter?
+  guildFilter           GuildFilter?
 
   accounts              Account[]
   sessions              Session[]
@@ -71,6 +72,7 @@ model User {
   bookmarks             Bookmark[]
   comments              Comment[]
   upvotes               Upvote[]
+  commentUpvotes        CommentUpvote[]
   joinRequests          JoinRequest[]
   guildsBelong          GuildMember[]
   guildShares           GuildShare[]
@@ -219,6 +221,9 @@ model Comment {
   childReplies Comment[]  @relation("ParentComment")
   notification Notification[]
 
+  upvotes      CommentUpvote[]
+  upvoteCount  Int @default(0)
+
   postId       String? @db.ObjectId
   post         Post? @relation(fields: [postId], references: [id], onDelete: Cascade)
 
@@ -226,6 +231,20 @@ model Comment {
   updatedAt    DateTime  @updatedAt @map(name: "updated_at")
 
   @@map("comments")
+}
+
+model CommentUpvote {
+  id            String @id @default(auto()) @map("_id") @db.ObjectId
+  userId        String @db.ObjectId
+  user          User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  commentId     String @db.ObjectId
+  comment       Comment @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  
+  createdAt     DateTime  @default(now()) @map(name: "created_at")
+  updatedAt     DateTime  @updatedAt @map(name: "updated_at")
+
+  @@map("comment-upvotes")
 }
 
 model Upvote {
@@ -241,6 +260,7 @@ model Upvote {
 
   @@map("upvotes")
 }
+
 
 model Notification {
   id            String @id @default(auto()) @map("_id") @db.ObjectId
@@ -310,6 +330,11 @@ enum PostType  {
   CODE_DIARY
 }
 
+enum GuildPrivacyType  {
+  PUBLIC
+  PRIVATE
+}
+
 enum GuildMemberRole {
   MEMBER
   CREATOR
@@ -321,6 +346,10 @@ type Image {
   imageUrl String
 }
 
-type Filter {
+type FeedFilter {
   postType PostType
+}
+
+type GuildFilter {
+  guildPrivacyType GuildPrivacyType
 }
