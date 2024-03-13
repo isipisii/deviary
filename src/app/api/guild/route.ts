@@ -115,7 +115,24 @@ export const GET = async (req: NextRequest) => {
       );
     }
 
+    // this is for getting the filtered guild privacy of the authenticated user
+    const user = await db.user.findUnique({
+      where: {
+        id: session.user.id
+      }
+    })
+    const guildFilterPrivacy = user?.guildFilter?.guildPrivacyType 
+
     const guilds = await db.guild.findMany({
+      ...(
+        guildFilterPrivacy  && (
+          {
+            where: {
+              isPrivate: guildFilterPrivacy === "PRIVATE" ? true : false
+            }
+          }
+        )
+      ),
       take: take ? Number(take) : 10,
       ...(lastCursor && {
         skip: 1,
@@ -167,6 +184,15 @@ export const GET = async (req: NextRequest) => {
     const cursor = lastGuildInResults?.id;
 
     const nextPage = await db.guild.findMany({
+      ...(
+        guildFilterPrivacy && (
+          {
+            where: {
+              isPrivate: guildFilterPrivacy === "PRIVATE" ? true : false
+            }
+          }
+        )
+      ),
       take: take ? Number(take) : 10,
       skip: 1,
       orderBy: {
@@ -200,7 +226,7 @@ export const GET = async (req: NextRequest) => {
 
         return {
           ...restFields,
-          membersCount: guild._count.members,
+          membersCount: _count.members,
           isBelong: isUserAGuildMember,
           hasAnExistingJoinRequest,
         };
