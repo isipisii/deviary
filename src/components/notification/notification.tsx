@@ -33,8 +33,7 @@ export default function Notification() {
         "new-notification",
         async (data: { notification: TNotification }) => {
           const newNotification = data.notification;
-
-          //append the upcoming notification to the cached notifications
+          //updates the ui if theres a new notification
           await newNotificationOptimisticUpdate(queryClient, newNotification);
         },
       );
