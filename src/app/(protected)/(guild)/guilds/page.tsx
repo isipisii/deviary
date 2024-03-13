@@ -7,6 +7,7 @@ import {
 } from "@tanstack/react-query";
 import { getGuilds } from "@/lib/services/guild.api";
 import { QueryKeys } from "@/lib/constants";
+import FilterPopover from "@/components/ui/filter-popover";
 
 export default async function GuildsPage() {
   const queryClient = new QueryClient();
@@ -22,7 +23,10 @@ export default async function GuildsPage() {
 
   return (
     <div className="p-6 md:p-12">
-      <PageTitle>Guilds</PageTitle>
+       <div className="flex items-center justify-between">
+        <PageTitle>Guilds</PageTitle>
+        <FilterPopover type="GUILDS" />
+      </div>
       <HydrationBoundary state={dehydrate(queryClient)}>
         <GuildsContainer />
       </HydrationBoundary>
