@@ -108,15 +108,14 @@ export const GET = async (request: NextRequest) => {
       },
     });
 
-    posts.forEach((post) => {
-      (post as any).isUpvoted = post._count.upvotes > 0;
-      (post as any).isBookmarked = post._count.bookmarks > 0;
-    });
-
     const postsWithoutAggregateField = posts.map((post) => {
       const { _count, ...restFields } = post;
 
-      return restFields;
+      return {
+        ...restFields,
+        isUpvoted: _count.upvotes > 0,
+        isBookmarked: _count.bookmarks > 0
+      }
     });
 
     const data = {
