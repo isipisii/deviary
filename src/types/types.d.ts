@@ -60,12 +60,17 @@ type TComment = {
   content: string;
   userId: string;
   user: TUser;
-  post: TPost;
   rootCommentId: readonly string
   commentReplies: TComment[]
   postId: string;
+  post: TPost
+  isUpvoted: boolean
+  upvoteCount: number
+
+  // the parent are used from what comment/reply the user replied to
   parentId: readonly string
   parent: TComment
+
   createdAt: Date;
   updatedAt: Date;
 };
@@ -80,7 +85,7 @@ type TNotification = {
   comment?: Partial<TComment>
   joinRequest: TJoinRequest
   post?: TPost;
-  type: "UPVOTE" | "JOIN_REQUEST" | "COMMENT" | "JOIN_REQUEST_ACCEPTED" | "ASSIGN_MOD";
+  type: TNotificationType
   viewed: boolean;
   postId: string;
   createdAt: Date;
@@ -141,3 +146,5 @@ type TGuildSharedPost = {
 }
 
 type TFeedFilter = "all" | "blog_post" | "code_diary"
+type TGuildsFilter = "ALL" | "PUBLIC" | "PRIVATE"
+type TNotificationType = "UPVOTE" | "JOIN_REQUEST" | "COMMENT" | "JOIN_REQUEST_ACCEPTED" | "ASSIGN_MOD";
