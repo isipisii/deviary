@@ -9,10 +9,15 @@ import {
   Radio,
 } from "@nextui-org/react";
 import { FiFilter } from "react-icons/fi";
-import { useGetCurrentFeedFilter, useApplyFeedFilter } from "@/lib/services/user.api";
+import {
+  useGetCurrentFeedFilter,
+  useApplyFeedFilter,
+  useGetCurrentGuildsFilter,
+  useApplyGuildsFilter,
+} from "@/lib/services/user.api";
 import { useEffect, useState } from "react";
 
-const radioItems = [
+const feedRadioItems = [
   {
     value: "all",
     description: "All posts that has been posted",
@@ -30,21 +35,71 @@ const radioItems = [
   },
 ] as const;
 
+const guildsRadioItems = [
+  {
+    value: "ALL",
+    description: "All private and public guilds",
+    label: "All",
+  },
+  {
+    value: "PUBLIC",
+    description: "Public guilds",
+    label: "Public",
+  },
+  {
+    value: "PRIVATE",
+    description: "Private guilds",
+    label: "Private",
+  },
+] as const;
 
-export default function FilterPopover() {
-  const { data: currentFeedFilter, isLoading } = useGetCurrentFeedFilter()
-  const { mutate: applyFeedFilterMutation, isPending } = useApplyFeedFilter()
-  const [selected, setSelected] = useState<TFeedFilter>(currentFeedFilter ?? "all")
+export default function FilterPopover({
+  type,
+}: {
+  type: "GUILDS" | "FEED_POSTS";
+}) {
+  // for feed posts
+  const { data: currentFeedFilter, isLoading: isFeedFilterLoading } =
+    useGetCurrentFeedFilter();
+  const { mutate: applyFeedFilterMutation, isPending: isApplyingFeedFilter } =
+    useApplyFeedFilter();
+  const [selectedFeedFilter, setSelectedFeedFilter] = useState<TFeedFilter>(
+    currentFeedFilter ?? "all",
+  );
 
+  // for guilds
+  const { data: currentGuildsFilter, isLoading: isGuildsFilterLoading } =
+    useGetCurrentGuildsFilter();
+  const {
+    mutate: applyGuildsFilterMutation,
+    isPending: isApplyingGuildFilter,
+  } = useApplyGuildsFilter();
+  const [selectedGuildsFilter, setSelectedGuildsFilter] =
+    useState<TGuildsFilter>(currentGuildsFilter ?? "ALL");
+
+  const isPending = isApplyingFeedFilter || isApplyingGuildFilter;
+  const radioItems = type === "FEED_POSTS" ? feedRadioItems : guildsRadioItems;
+
+  //for setting the saved value after fetching the filter data 
   useEffect(() => {
-    if(!isLoading && currentFeedFilter) setSelected(currentFeedFilter)
-  },[isLoading, currentFeedFilter])
+    if (!isFeedFilterLoading && currentFeedFilter)
+      setSelectedFeedFilter(currentFeedFilter);
+
+    if (!isGuildsFilterLoading && currentGuildsFilter)
+      setSelectedGuildsFilter(currentGuildsFilter);
+  }, [
+    isFeedFilterLoading,
+    currentGuildsFilter,
+    currentFeedFilter,
+    isGuildsFilterLoading,
+  ]);
 
   function handleApplyChanges() {
-    applyFeedFilterMutation(selected)
+    if (type === "GUILDS") applyGuildsFilterMutation(selectedGuildsFilter);
+    if (type === "FEED_POSTS") applyFeedFilterMutation(selectedFeedFilter);
   }
 
-  return ( 
+  return (
     <Popover
       placement="bottom-end"
       classNames={{
@@ -66,8 +121,14 @@ export default function FilterPopover() {
           <div className="text-base font-semibold">Filter</div>
           <RadioGroup
             color="secondary"
-            value={selected}
-            onValueChange={(value ) => setSelected(value as TFeedFilter)}
+            value={
+              type === "FEED_POSTS" ? selectedFeedFilter : selectedGuildsFilter
+            }
+            onValueChange={(value) =>
+              type === "FEED_POSTS"
+                ? setSelectedFeedFilter(value as TFeedFilter)
+                : setSelectedGuildsFilter(value as TGuildsFilter)
+            }
             className="flex flex-col gap-3"
           >
             {radioItems.map((radioItem, index) => (
