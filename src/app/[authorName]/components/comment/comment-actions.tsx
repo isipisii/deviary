@@ -5,9 +5,16 @@ import { cn } from "@/utils/cn";
 import { Button } from "@nextui-org/react";
 import { FaRegComments } from "react-icons/fa6";
 import { TbArrowBigUp, TbArrowBigUpFilled, TbShare3 } from "react-icons/tb";
+import { useUpvoteComment, useRemoveUpvoteComment } from "@/lib/services/upvote-comment.api";
 
-// TODO: CREATE A UPVOTE FNTY FOR COMMENTS
-export default function CommentActions({ toggleReplyForm }: { toggleReplyForm: () => void }) {
+export default function CommentActions({ toggleReplyForm, comment }: { toggleReplyForm: () => void, comment: TComment }) {
+  const { mutate: upvoteCommentMutation } = useUpvoteComment()
+  const { mutate: removeCommentUpvoteMutation } = useRemoveUpvoteComment()
+
+  function handleUpvote() {
+    comment.isUpvoted ? removeCommentUpvoteMutation(comment) : upvoteCommentMutation(comment) 
+  }
+
   return (
     <div className="flex gap-9 items-center">
       <div className="flex items-center gap-1">
@@ -18,19 +25,16 @@ export default function CommentActions({ toggleReplyForm }: { toggleReplyForm: (
               `rounded-xl bg-[#fff0] text-xl text-[#A1A1AA]
            hover:bg-[#34b6003b] hover:text-[#34FF00]`,
               {
-                "text-[#34FF00]": true,
-                "text-[#A1A1AA]": false,
+                "text-[#34FF00]": comment.isUpvoted,
+                "text-[#A1A1AA]": !comment.isUpvoted,
               },
             )}
-            onClick={(e) => {
-              e.preventDefault();
-              e.nativeEvent.stopImmediatePropagation();
-            }}
+            onClick={handleUpvote}
           >
-            {true ? <TbArrowBigUpFilled /> : <TbArrowBigUp />}
+            {comment.isUpvoted ? <TbArrowBigUpFilled /> : <TbArrowBigUp />}
           </Button>
         </CustomTooltip>
-        <p className="font-bold text-[#A1A1AA]">0</p>
+        <p className="font-bold text-[#A1A1AA]">{comment.upvoteCount}</p>
       </div>
 
       <CustomTooltip placement="bottom" content={"Reply"}>
