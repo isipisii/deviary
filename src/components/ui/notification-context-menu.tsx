@@ -49,6 +49,7 @@ export default function NotificationContextMenu({
       <DropdownMenu
         aria-label="Dynamic Actions"
         variant="flat"
+        closeOnSelect={false}
         disabledKeys={
           isPending ? ["delete"] : notification.viewed ? ["view"] : undefined
         }

@@ -65,6 +65,7 @@ export const config = {
     "/edit-guild/:path*",
     "/search",
     "/bookmarks",
-    "/tags/:path*"
+    "/tags/:path*",
+    "/history"
   ],
 };

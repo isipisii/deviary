@@ -8,7 +8,7 @@ type TUser = {
   email: string;
   onboarded?: boolean;
   name: string;
-  bio?: string
+  bio?: string;
   image: string;
 };
 
@@ -36,7 +36,7 @@ type TPost = {
 
 type TBlog = {
   content: string;
-  thumbnail?: TImage
+  thumbnail?: TImage;
   title: string;
 };
 
@@ -46,6 +46,15 @@ type TBookmark = {
   post: TPost;
   userId: string;
   user: TUser;
+};
+
+type TReadingHistory = {
+  id: readonly string;
+  postId: string;
+  post: TPost;
+  userId: string;
+  user: TUser;
+  createdAt: Date;
 };
 
 type TDiary = {
@@ -60,12 +69,17 @@ type TComment = {
   content: string;
   userId: string;
   user: TUser;
-  post: TPost;
-  rootCommentId: readonly string
-  commentReplies: TComment[]
+  rootCommentId: readonly string;
+  commentReplies: TComment[];
   postId: string;
-  parentId: readonly string
-  parent: TComment
+  post: TPost;
+  isUpvoted: boolean;
+  upvoteCount: number;
+
+  // the parent are used from what comment/reply the user replied to
+  parentId: readonly string;
+  parent: TComment;
+
   createdAt: Date;
   updatedAt: Date;
 };
@@ -75,10 +89,12 @@ type TNotification = {
   sender: TUser;
   senderId: readonly string;
   recipientId: readonly string;
-  comment?: Partial<TComment>
-  joinRequest: TJoinRequest
+  guild: TGuild;
+  guildId: readonly string;
+  comment?: Partial<TComment>;
+  joinRequest: TJoinRequest;
   post?: TPost;
-  type: "UPVOTE" | "JOIN_REQUEST" | "COMMENT";
+  type: TNotificationType;
   viewed: boolean;
   postId: string;
   createdAt: Date;
@@ -87,52 +103,62 @@ type TNotification = {
 type TImage = {
   imageKey?: string;
   imageUrl?: string;
-}
+};
 
 type TGuild = {
   id: readonly string;
-  image: TImage
-  name: string
-  isPrivate: boolean
-  creator: TUser
-  members: TGuildMember[]
-  isBelong?: boolean,
-  membersCount: number,
-  hasAnExistingJoinRequest: boolean
-  description?: string
-  creatorId: readonly string
+  image: TImage;
+  name: string;
+  isPrivate: boolean;
+  creator: TUser;
+  members: TGuildMember[];
+  isBelong?: boolean;
+  membersCount: number;
+  hasAnExistingJoinRequest: boolean;
+  description?: string;
+  creatorId: readonly string;
+  isModerator: boolean;
+  isGuildCreator: boolean;
   createdAt: Date;
   updatedAt: Date;
-}
+};
 
 type TGuildMember = {
   id: readonly string;
-  userId: readonly string,
-  guildId: readonly string,
-  user: TUser,
-  role: "MEMBER" | "CREATOR" | "MODERATOR"
+  userId: readonly string;
+  guildId: readonly string;
+  user: TUser;
+  role: "MEMBER" | "CREATOR" | "MODERATOR";
   createdAt: Date;
   updatedAt: Date;
-}
+};
 
 type TJoinRequest = {
   id: readonly string;
   senderId: readonly string;
-  sender: TUser,
-  guild: TGuild
+  sender: TUser;
+  guild: TGuild;
   guildId: readonly string;
-}
+  createdAt: Date;
+};
 
 type TGuildSharedPost = {
   id: readonly string;
   userId: readonly string;
-  user: TUser,
-  guild: TGuild
+  user: TUser;
+  guild: TGuild;
   guildId: readonly string;
-  post: TPost
-  content?: string
+  post: TPost;
+  content?: string;
   createdAt: Date;
   updatedAt: Date;
-}
+};
 
-type TFeedFilter = "all" | "blog_post" | "code_diary"
+type TFeedFilter = "all" | "blog_post" | "code_diary";
+type TGuildsFilter = "ALL" | "PUBLIC" | "PRIVATE";
+type TNotificationType =
+  | "UPVOTE"
+  | "JOIN_REQUEST"
+  | "COMMENT"
+  | "JOIN_REQUEST_ACCEPTED"
+  | "ASSIGN_MOD";

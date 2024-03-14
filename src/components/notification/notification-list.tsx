@@ -1,22 +1,14 @@
-"use client";
-
-import { useEffect } from "react";
 import { ScrollShadow } from "@nextui-org/react";
 import UpvoteNotificationCard from "./upvote-notification-card";
 import CommentNotificationCard from "./comment-notification-card";
 import JoinRequesNotificationCard from "./join-request-notification-card";
+import NotificationCard from "./notification-card";
 
 export default function NotificationList({
   notifications,
-  setAsViewed,
 }: {
   notifications: TNotification[];
-  setAsViewed: () => void;
 }) {
-  useEffect(() => {
-    setAsViewed();
-  }, [setAsViewed]);
-
   return (
     <ScrollShadow size={80} className="h-[500px] w-full">
       <div className="flex w-full flex-col gap-4">
@@ -46,6 +38,26 @@ export default function NotificationList({
                   <JoinRequesNotificationCard
                     notification={notification}
                     key={notification.id}
+                  />
+                );
+              }
+
+              if (notification.type === "ASSIGN_MOD") {
+                return (
+                  <NotificationCard
+                    notification={notification}
+                    key={notification.id}
+                    message="assigned you as mod in"
+                  />
+                );
+              }
+
+              if (notification.type === "JOIN_REQUEST_ACCEPTED") {
+                return (
+                  <NotificationCard
+                    notification={notification}
+                    key={notification.id}
+                    message="accepted your join request in"
                   />
                 );
               }

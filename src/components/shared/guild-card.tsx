@@ -84,7 +84,7 @@ export default function GuildCard({ guild }: { guild: TGuild }) {
               variant="ghost"
               onClick={(e) => {
                 e.preventDefault()
-                e.nativeEvent.stopImmediatePropagation();
+                // e.nativeEvent.stopImmediatePropagation();
                 router.push(`/guilds/${guild.id}`)
               }}
             >

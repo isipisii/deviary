@@ -104,16 +104,17 @@ export async function newNotificationOptimisticUpdate(
   queryClient: QueryClient,
   newNotification: TNotification,
 ) {
-  queryClient.setQueryData<TNotification[]>(
-    [QueryKeys.Notifications],
-    (oldData) => {
-      const newData = oldData ? [newNotification, ...oldData] : oldData;
-      return newData;
-    },
-  );
   await queryClient.invalidateQueries({
     queryKey: [QueryKeys.Notifications],
   });
+  
+  if(newNotification.type === "JOIN_REQUEST") {
+    await queryClient.invalidateQueries({queryKey: [QueryKeys.GuildJoinRequests, newNotification.joinRequest.guildId]})
+  }
+
+  if(newNotification.type === "ASSIGN_MOD") {
+    await queryClient.invalidateQueries({queryKey: [QueryKeys.GuildMembers, newNotification.guildId]})
+  }
 }
 
 function viewNotificationOptimisticUpdate(

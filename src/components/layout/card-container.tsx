@@ -6,7 +6,6 @@ import { useSideBarNavStore } from "@/lib/store/useSideBarNavStore";
 export default function CardContainer({ children }: { children: ReactNode }) {
   const { isSideBarMinimized } = useSideBarNavStore((state) => state);
   return (
-    // <div className="flex-start mt-8 flex flex-wrap items-center justify-center gap-6">
     <div
       className={`mt-8 mb-[5rem] md:mb-0 grid w-full grid-cols-1 place-items-center gap-8 ${
         isSideBarMinimized

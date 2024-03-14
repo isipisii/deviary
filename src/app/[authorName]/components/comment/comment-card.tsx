@@ -101,7 +101,7 @@ export default function CommentCard({
             {comment.content}
           </p>
         )}
-        <CommentActions toggleReplyForm={toggleReplyForm} />
+        <CommentActions toggleReplyForm={toggleReplyForm} comment={comment} />
       </div>
       {isReplying && (
         <CommentForm

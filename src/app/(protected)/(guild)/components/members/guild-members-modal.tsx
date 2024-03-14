@@ -7,9 +7,11 @@ import { useEffect } from "react";
 import { Modal, ModalBody, ModalContent, ModalHeader } from "@nextui-org/react";
 import MemberCard from "./member-card";
 import { useModalStore } from "@/lib/store/useModalStore";
+import { CircularProgress } from "@nextui-org/react";
 
 export default function GuildMembersModal() {
-  const { isGuildMembersModalOpen, onOpenChangeGuildMembersModal } = useModalStore((state) => state);
+  const { isGuildMembersModalOpen, onOpenChangeGuildMembersModal } =
+    useModalStore((state) => state);
   const { ref, inView } = useInView();
   const params = useParams<{ guildId: string }>();
   const { data, isFetchingNextPage, isLoading, fetchNextPage, hasNextPage } =
@@ -43,21 +45,35 @@ export default function GuildMembersModal() {
               </div>
             </ModalHeader>
             <ModalBody className="pb-6">
-              {data?.pages.map(
-                (page) =>
-                  page?.data?.map((guildMember, index) => {
-                    if (index + 1 === page.data.length) {
-                      return (
-                        <div key={guildMember.id}>
-                          <MemberCard guildMember={guildMember} />
-                        </div>
-                      );
-                    }
-                    return (
-                      <MemberCard guildMember={guildMember} key={guildMember.id} />
-                    );
-                  }),
-              )}
+              <div className="h-auto max-h-[70vh] w-full overflow-auto px-1">
+                <div className="flex w-full flex-col gap-3">
+                  {data?.pages.map(
+                    (page) =>
+                      page?.data?.map((guildMember, index) => {
+                        if (index + 1 === page.data.length) {
+                          return (
+                            <div key={guildMember.id}>
+                              <MemberCard guildMember={guildMember} />
+                            </div>
+                          );
+                        }
+                        return (
+                          <MemberCard
+                            guildMember={guildMember}
+                            key={guildMember.id}
+                          />
+                        );
+                      }),
+                  )}
+                  {(isLoading || isFetchingNextPage) && (
+                    <CircularProgress
+                      color="secondary"
+                      size="sm"
+                      className="self-center"
+                    />
+                  )}
+                </div>
+              </div>
             </ModalBody>
           </>
         )}

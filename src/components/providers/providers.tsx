@@ -9,7 +9,7 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import ShareModal from "../ui/share-modal";
 import EditSharedPostModal from "@/app/(protected)/(guild)/components/edit-shared-post-modal";
 import GuildMembersModal from "@/app/(protected)/(guild)/components/members/guild-members-modal";
-
+import GuildJoinRequestsModal from "@/app/(protected)/(guild)/components/join-requests/guild-join-requests-modal";
 
 export default function Providers({ children }: { children: ReactNode }) {
   const [queryClient] = useState(
@@ -31,6 +31,7 @@ export default function Providers({ children }: { children: ReactNode }) {
         <ShareModal />
         <EditSharedPostModal />
         <GuildMembersModal />
+        <GuildJoinRequestsModal />
         <NextUIProvider>
           <ThemeProvider
             attribute="class"

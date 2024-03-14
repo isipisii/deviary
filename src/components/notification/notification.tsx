@@ -22,7 +22,6 @@ export default function Notification() {
   const { data: sessionData } = useSession();
   const [isOpen, setIsOpen] = useState(false);
   const { mutate: viewAllNotificationsMutation } = useViewAllNotifications();
-  const [hasNewNotification, setHasNewNotification] = useState(false);
   const { data: notifications, isLoading } = useGetNotifications();
   const queryClient = useQueryClient();
 
@@ -34,10 +33,8 @@ export default function Notification() {
         "new-notification",
         async (data: { notification: TNotification }) => {
           const newNotification = data.notification;
-
-          //append the upcoming notification to the cached notifications
+          //updates the ui if theres a new notification
           await newNotificationOptimisticUpdate(queryClient, newNotification);
-          setHasNewNotification(true);
         },
       );
 
@@ -45,10 +42,6 @@ export default function Notification() {
       channel.unbind();
     };
   }, [sessionData?.user.id, queryClient]);
-
-  function setAsViewed() {
-    setHasNewNotification(false);
-  }
 
   function hasUnviewedNotification(notifications: TNotification[]) {
     return notifications?.some((notification) => !notification.viewed);
@@ -91,7 +84,6 @@ export default function Notification() {
           {notifications && notifications?.length > 0 && (
             <NotificationList
               notifications={notifications}
-              setAsViewed={setAsViewed}
             />
           )}
 
