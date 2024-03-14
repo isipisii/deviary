@@ -7,9 +7,9 @@ import { useInView } from "react-intersection-observer";
 import BlogPostCard from "@/components/shared/blog-post-card";
 import DiaryCard from "@/components/shared/diary-card";
 import PostsSkeletonLoader from "@/components/skeleton-loaders/posts-skeleton-loader";
-import { LuBookmark } from "react-icons/lu";
-import { Button } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
+import EmptyState from "@/components/shared/empty-state";
+import { LuBookmark } from "react-icons/lu";
 
 export default function BookmarksContainer() {
   const router = useRouter();
@@ -31,31 +31,12 @@ export default function BookmarksContainer() {
   since it should be an empty page object*/}
   if (Array.isArray(data?.pages[0])) {
     return (
-      <div className="grid h-[70vh] place-items-center">
-        <div className="flex flex-col items-center gap-4">
-          <p className="text-[5rem] text-navTextColor">
-            <LuBookmark />
-          </p>
-          <div className="space-y-2">
-            <h3 className="text-center text-2xl font-semibold text-navTextColor md:text-3xl">
-              No bookmarks.
-            </h3>
-            <p className="text-center text-sm font-medium text-navTextColor md:text-base">
-              It seems like you haven&apos;t bookmarked any posts yet.
-            </p>
-          </div>
-
-          <Button
-            color="secondary"
-            variant="light"
-            className="font-semibold"
-            size="md"
-            onClick={() => router.push("/feed")}
-          >
-            Explore?
-          </Button>
-        </div>
-      </div>
+      <EmptyState
+        header="No bookmarks."
+        description="It seems like you haven't bookmarked any posts yet."
+        buttonText="Explore?"
+        Icon={LuBookmark}
+      />
     );
   }
 
