@@ -76,6 +76,7 @@ model User {
   joinRequests          JoinRequest[]
   guildsBelong          GuildMember[]
   guildShares           GuildShare[]
+  readingHistories      ReadingHistory[]
 
   sentNotifications     Notification[] @relation("SentNotifications")
   receivedNotifications Notification[] @relation("ReceivedNotifications")
@@ -99,10 +100,6 @@ model Guild {
 
   creatorId       String @db.ObjectId
   creator         User  @relation("GuildCreator", fields: [creatorId], references: [id], onDelete: Cascade)
-
-  // try
-  // moderatorsId    String[] @db.ObjectId
-  // moderator       User[]  @relation("GuildModerators", fields: [moderatorsId], references: [id])
   members         GuildMember[]
   joinRequests    JoinRequest[]
   guildShares     GuildShare[]
@@ -169,6 +166,7 @@ model Post {
   blog          Blog?
   notifications Notification[]
   guildShares   GuildShare[]
+  readingHistories      ReadingHistory[]
        
   createdAt     DateTime  @default(now()) @map(name: "created_at")
   updatedAt     DateTime  @updatedAt @map(name: "updated_at")
@@ -261,7 +259,6 @@ model Upvote {
   @@map("upvotes")
 }
 
-
 model Notification {
   id            String @id @default(auto()) @map("_id") @db.ObjectId
   viewed        Boolean @default(false)
@@ -289,6 +286,7 @@ model Notification {
   updatedAt     DateTime  @updatedAt @map(name: "updated_at")
 
   @@map("notifications")
+  @@index([postId])
 }
 
 model Tag {
@@ -315,6 +313,20 @@ model GuildShare {
   createdAt     DateTime  @default(now()) @map(name: "created_at")
   updatedAt     DateTime  @updatedAt @map(name: "updated_at")
   @@map("guild-shares")
+}
+
+model ReadingHistory {
+  id          String @id @default(auto()) @map("_id") @db.ObjectId
+
+  postId      String @db.ObjectId
+  post        Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  userId      String @db.ObjectId
+  user        User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt     DateTime  @default(now()) @map(name: "created_at")
+  updatedAt     DateTime  @updatedAt @map(name: "updated_at")
+  @@map("reading-histories")
 }
 
 enum NotificationType  {
