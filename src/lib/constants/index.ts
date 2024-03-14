@@ -38,7 +38,8 @@ export const QueryKeys = {
   GuildSharedPosts: "guildSharedPosts",
   GuildMembers: "guildMembers",
   GuildJoinRequests: "guildJoinRequests",
-  CurrentGuildsFilter: "currentGuildsFilter"
+  CurrentGuildsFilter: "currentGuildsFilter",
+  ReadingHistories: "readingHistories"
 } as const;
 
 export const sideBarNavs: ISideBarNav[] = [
