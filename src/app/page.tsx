@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { Button } from "@nextui-org/react";
-import Link from "next/link";
 import { LuUsers2 } from "react-icons/lu";
+import Link from "next/link";
 
 export default function Home() {
   return (
@@ -23,26 +23,26 @@ export default function Home() {
             />
 
             <div className="flex gap-4">
-              <Link href="/sign-in">
-                <Button
-                  color="secondary"
-                  className="font-medium"
-                  variant="light"
-                  radius="lg"
-                >
-                  Sign in
-                </Button>
-              </Link>
+              <Button
+                as={Link}
+                href="/sign-in"
+                color="secondary"
+                className="font-medium"
+                variant="light"
+                radius="lg"
+              >
+                Sign in
+              </Button>
 
-              <Link href="/sign-up">
-                <Button
-                  color="secondary"
-                  className="font-medium text-white"
-                  radius="lg"
-                >
-                  Create an account
-                </Button>
-              </Link>
+              <Button
+                as={Link}
+                href="/sign-up" 
+                color="secondary"
+                className="font-medium text-white"
+                radius="lg"
+              >
+                Create an account
+              </Button>
             </div>
           </header>
         </nav>
