@@ -41,43 +41,45 @@ export function useUpvoteComment() {
                   if (page) {
                     return {
                       ...page,
-                      data: page.data.map((comment) => {
-                        let updatedComment;
+                      data: page.data
+                        ? page.data.map((comment) => {
+                            let updatedComment;
 
-                        //if the user upvoted a reply
-                        if (rootCommentId) {
-                          updatedComment =
-                            rootCommentId === comment.id
-                              ? {
-                                  ...comment,
-                                  commentReplies: comment.commentReplies.map(
-                                    (reply) =>
-                                      reply.id === commentId
-                                        ? {
-                                            ...reply,
-                                            upvoteCount:
-                                              comment.upvoteCount + 1,
-                                            isUpvoted: true,
-                                          }
-                                        : reply,
-                                  ),
-                                }
-                              : comment;
-                          return updatedComment;
-                        }
+                            //if the user upvoted a reply
+                            if (rootCommentId) {
+                              updatedComment =
+                                rootCommentId === comment.id
+                                  ? {
+                                      ...comment,
+                                      commentReplies:
+                                        comment.commentReplies.map((reply) =>
+                                          reply.id === commentId
+                                            ? {
+                                                ...reply,
+                                                upvoteCount:
+                                                  comment.upvoteCount + 1,
+                                                isUpvoted: true,
+                                              }
+                                            : reply,
+                                        ),
+                                    }
+                                  : comment;
+                              return updatedComment;
+                            } else {
+                              //if the user upvoted a comment
+                              updatedComment =
+                                commentId === comment.id
+                                  ? {
+                                      ...comment,
+                                      upvoteCount: comment.upvoteCount + 1,
+                                      isUpvoted: true,
+                                    }
+                                  : comment;
 
-                        //if the user upvoted a comment
-                        updatedComment =
-                          commentId === comment.id
-                            ? {
-                                ...comment,
-                                upvoteCount: comment.upvoteCount + 1,
-                                isUpvoted: true,
-                              }
-                            : comment;
-
-                        return updatedComment;
-                      }),
+                              return updatedComment;
+                            }
+                          })
+                        : [],
                     };
                   }
 
@@ -93,6 +95,7 @@ export function useUpvoteComment() {
       return { previousComments };
     },
     onError: (error, variables, context) => {
+      console.log(error);
       queryClient.setQueryData(
         [QueryKeys.Comments, postId],
         context?.previousComments,
@@ -139,43 +142,45 @@ export function useRemoveUpvoteComment() {
                   if (page) {
                     return {
                       ...page,
-                      data: page.data.map((comment) => {
-                        let updatedComment;
+                      data: page.data
+                        ? page.data.map((comment) => {
+                            let updatedComment;
 
-                        //if the user upvoted a reply
-                        if (rootCommentId) {
-                          updatedComment =
-                            rootCommentId === comment.id
-                              ? {
-                                  ...comment,
-                                  commentReplies: comment.commentReplies.map(
-                                    (reply) =>
-                                      reply.id === commentId
-                                        ? {
-                                            ...reply,
-                                            upvoteCount:
-                                              comment.upvoteCount - 1,
-                                            isUpvoted: false,
-                                          }
-                                        : reply,
-                                  ),
-                                }
-                              : comment;
-                          return updatedComment;
-                        }
+                            //if the user upvoted a reply
+                            if (rootCommentId) {
+                              updatedComment =
+                                rootCommentId === comment.id
+                                  ? {
+                                      ...comment,
+                                      commentReplies:
+                                        comment.commentReplies.map((reply) =>
+                                          reply.id === commentId
+                                            ? {
+                                                ...reply,
+                                                upvoteCount:
+                                                  comment.upvoteCount - 1,
+                                                isUpvoted: false,
+                                              }
+                                            : reply,
+                                        ),
+                                    }
+                                  : comment;
+                              return updatedComment;
+                            } else {
+                              //if the user upvoted a comment
+                              updatedComment =
+                                commentId === comment.id
+                                  ? {
+                                      ...comment,
+                                      upvoteCount: comment.upvoteCount - 1,
+                                      isUpvoted: false,
+                                    }
+                                  : comment;
 
-                        //if the user upvoted a comment
-                        updatedComment =
-                          commentId === comment.id
-                            ? {
-                                ...comment,
-                                upvoteCount: comment.upvoteCount - 1,
-                                isUpvoted: false,
-                              }
-                            : comment;
-
-                        return updatedComment;
-                      }),
+                              return updatedComment;
+                            }
+                          })
+                        : [],
                     };
                   }
 
@@ -191,6 +196,7 @@ export function useRemoveUpvoteComment() {
       return { previousComments };
     },
     onError: (error, postId, context) => {
+      console.log(error);
       queryClient.setQueryData(
         [QueryKeys.Comments, postId],
         context?.previousComments,
