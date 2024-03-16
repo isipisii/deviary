@@ -2,6 +2,7 @@ import PostAside from "./post-aside";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { dracula } from "react-syntax-highlighter/dist/esm/styles/prism";
 import PostTags from "./post-tags";
+import InViewProvider from "./in-view-provider";
 
 export default function DiaryPost({ post }: { post: TPost }) {
   return (
@@ -21,7 +22,7 @@ export default function DiaryPost({ post }: { post: TPost }) {
             </p>
           </div>
           <PostTags tags={post.tags} />
-          <div>
+          <InViewProvider>
             <SyntaxHighlighter
               language="jsx"
               style={dracula}
@@ -35,7 +36,7 @@ export default function DiaryPost({ post }: { post: TPost }) {
             >
               {post.diary?.codeSnippet as string}
             </SyntaxHighlighter>
-          </div>
+          </InViewProvider>
         </div>
 
         {/* RIGHT */}
