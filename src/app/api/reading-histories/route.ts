@@ -3,10 +3,10 @@ import { db } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 
 export const POST = async (req: NextRequest) => {
-  const session = await getServerSideSession();
+  const session = await getServerSideSession(); 
   const url = new URL(req.nextUrl);
   const postId = url.searchParams.get("postId");
-
+  
   try {
     if (!postId) {
       return NextResponse.json(
