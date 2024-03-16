@@ -5,6 +5,7 @@ import formatDate from "@/utils/formatDate";
 import readingTime from "reading-time";
 import PostAside from "./post-aside";
 import PostTags from "./post-tags";
+import InViewProvider from "./in-view-provider";
 
 export default function BlogPost({ post }: { post: TPost }) {
   const { text: estimatedReadingTime } = readingTime(
@@ -27,20 +28,22 @@ export default function BlogPost({ post }: { post: TPost }) {
             />
           </div>
 
-          <div className="w-full">
-            <div className="flex flex-col gap-4 px-[20px]">
-              <div className="space-y-3">
-                <h1 className="text-[2rem] font-bold md:text-[2.5rem]">
-                  {post.blog?.title}
-                </h1>
-                <p className="text-sm text-navTextColor">
-                  {formatDate(post.createdAt)} • {estimatedReadingTime}
-                </p>
+          <InViewProvider>
+            <div className="w-full">
+              <div className="flex flex-col gap-4 px-[20px]">
+                <div className="space-y-3">
+                  <h1 className="text-[2rem] font-bold md:text-[2.5rem]">
+                    {post.blog?.title}
+                  </h1>
+                  <p className="text-sm text-navTextColor">
+                    {formatDate(post.createdAt)} • {estimatedReadingTime}
+                  </p>
+                </div>
+                <PostTags tags={post.tags} />
               </div>
-              <PostTags tags={post.tags} />
+              <MarkdownPreview modelValue={post.blog?.content as string} />
             </div>
-            <MarkdownPreview modelValue={post.blog?.content as string} />
-          </div>
+          </InViewProvider>
         </div>
 
         {/* RIGHT */}
