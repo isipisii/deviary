@@ -10,7 +10,6 @@ import { toast } from "sonner";
 import { QueryKeys } from "../constants";
 import { usePathname } from "next/navigation";
 
-// TODO: FINISH THE CREATION OF READING HISTORY
 export async function getReadingHistories(take: number, lastCursor: string) {
   const response = await axios.get("/api/reading-histories", {
     params: { take, lastCursor },
@@ -28,12 +27,12 @@ export function useGetReadingHistories() {
   });
 }
 
-export function useCreateReadHistory() {
+export function useCreateReadingHistory() {
   const queryClient = useQueryClient();
   const path = usePathname();
 
   return useMutation({
-    mutationKey: ["createReadHistory"],
+    mutationKey: ["createReadingHistory"],
     mutationFn: async (postId: string) => {
       return await axios.post(
         "/api/reading-histories",
@@ -45,16 +44,16 @@ export function useCreateReadHistory() {
       await queryClient.invalidateQueries({
         queryKey: [QueryKeys.ReadingHistories],
       });
+      console.log("created")
     },
-      onError: (error, postId, context) => {
-        console.log(error)
-      },
+    onError: (error, postId, context) => {
+      console.log(error)
+    },
   });
 }
 
 export function useRemoveReadingHistory() {
   const queryClient = useQueryClient();
-  const path = usePathname();
 
   return useMutation({
     mutationKey: ["removeReadingHistory"],
