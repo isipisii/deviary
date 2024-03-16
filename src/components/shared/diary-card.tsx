@@ -5,12 +5,14 @@ import formatDate from "@/utils/formatDate";
 import formatPostHref from "@/utils/formatPostHref";
 import Link from "next/link";
 import SyntaxHighlighter from "./syntax-highlighter";
+import PostReadingHistoryContextMenu from "../ui/post-reading-history-context-menu";
 
 interface IDiaryCard {
   post: TPost;
+  readingHistoryId?: string;
 }
 
-export default function DiaryCard({ post }: IDiaryCard) {
+export default function DiaryCard({ post, readingHistoryId }: IDiaryCard) {
   return (
     <Link href={formatPostHref(post)} className=" w-full max-w-[350px]">
       <div
@@ -33,7 +35,13 @@ export default function DiaryCard({ post }: IDiaryCard) {
                 </p>
               </div>
             </div>
-            <PostContextMenu post={post} />
+            {readingHistoryId ? (
+              <PostReadingHistoryContextMenu
+                readingHistoryId={readingHistoryId}
+              />
+            ) : (
+              <PostContextMenu post={post} />
+            )}
           </div>
           <h1 className="line-clamp-3 text-sm font-bold">
             {post.diary?.title}
