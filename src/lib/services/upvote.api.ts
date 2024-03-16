@@ -134,6 +134,7 @@ function upvoteOptismiticUpdate(
   const cachedBookmarks = queryClient.getQueryData([QueryKeys.Bookmarks]);
   const cachedSearchedPosts = queryClient.getQueryData([QueryKeys.SearchedPosts, searchQuery]);
   const cachedSharedPosts = queryClient.getQueryData([QueryKeys.GuildSharedPosts, guildId])
+  const cachedReadingHistories = queryClient.getQueryData([QueryKeys.ReadingHistories])
 
   // posts in feed page
   queryClient.setQueryData<InfiniteData<TPage<TPost[]>>>(
@@ -238,6 +239,47 @@ function upvoteOptismiticUpdate(
                                 },
                               }
                             : sharedPost,
+                        )
+                      : [],
+                  };
+                }
+
+                return page;
+              }),
+            }
+          : oldData;
+
+        return newData;
+      },
+    );
+  }
+
+   // posts in history
+   if (cachedReadingHistories) {
+    queryClient.setQueryData<InfiniteData<TPage<TReadingHistory[]>>>(
+      [QueryKeys.ReadingHistories],
+      (oldData) => {
+        const newData = oldData
+          ? {
+              ...oldData,
+              pages: oldData.pages.map((page) => {
+                if (page) {
+                  return {
+                    ...page,
+                    data: page.data
+                      ? page.data.map((readingHistory) =>
+                          readingHistory.post.id === postId
+                            ? {
+                                ...readingHistory,
+                                post: {
+                                  ...readingHistory.post,
+                                  upvoteCount: upvoted
+                                    ? readingHistory.post.upvoteCount + 1
+                                    : readingHistory.post.upvoteCount - 1,
+                                  isUpvoted: upvoted,
+                                },
+                              }
+                            : readingHistory,
                         )
                       : [],
                   };
