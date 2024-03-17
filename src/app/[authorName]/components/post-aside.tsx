@@ -3,7 +3,7 @@
 import { useState } from "react";
 import PostActions from "@/components/shared/post-actions";
 import PostContextMenu from "@/components/ui/post-context-menu";
-import { User} from "@nextui-org/react";
+import { User } from "@nextui-org/react";
 import CommentList from "./comment/comment-list";
 import { useSession } from "next-auth/react";
 import CommentForm from "./comment/comment-form";
@@ -11,7 +11,7 @@ import { FaMedal } from "react-icons/fa";
 
 export default function PostAside({ post }: { post: TPost }) {
   const [isCommentFormOpen, setIsCommentFormOpen] = useState(true);
-  const { data } = useSession();
+  const { status } = useSession();
 
   function toggleOpenCommentForm() {
     setIsCommentFormOpen((prevState) => !prevState);
@@ -23,15 +23,15 @@ export default function PostAside({ post }: { post: TPost }) {
         <div
           className=" flex 
           w-full flex-col justify-between
-          rounded-3xl border border-borderColor p-4 gap-4"
+          gap-4 rounded-3xl border border-borderColor p-4"
         >
           <div className="flex justify-between">
-            <div className="flex gap-2 items-center">
+            <div className="flex items-center gap-2">
               <User
                 as="button"
                 avatarProps={{
                   src: post.author.image,
-                  isBordered: true
+                  isBordered: true,
                 }}
                 className="self-start transition-transform"
                 classNames={{
@@ -41,12 +41,17 @@ export default function PostAside({ post }: { post: TPost }) {
                 description={post.author.email}
                 name={post.author.name}
               />
-              <p className="text-md text-warning -mt-1"><FaMedal/></p>
+              <p className="text-md -mt-1 text-warning">
+                <FaMedal />
+              </p>
             </div>
-            <PostContextMenu
-              post={post}
-              className="border-[1px] border-borderColor bg-background"
-            />
+
+            {status === "authenticated" && (
+              <PostContextMenu
+                post={post}
+                className="border-[1px] border-borderColor bg-background"
+              />
+            )}
           </div>
           <p className="text-navTextColor">{post.author.bio}</p>
           <PostActions
