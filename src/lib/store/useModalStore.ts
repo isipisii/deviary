@@ -22,10 +22,15 @@ type TModalStoreState = {
   openGuildMembersModal: () => void;
   onOpenChangeGuildMembersModal: () => void;
 
-   //for guild join-requests modal 
-   isGuildJoinRequestsModalOpen: boolean
-   openGuildJoinRequestsModal: () => void;
-   onOpenChangeGuildJoinRequestsModal: () => void;
+  //for guild join-requests modal 
+  isGuildJoinRequestsModalOpen: boolean
+  openGuildJoinRequestsModal: () => void;
+  onOpenChangeGuildJoinRequestsModal: () => void;
+
+  //for unauthenticated modal in post page
+  isUnauthenticatedModalOpen: boolean
+  openUnauthenticatedModal: () => void;
+  onOpenChangeUnauthenticatedModal: () => void;
 };
 
 export const useModalStore = create<TModalStoreState>((set, get) => ({
@@ -51,6 +56,11 @@ export const useModalStore = create<TModalStoreState>((set, get) => ({
 
   //for guild join-requests modal 
   isGuildJoinRequestsModalOpen: false,
-  openGuildJoinRequestsModal: () => set({isGuildJoinRequestsModalOpen: true}),
-  onOpenChangeGuildJoinRequestsModal: () => set({isGuildJoinRequestsModalOpen: !get().isGuildJoinRequestsModalOpen})
+  openGuildJoinRequestsModal: () => set({isGuildJoinRequestsModalOpen: true }),
+  onOpenChangeGuildJoinRequestsModal: () => set({ isGuildJoinRequestsModalOpen: !get().isGuildJoinRequestsModalOpen }),
+
+    //for unauthenticated modal in post page
+  isUnauthenticatedModalOpen: false,
+  openUnauthenticatedModal: () => set({ isUnauthenticatedModalOpen: true }),
+  onOpenChangeUnauthenticatedModal: () => set({ isUnauthenticatedModalOpen: !get().isUnauthenticatedModalOpen }),
 }));
