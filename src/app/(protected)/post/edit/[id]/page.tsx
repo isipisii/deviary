@@ -3,6 +3,12 @@ import BlogPostForm from "../../components/blog-post-form";
 import DiaryForm from "../../components/diary-form";
 import PageTitle from "@/components/ui/page-title";
 import { unstable_noStore as noStore } from "next/cache";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Deviary | Edit post",
+  description: `a developer's diary and community`,
+};
 
 export default async function EditPost({ params }: { params: { id: string } }) {
   //to remove caching

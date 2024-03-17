@@ -7,6 +7,12 @@ import {
   HydrationBoundary,
   dehydrate,
 } from "@tanstack/react-query";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Deviary | Bookmarks",
+  description: `a developer's diary and community`,
+};
 
 export default async function BookMarkPage() {
   const queryClient = new QueryClient();

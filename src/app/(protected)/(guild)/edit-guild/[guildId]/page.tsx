@@ -2,6 +2,12 @@ import PageTitle from "@/components/ui/page-title";
 import React from "react";
 import GuildForm from "../../components/guild-form";
 import { getGuildById } from "@/lib/actions";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Deviary | Edit guild",
+  description: `a developer's diary and community`,
+};
 
 export default async function EditGuild({ params }: { params: { guildId: string } }) {
   const guildToEdit = await getGuildById(params.guildId)

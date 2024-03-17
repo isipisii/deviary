@@ -1,5 +1,11 @@
 import CreatePostContainer from "../components/create-post-container";
 import PageTitle from "@/components/ui/page-title";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Deviary | Create post",
+  description: `a developer's diary and community`,
+};
 
 export default function CreatePost() {
   return (

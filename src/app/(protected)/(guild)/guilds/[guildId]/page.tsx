@@ -9,6 +9,28 @@ import { QueryKeys } from "@/lib/constants";
 import { getGuildById } from "@/lib/services/guild.api";
 import { getGuildSharedPosts } from "@/lib/services/guild-shared-posts.api";
 import GuildModalsProvider from "@/components/providers/guild-modals-provider";
+import { Metadata, ResolvingMetadata } from "next";
+import { db } from "@/lib/prisma";
+
+type Props = {
+  params: { guildId: string }
+}
+
+export async function generateMetadata(
+  { params }: Props,
+): Promise<Metadata> {
+ 
+  const guild = await db.guild.findUnique({
+    where: {
+      id: params.guildId
+    }
+  })
+
+  return {
+    title: "Deviary | " + guild?.name,
+    description: `a developer's diary and community`,
+  }
+}
 
 export default async function GuildPage({
   params,

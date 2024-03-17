@@ -1,5 +1,11 @@
 import PageTitle from "@/components/ui/page-title";
 import GuildForm from "../components/guild-form";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Deviary | New guild",
+  description: `a developer's diary and community`,
+};
 
 export default function NewGuild() {
   return (

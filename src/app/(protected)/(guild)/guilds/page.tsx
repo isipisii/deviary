@@ -8,6 +8,12 @@ import {
 import { getGuilds } from "@/lib/services/guild.api";
 import { QueryKeys } from "@/lib/constants";
 import FilterPopover from "@/components/ui/filter-popover";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Deviary | Guilds",
+  description: `a developer's diary and community`,
+};
 
 export default async function GuildsPage() {
   const queryClient = new QueryClient();

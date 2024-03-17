@@ -4,6 +4,12 @@ import { getFeedPosts } from "@/lib/services/post.api";
 import { HydrationBoundary, QueryClient, dehydrate } from "@tanstack/react-query";
 import SearchContainer from "./components/search-container";
 import SearchField from "./components/search-field";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Deviary | Search",
+  description: `a developer's diary and community`,
+};
 
 export default async function SearchPage() {
   const queryClient = new QueryClient()
