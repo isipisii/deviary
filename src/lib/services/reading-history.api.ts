@@ -44,7 +44,6 @@ export function useCreateReadingHistory() {
       await queryClient.invalidateQueries({
         queryKey: [QueryKeys.ReadingHistories],
       });
-      console.log("created")
     },
     onError: (error, postId, context) => {
       console.log(error)
@@ -80,10 +79,10 @@ export function useRemoveReadingHistory() {
                   if (page) {
                     return {
                       ...page,
-                      data: page.data.filter(
+                      data: page.data ? page.data.filter(
                         (readingHistory) =>
                           readingHistory.id !== readingHistoryId,
-                      ),
+                      ) : [],
                     };
                   }
                   return page;
@@ -98,13 +97,13 @@ export function useRemoveReadingHistory() {
       toast.success("Removed from histories");
       return { previousReadingHistories };
     },
-    onError: (error, readingHistory, context) => {
-      queryClient.setQueryData([QueryKeys.ReadingHistories], context?.previousReadingHistories);
-    },
-    onSettled: async () => {
+    onSuccess: async () => {
       await queryClient.invalidateQueries({
         queryKey: [QueryKeys.ReadingHistories],
       });
+    },
+    onError: (error, readingHistory, context) => {
+      queryClient.setQueryData([QueryKeys.ReadingHistories], context?.previousReadingHistories);
     },
   });
 }
