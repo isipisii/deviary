@@ -65,7 +65,7 @@ export function useGetGuildJoinRequests(guildId: string, isGuildPrivate?: boolea
     },
     getNextPageParam: (lastPage) =>
       lastPage.metaData ? lastPage?.metaData.lastCursor : null,
-      enabled: isGuildPrivate
+    enabled: isGuildPrivate
   });
 }
 
