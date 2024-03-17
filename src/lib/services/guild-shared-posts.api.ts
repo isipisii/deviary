@@ -105,6 +105,7 @@ export function useDeleteSharedPost(closeModal: () => void) {
         queryKey: [QueryKeys.GuildSharedPosts, guildId],
       });
       toast.success("Shared post has been deleted.");
+      closeModal()
     },
     onError: async (error: AxiosError<ErrorResponse>) => {
       toast.error("An error occured while deleting the shared post.");
