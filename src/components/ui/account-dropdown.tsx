@@ -12,6 +12,7 @@ import {
   useDisclosure,
 } from "@nextui-org/react";
 
+import Link from "next/link";
 import { PiSignOutBold } from "react-icons/pi";
 import { LuSettings, LuUser2 } from "react-icons/lu";
 import ConfirmationModal from "./confirmation-modal";
@@ -21,10 +22,10 @@ import useLogout from "@/lib/hooks/useLogout";
 export default function AccountDropdown() {
   const { data } = useSession();
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
-  const {  handleLogout, isPending } = useLogout(onClose)
+  const { handleLogout, isPending } = useLogout(onClose);
 
   return (
-    <>  
+    <>
       <ConfirmationModal
         isOpen={isOpen}
         onOpenChange={onOpenChange}
@@ -40,14 +41,14 @@ export default function AccountDropdown() {
       <Dropdown
         placement="bottom-end"
         backdrop="transparent"
-        className="bg-background border border-borderColor"
+        className="border border-borderColor bg-background"
       >
         <DropdownTrigger>
           <User
             as="button"
             avatarProps={{
               src: data?.user?.image ?? "",
-              isBordered: true
+              isBordered: true,
             }}
             classNames={{
               description: "text-navTextColor",
@@ -61,7 +62,7 @@ export default function AccountDropdown() {
         <DropdownMenu aria-label="User Actions" variant="flat">
           <DropdownSection showDivider>
             <DropdownItem key="profile" startContent={<LuUser2 />}>
-              Profile
+              <Link href={`/profile/${data?.user.id}`}>Profile</Link>
             </DropdownItem>
             <DropdownItem key="settings" startContent={<LuSettings />}>
               My Settings
