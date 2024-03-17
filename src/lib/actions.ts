@@ -57,8 +57,8 @@ export async function getPostById(postId: string, authenticatedUserId: string) {
 
     return {
       ...rest,
-      isUpvoted: _count?.upvotes > 0,
-      isBookmarked: _count.bookmarks > 0,
+      isUpvoted: authenticatedUserId ? _count?.upvotes > 0 : false,
+      isBookmarked: authenticatedUserId ? _count.bookmarks > 0 : false,
     } as TPost;
   }
 }
