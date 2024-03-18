@@ -13,7 +13,7 @@ export default function CommentNotificationCard({
   notification: TNotification;
 }) {
   const { sender, comment, createdAt } = notification;
-
+  
   return (
     <Link href={formatPostHref(comment?.post as TPost)} className="w-full">
       <div className="relative flex w-full gap-4 p-5 hover:bg-[#a8a7a716] transition-all duration-1000 ease-in-out ">

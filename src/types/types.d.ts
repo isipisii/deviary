@@ -10,6 +10,12 @@ type TUser = {
   name: string;
   bio?: string;
   image: string;
+  social?: {
+    facebook?: string
+    github?: string
+  }
+  // username: string
+  createdAt: Date
 };
 
 type TPage<TData> = {

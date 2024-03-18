@@ -53,7 +53,10 @@ export default function ReadingHistoriesContainer() {
                     key={readingHistory.id}
                     className="w-full max-w-[350px]"
                   >
-                    <BlogPostCard post={readingHistory.post} />
+                    <BlogPostCard
+                      post={readingHistory.post}
+                      readingHistoryId={readingHistory.id}
+                    />
                   </div>
                 );
               }
@@ -63,7 +66,10 @@ export default function ReadingHistoriesContainer() {
                   key={readingHistory.id}
                   className="w-full max-w-[350px]"
                 >
-                  <DiaryCard post={readingHistory.post} />
+                  <DiaryCard
+                    post={readingHistory.post}
+                    readingHistoryId={readingHistory.id}
+                  />
                 </div>
               );
             }
@@ -73,11 +79,16 @@ export default function ReadingHistoriesContainer() {
                 <BlogPostCard
                   post={readingHistory.post}
                   key={readingHistory.id}
+                  readingHistoryId={readingHistory.id}
                 />
               );
             }
             return (
-              <DiaryCard post={readingHistory.post} key={readingHistory.id} />
+              <DiaryCard
+                post={readingHistory.post}
+                key={readingHistory.id}
+                readingHistoryId={readingHistory.id}
+              />
             );
           }),
       )}

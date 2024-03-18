@@ -6,12 +6,21 @@ import { Button } from "@nextui-org/react";
 import { FaRegComments } from "react-icons/fa6";
 import { TbArrowBigUp, TbArrowBigUpFilled, TbShare3 } from "react-icons/tb";
 import { useUpvoteComment, useRemoveUpvoteComment } from "@/lib/services/upvote-comment.api";
+import { useModalStore } from "@/lib/store/useModalStore";
+import { useSession } from "next-auth/react";
 
 export default function CommentActions({ toggleReplyForm, comment }: { toggleReplyForm: () => void, comment: TComment }) {
+  const { status } = useSession()
+  const { openUnauthenticatedModal } = useModalStore(state => state)
   const { mutate: upvoteCommentMutation } = useUpvoteComment()
   const { mutate: removeCommentUpvoteMutation } = useRemoveUpvoteComment()
 
   function handleUpvote() {
+    if(status === "unauthenticated") {
+      openUnauthenticatedModal()
+      return
+    }
+    
     comment.isUpvoted ? removeCommentUpvoteMutation(comment) : upvoteCommentMutation(comment) 
   }
 

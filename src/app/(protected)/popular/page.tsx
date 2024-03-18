@@ -7,6 +7,13 @@ import {
   dehydrate,
 } from "@tanstack/react-query";
 import PopularPostsContainer from "./components/popular-posts-container"
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Deviary | Popular",
+  description: `a developer's diary and community`,
+};
+
 
 export default async function PopularPage() {
   const queryClient = new QueryClient();

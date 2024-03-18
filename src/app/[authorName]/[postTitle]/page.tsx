@@ -11,6 +11,7 @@ import { QueryKeys } from "@/lib/constants";
 import { getPostComments } from "@/lib/services/comments.api";
 import DiaryPost from "../components/diary-post";
 import BackButton from "../components/back-button";
+import UnauthenticatedModal from "@/components/ui/unauthenticated-modal";
 
 export default async function PostPage({
   params,
@@ -35,6 +36,7 @@ export default async function PostPage({
   return (
     <>
       <TopNav />
+      <UnauthenticatedModal />
       <HydrationBoundary state={dehydrate(queryClient)}>
         <div className="relative mt-[73px] flex items-center justify-center">
           <BackButton />

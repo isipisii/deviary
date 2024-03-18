@@ -18,6 +18,7 @@ import {
 import { cn } from "@/utils/cn";
 import z from "zod";
 import { useParams } from "next/navigation";
+import { useModalStore } from "@/lib/store/useModalStore";
 
 interface ICommentForm {
   isEditing?: boolean;
@@ -41,9 +42,10 @@ export default function CommentForm({
   textAreaProps,
   initialValue,
 }: ICommentForm) {
+  const { openUnauthenticatedModal } = useModalStore(state => state)
   const params = useParams<{ authorName: string, postTitle: string}>()
   const postId = params.postTitle.split("-").at(-1) as string
-  const { data } = useSession();
+  const { data, status } = useSession();
   const {
     register,
     handleSubmit,
@@ -53,6 +55,7 @@ export default function CommentForm({
   } = useForm<TCommentSchema>({
     resolver: zodResolver(commentSchema),
   });
+
   const { mutate: createCommentMutation, isPending: isCreatingComment } =
     useCreateComment(reset);
   const { mutate: createReplyMutation, isPending: isCreatingReply } =
@@ -69,10 +72,20 @@ export default function CommentForm({
   }
 
   function handleSubmitComment(formData: TCommentSchema) {
+    if(status === "unauthenticated") {
+      openUnauthenticatedModal()
+      return
+    } 
+
     createCommentMutation({ content: formData.content, postId });
   }
 
   function handleSubmitReply(formData: TCommentSchema) {
+    if(status === "unauthenticated") {
+      openUnauthenticatedModal()
+      return
+    } 
+
     if (!comment) return;
     createReplyMutation({
       content: formData.content,

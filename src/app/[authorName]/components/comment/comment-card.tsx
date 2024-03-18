@@ -22,7 +22,7 @@ export default function CommentCard({
 }) {
   const [isEditing, setIsEditing] = useState(false);
   const [isReplying, setIsReplying] = useState(false);
-  const { data } = useSession();
+  const { data, status } = useSession();
 
   function showEditForm() {
     setIsEditing(true);
@@ -74,7 +74,7 @@ export default function CommentCard({
               </p>
             )}
           </div>
-          {data?.user.id === comment.userId && (
+          {data?.user.id === comment.userId && status === "authenticated" && (
             <CommentContextMenu comment={comment} showEditForm={showEditForm} />
           )}
         </div>

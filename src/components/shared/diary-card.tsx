@@ -5,12 +5,14 @@ import formatDate from "@/utils/formatDate";
 import formatPostHref from "@/utils/formatPostHref";
 import Link from "next/link";
 import SyntaxHighlighter from "./syntax-highlighter";
+import PostReadingHistoryContextMenu from "../ui/post-reading-history-context-menu";
 
 interface IDiaryCard {
   post: TPost;
+  readingHistoryId?: string;
 }
 
-export default function DiaryCard({ post }: IDiaryCard) {
+export default function DiaryCard({ post, readingHistoryId }: IDiaryCard) {
   return (
     <Link href={formatPostHref(post)} className=" w-full max-w-[350px]">
       <div
@@ -20,20 +22,28 @@ export default function DiaryCard({ post }: IDiaryCard) {
       >
         <div className="grid gap-3">
           <div className="flex justify-between">
-            <div className="flex items-center gap-2">
-              <Avatar
-                src={post.author?.image as string}
-                className="h-[40px] w-[40px]"
-                isBordered
-              />
-              <div>
-                <p className="text-sm font-semibold">{post.author?.name}</p>
-                <p className="text-[.7rem] text-[#878080]">
-                  {formatDate(post.createdAt)}
-                </p>
+            <Link href={`/profile/${post.authorId}`}>
+              <div className="flex items-center gap-2">
+                <Avatar
+                  src={post.author?.image as string}
+                  className="h-[40px] w-[40px]"
+                  isBordered
+                />
+                <div>
+                  <p className="text-sm font-semibold">{post.author?.name}</p>
+                  <p className="text-[.7rem] text-[#878080]">
+                    {formatDate(post.createdAt)}
+                  </p>
+                </div>
               </div>
-            </div>
-            <PostContextMenu post={post} />
+            </Link>
+            {readingHistoryId ? (
+              <PostReadingHistoryContextMenu
+                readingHistoryId={readingHistoryId}
+              />
+            ) : (
+              <PostContextMenu post={post} />
+            )}
           </div>
           <h1 className="line-clamp-3 text-sm font-bold">
             {post.diary?.title}

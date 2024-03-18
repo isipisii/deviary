@@ -8,6 +8,7 @@ const pusherServer = getPusherInstance();
 
 export const GET = async (request: NextRequest) => {
   const session = await getServerSideSession();
+  const isAuthenticated = !!session?.user.id
   const url = new URL(request.url);
   const postId = url.searchParams.get("postId") as string;
   const take = url.searchParams.get("take");
@@ -122,12 +123,12 @@ export const GET = async (request: NextRequest) => {
 
       return {
         ...commentRestFields,
-        isUpvoted: _count.upvotes > 0,
+        isUpvoted: isAuthenticated ? _count.upvotes > 0 : false,
         commentReplies: comment.commentReplies.map((commentReply) => {
           const { _count, ...commentReplyRestFields } = commentReply;
           return {
             ...commentReplyRestFields,
-            isUpvoted: _count.upvotes > 0,
+            isUpvoted: isAuthenticated ? _count.upvotes > 0 : false,
           };
         }),
       };
@@ -279,7 +280,7 @@ export const POST = async (request: NextRequest) => {
       });
     }
 
-    const {_count, ...rest} = newComment
+    const { _count, ...rest } = newComment
     const newCommentWithoutAggregateField = {
       ...rest,
       isUpvoted: _count.upvotes > 0 

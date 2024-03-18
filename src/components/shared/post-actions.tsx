@@ -9,8 +9,7 @@ import CustomTooltip from "../ui/custom-tooltip";
 import { useState } from "react";
 import { useUpvote, useRemoveUpvote } from "@/lib/services/upvote.api";
 import formatPostHref from "@/utils/formatPostHref";
-import { useDisclosure } from "@nextui-org/react";
-import ShareModal from "../ui/share-modal";
+import { useSession } from "next-auth/react";
 import { useModalStore } from "@/lib/store/useModalStore";
 
 export default function PostActions({
@@ -24,14 +23,14 @@ export default function PostActions({
   toggleOpenCommentForm?: () => void;
   isCommentFormOpen?: boolean;
 }) {
+  const { status } = useSession()
   const router = useRouter();
   const { mutate: upvoteMutation } = useUpvote();
   const { mutate: removeUpvoteMutation } = useRemoveUpvote();
   const [postPageState, setPostPageState] = useState<TPost>(post);
-  const { onOpen, onOpenChange, isOpen } = useDisclosure();
-  const { openShareModal, setPostToShare }  = useModalStore((state) => state)
+  const { openShareModal, setPostToShare,  openUnauthenticatedModal  }  = useModalStore((state) => state)
 
-  // this is for card components
+  // this is for cards components in protected routes
   function handleToggleUpvote() {
     if (post.isUpvoted) {
       removeUpvoteMutation(post.id);
@@ -42,6 +41,11 @@ export default function PostActions({
 
   // this is for post page
   function handleToggleUpvoteInPostPage() {
+    if(status === "unauthenticated") {
+      openUnauthenticatedModal()
+      return
+    } 
+
     if (postPageState.isUpvoted) {
       removeUpvoteMutation(postPageState.id);
       setPostPageState((prevState) => ({

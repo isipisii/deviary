@@ -5,6 +5,12 @@ import { getFeedPosts } from "@/lib/services/post.api";
 import FilterPopover from "@/components/ui/filter-popover";
 import { QueryKeys } from "@/lib/constants";
 import PageTitle from "@/components/ui/page-title";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Deviary | Feed",
+  description: `a developer's diary and community`,
+};
 
 export default async function Feed() {
   const queryClient = new QueryClient()

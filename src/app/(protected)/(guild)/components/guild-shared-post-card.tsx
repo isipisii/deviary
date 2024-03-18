@@ -90,7 +90,7 @@ export function SharedBlogPostCard({
           src={thumbnail?.imageUrl}
           alt="thumbnail"
           removeWrapper
-          className="absolute left-0 top-0 z-[5] h-full w-full rounded-3xl object-cover"
+          className="absolute left-0 top-0 z-[5] h-full w-full rounded-2xl object-cover"
         />
         <div
           className="absolute bottom-0 left-0 z-[6] h-full w-full rounded-2xl bg-gradient-to-t from-[#0C1319]

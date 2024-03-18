@@ -4,6 +4,12 @@ import PageTitle from '@/components/ui/page-title'
 import ReadingHistoriesContainer from './components/reading-histories-container'
 import { QueryKeys } from '@/lib/constants'
 import { getReadingHistories } from '@/lib/services/reading-history.api'
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Deviary | History",
+  description: `a developer's diary and community`,
+};
 
 export default async function HistoryPage() {
   const queryClient = new QueryClient()

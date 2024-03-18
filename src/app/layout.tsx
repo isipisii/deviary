@@ -11,10 +11,11 @@ export const metadata: Metadata = {
   description: `a developer's diary and community`,
 };
 
-export default async function RootLayout({ children }: {
+export default async function RootLayout({
+  children,
+}: {
   children: React.ReactNode;
 }) {
-
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={"bg-background"}>
@@ -27,7 +28,12 @@ export default async function RootLayout({ children }: {
           boxShadow="2px"
         />
         <Providers>
-          <Toaster richColors expand={true} position="bottom-right" className="bg-background" />
+          <Toaster
+            richColors
+            expand={true}
+            position="bottom-right"
+            className="bg-background"
+          />
           {children}
         </Providers>
       </body>

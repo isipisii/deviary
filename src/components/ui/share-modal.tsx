@@ -18,8 +18,10 @@ import { FaCheck } from "react-icons/fa6";
 import { useState } from "react";
 import { FaArrowLeft } from "react-icons/fa6";
 import SharePostForm from "@/app/(protected)/(guild)/components/share-post-form";
+import { useSession } from "next-auth/react";
 
 export default function ShareModal() {
+  const { status } = useSession();
   const queryClient = useQueryClient();
   const [isCopied, setIsCopied] = useState(false);
   const [selectedGuild, setSelectedGuild] = useState<TGuild | null>(null);
@@ -89,36 +91,40 @@ export default function ShareModal() {
               {/* right */}
               {!selectedGuild && (
                 <div className="flex w-full flex-col gap-4">
-                  <div className="flex flex-col gap-2">
-                    <h3 className="text-sm font-semibold text-navTextColor">
-                      Share to guild
-                    </h3>
+                  {userGuilds && userGuilds?.length > 0 && (
+                    <div className="flex flex-col gap-2">
+                      <h3 className="text-sm font-semibold text-navTextColor">
+                        Share to guild
+                      </h3>
 
-                    <div className="flex gap-3">
-                      {userGuilds?.map((guild, index) => (
-                        <div
-                          key={index}
-                          className="flex flex-col flex-wrap items-center gap-1"
-                          onClick={() => setSelectedGuild(guild.guild)}
-                        >
-                          <div className="rounded-md p-2">
-                            <Avatar
-                              isBordered
-                              src={guild.guild.image.imageUrl}
-                              alt="guild-image"
-                              className="h-[40px] w-[40px]"
-                            />
+                      <div className="flex gap-3">
+                        {userGuilds?.map((guild, index) => (
+                          <div
+                            key={index}
+                            className="flex flex-col flex-wrap items-center gap-1"
+                            onClick={() => setSelectedGuild(guild.guild)}
+                          >
+                            <div className="rounded-md p-2">
+                              <Avatar
+                                isBordered
+                                src={guild.guild.image.imageUrl}
+                                alt="guild-image"
+                                className="h-[40px] w-[40px]"
+                              />
+                            </div>
+                            <p className="text-xs">{guild.guild.name}</p>
                           </div>
-                          <p className="text-xs">{guild.guild.name}</p>
-                        </div>
-                      ))}
+                        ))}
+                      </div>
                     </div>
-                  </div>
+                  )}
 
                   <div className="flex flex-col gap-2">
-                    <h3 className="text-sm font-semibold text-navTextColor">
-                      Others
-                    </h3>
+                    {status === "authenticated" && (
+                      <h3 className="text-sm font-semibold text-navTextColor">
+                        Others
+                      </h3>
+                    )}
 
                     <div className="flex gap-4">
                       <div className="flex flex-col flex-wrap items-center gap-1">

@@ -7,6 +7,20 @@ import {
 import { getPostsByTag } from "@/lib/services/tag.api";
 import { QueryKeys } from "@/lib/constants";
 import PostsByTagContainer from "../component/PostsByTagContainer"
+import { Metadata } from "next";
+
+type Props = {
+  params: { tagName: string }
+}
+
+export function generateMetadata(
+  { params }: Props,
+): Metadata {
+  return {
+    title: `Deviary | Tag: ${params.tagName}`,
+    description: `a developer's diary and community`,
+  }
+}
 
 export default async function TagsPage({ params }: { params: {tagName: string }}) {
   const queryClient = new QueryClient();
