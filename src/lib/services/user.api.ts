@@ -3,6 +3,18 @@ import { QueryKeys } from "../constants";
 import axios, { AxiosError } from "axios";
 import { toast } from "sonner";
 
+export async function  getUserById(userId: string) {
+  const res = await axios.get(`/api/users/${userId}`)
+  return res.data.user as TUser
+}
+
+export function useGetUserById(userId: string) {
+  return useQuery({
+    queryKey: [QueryKeys.User, userId],
+    queryFn: () => getUserById(userId),
+  })
+}
+
 export function useApplyFeedFilter() {
   const queryClient = useQueryClient();
   return useMutation({
