@@ -22,19 +22,21 @@ export default function DiaryCard({ post, readingHistoryId }: IDiaryCard) {
       >
         <div className="grid gap-3">
           <div className="flex justify-between">
-            <div className="flex items-center gap-2">
-              <Avatar
-                src={post.author?.image as string}
-                className="h-[40px] w-[40px]"
-                isBordered
-              />
-              <div>
-                <p className="text-sm font-semibold">{post.author?.name}</p>
-                <p className="text-[.7rem] text-[#878080]">
-                  {formatDate(post.createdAt)}
-                </p>
+            <Link href={`/profile/${post.authorId}`}>
+              <div className="flex items-center gap-2">
+                <Avatar
+                  src={post.author?.image as string}
+                  className="h-[40px] w-[40px]"
+                  isBordered
+                />
+                <div>
+                  <p className="text-sm font-semibold">{post.author?.name}</p>
+                  <p className="text-[.7rem] text-[#878080]">
+                    {formatDate(post.createdAt)}
+                  </p>
+                </div>
               </div>
-            </div>
+            </Link>
             {readingHistoryId ? (
               <PostReadingHistoryContextMenu
                 readingHistoryId={readingHistoryId}
