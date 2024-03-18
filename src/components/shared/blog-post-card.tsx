@@ -43,12 +43,13 @@ export default function BlogPostCard({
           <div className="absolute bottom-4 left-1/2 z-[6] flex w-[90%] -translate-x-1/2 flex-col justify-center gap-3">
             <div className="flex flex-col gap-1">
               <div className="flex justify-between">
-                <Avatar
-                  src={image as string}
-                  className="w-[40px h-[40px]"
-                  isBordered
-                />
-
+                <Link href={`/profile/${post.authorId}`}>
+                  <Avatar
+                    src={image as string}
+                    className="w-[40px h-[40px]"
+                    isBordered
+                  />
+                </Link>
                 {readingHistoryId ? (
                   <PostReadingHistoryContextMenu
                     readingHistoryId={readingHistoryId}
