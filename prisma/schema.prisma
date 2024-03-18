@@ -55,12 +55,14 @@ model Social {
 model User {
   id                    String @id @default(auto()) @map("_id") @db.ObjectId
   name                  String?
+  username              String? @unique
   email                 String? @unique
   password              String?
   bio                   String?
   emailVerified         DateTime?
   image                 String?
   onboarded             Boolean?  @default(false)
+  backgroundImage       Image?
   social                Social?
   followedTags          String[] @default([])
   feedFilter            FeedFilter?
