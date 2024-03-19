@@ -46,6 +46,11 @@ life's been stressing me out, fuck. */
     gap: 4px;
 }
  
+/* .profile-upper {
+    display: flex;
+    align-items: end;
+    flex-direction: row;
+} */
 
 @media (max-width: 1024px) {
     .guild-details {
@@ -57,4 +62,9 @@ life's been stressing me out, fuck. */
     .guild-details-skeleton-container {
         align-items: center;
     }
+    /* .profile-upper {
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+    } */
 }

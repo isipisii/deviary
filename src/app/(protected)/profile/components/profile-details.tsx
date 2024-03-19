@@ -11,25 +11,25 @@ export default function ProfileDetails({ user }: { user?: TUser }) {
   }
   
   return (
-    <div className="flex w-full flex-col gap-[6rem]">
-      <div className="relative w-full">
+    <div className="flex w-full flex-col">
+      <div className="w-full">
         <Image
           isBlurred
           src="https://img.freepik.com/free-vector/hand-painted-watercolor-pastel-sky-background_23-2148902771.jpg"
           alt="thumbnail"
           removeWrapper
-          className="left-0 top-0 z-[5] h-[150px] w-full rounded-xl object-cover"
+          className="left-0 top-0 z-[0] h-[150px] w-full rounded-xl object-cover"
         />
 
-        <div className="absolute md:-bottom-[50%] -bottom-[40%] left-8 z-[6] flex items-end gap-3">
+        <div className="flex flex-col z-[10] -mt-10 px-4 gap-3">
           <Avatar
             src={user?.image}
             isBordered
-            className="md:h-[150px] md:w-[150px] h-[120px] w-[120px]"
+            className="md:h-[130px] md:w-[130px] h-[90px] w-[90px]"
           />
           <div>
-            <h2 className="md:text-2xl text-[1.3rem] font-bold">{user?.name}</h2>
-            <p className="md:text-sm text-[.75rem]">
+            <h2 className="md:text-2xl text-[1.4rem] font-bold">{user?.name}</h2>
+            <p className="text-sm">
               @{user?.name.toLowerCase()}{" "}
               <span className="font-semibold text-navTextColor">
                 {" "}
@@ -39,6 +39,7 @@ export default function ProfileDetails({ user }: { user?: TUser }) {
           </div>
         </div>
       </div>
+
       <div className="flex flex-col gap-2 px-8">
         {user?.bio && <p>{user?.bio}</p>}
         <div className="flex gap-2">
