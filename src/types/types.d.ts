@@ -15,7 +15,7 @@ type TUser = {
     github?: string
   }
   // username: string
-  createdAt: Date
+  createdAt?: Date
 };
 
 type TPage<TData> = {
