@@ -9,7 +9,7 @@ export default function Profile() {
   const { data } = useGetUserById(userId);
   // TODO: CREATE A UI FOR UPDATING THE USER PROFILE
   return (
-    <div className="h-screen w-full flex flex-col gap-4">
+    <div className="w-full flex flex-col gap-4">
       {/* profile details */}
       {data && <ProfileDetails user={data} />}
       {/* user posts and upvotes */}

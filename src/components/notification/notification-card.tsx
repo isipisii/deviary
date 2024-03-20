@@ -44,7 +44,7 @@ export default function NotificationCard({
                 {sender.name}
               </Link>{" "}
               <span className="text-navTextColor">{message}</span> {" "}
-              <Link href={`/guild/${sender.id}`} className="font-semibold">
+              <Link href={`/guild/${guild.id}`} className="font-semibold">
                 {guild.name}
               </Link>
             </p>

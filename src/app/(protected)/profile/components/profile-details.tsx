@@ -11,7 +11,7 @@ export default function ProfileDetails({ user }: { user?: TUser }) {
   }
   
   return (
-    <div className="flex w-full flex-col">
+    <div className="flex w-full flex-col gap-3">
       <div className="w-full">
         <Image
           isBlurred
@@ -40,7 +40,7 @@ export default function ProfileDetails({ user }: { user?: TUser }) {
         </div>
       </div>
 
-      <div className="flex flex-col gap-2 px-8">
+      <div className="flex flex-col gap-2 px-4">
         {user?.bio && <p>{user?.bio}</p>}
         <div className="flex gap-2">
           {user?.social?.github && (

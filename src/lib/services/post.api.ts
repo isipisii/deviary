@@ -30,6 +30,23 @@ export async function getPopularPosts(take: number, lastCursor: string) {
   return response.data.data as TPage<TPost[]>;
 }
 
+export function useGetPostsByAuthor(userId: string, postType?: "BLOG_POST"
+| "CODE_DIARY") {
+  return useInfiniteQuery({
+    queryKey: [QueryKeys.PostsByAuthor, postType, userId],
+    initialPageParam: "",
+    queryFn:  async ({ pageParam: lastCursor }) => {
+      const res = await axios.get(`/api/post/user/${userId}`, {
+        params: { take: 5, lastCursor, type: postType },
+      });
+
+      return res.data.data as TPage<TPost[]>
+    },
+    getNextPageParam: (lastPage) =>
+      lastPage.metaData ? lastPage?.metaData.lastCursor : null,
+  });
+}
+
 export function useGetPopularPosts() {
   return useInfiniteQuery({
     queryKey: [QueryKeys.PopularPosts],
