@@ -7,7 +7,7 @@ export function CustomRadio({ children, ...otherProps }: RadioProps) {
       {...otherProps}
       classNames={{
         description: "text-navTextColor",
-        label: "font-semibold",
+        label: "font-semibold text-sm",
         base: cn(
           "m-0 items-center",
           "max-w-[400px] cursor-pointer rounded-xl gap-4 px-4 py-2 border-2 border-transparent",
