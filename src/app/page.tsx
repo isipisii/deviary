@@ -49,20 +49,20 @@ export default function Home() {
 
         {/* Hero Section Container */}
         <div className="z-30 w-[90%] max-w-[1200px] pt-4">
-          <h1 className="text-center text-[2.5rem] font-bold leading-tight md:text-[3.2rem] md:leading-none lg:text-[4rem] 2xl:text-[4.5rem]">
+          <h1 className="text-center text-[2.3rem] font-bold leading-tight md:text-[3.2rem] md:leading-none lg:text-[4rem] 2xl:text-[4.5rem]">
             <span className="text-white">Where developers</span>
             <br />{" "}
             <span className="bg-gradient-to-b from-[#7334ca] to-[#DD0DB9] bg-clip-text text-transparent">
               write, read, keep, and explore.
             </span>
           </h1>
-          <p className="mt-4 text-center text-[#ECEDEE]/80">
+          {/* <p className="mt-4 text-center text-[#ECEDEE]/80">
             Tech tales to tell,{" "}
             <span className="font-semibold text-white">code diaries</span> to
             swell.{" "}
             <span className="font-semibold text-white">Blog your tech</span>,
             let your code story excel.
-          </p>
+          </p> */}
         </div>
       </section>
 

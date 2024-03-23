@@ -3,16 +3,15 @@
 
 import { sideBarNavs } from "@/lib/constants";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { LuChevronDown, LuChevronLeft } from "react-icons/lu";
 import type { IconType } from "react-icons";
 import { useSideBarNavStore } from "@/lib/store/useSideBarNavStore";
-import { Avatar, Button, CircularProgress, useDisclosure } from "@nextui-org/react";
+import { Avatar, Button, CircularProgress } from "@nextui-org/react";
 import { cn } from "@/utils/cn";
 import CustomTooltip from "../ui/custom-tooltip";
 import { useIsActive } from "@/lib/hooks/useIsActive";
-import SettingsModal from "../ui/settings-modal";
 import { useGetMyGuilds } from "@/lib/services/guild.api";
 
 export function SideBar() {
@@ -151,32 +150,6 @@ export function SideBarNavItem({
 }: ISideBarNavItem) {
   const isActive = useIsActive();
   const { isSideBarMinimized } = useSideBarNavStore((state) => state);
-  const { onOpen, onOpenChange, isOpen } = useDisclosure();
-
-  if (title === "Settings") {
-    return (
-      <>
-        <SettingsModal isOpen={isOpen} onOpenChange={onOpenChange} />
-        <button
-          onClick={onOpen}
-          className={`flex items-center  
-          gap-4 rounded-[1.2rem] bg-light p-2 text-[.9rem] font-[500] transition-all duration-1000 ease-in-out 
-          hover:bg-lightHover ${
-            isActive(href)
-              ? "bg-lightHover font-[600] text-activeNavTextColor"
-              : "text-navTextColor"
-          }`}
-        >
-          {Icon &&  (
-            <p className="rounded-2xl bg-background p-2 text-[1.5rem] text-secondary">
-              <Icon />
-            </p>
-          )}
-          {isSideBarMinimized ? null : title}
-        </button>
-      </>
-    );
-  }
 
   return (
     <Link

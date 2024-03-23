@@ -36,10 +36,10 @@ export const GET = async (
       );
     }
 
-    const { password, guildFilter, feedFilter, ...restUserFiels } = user;
+    const { password, guildFilter, feedFilter, ...restUserFields } = user;
     return NextResponse.json(
       {
-        user: restUserFiels,
+        user: restUserFields,
         success: true,
       },
       {
@@ -115,7 +115,7 @@ export const PATCH = async (
       },
     });
 
-    if (existingUsername) {
+    if (existingUsername && username !== user.username) {
       return NextResponse.json(
         {
           message: "This username is already existing",
@@ -128,11 +128,22 @@ export const PATCH = async (
     }
 
     if (profileImage) {
+      if(user.image) {
+        const url = new URL(user.image)
+        const imageId = url.pathname.split("/").at(-1)?.split(".").at(0) ?? "";
+
+        if(imageId) await utapi.deleteFiles(imageId)
+      }
+
       const response = await utapi.uploadFiles(profileImage);
       uploadedProfileImage = response.data?.url as string;
     }
 
     if (backgroundImage) {
+      if(user?.backgroundImage?.imageKey) {
+        await utapi.deleteFiles(user.backgroundImage.imageKey)
+      }     
+
       const response = await utapi.uploadFiles(backgroundImage);
       uploadedBackgroundImage.imageUrl = response.data?.url as string;
       uploadedBackgroundImage.imageKey = response.data?.key as string;
@@ -181,10 +192,10 @@ export const PATCH = async (
       },
     });
 
-    const { password, guildFilter, feedFilter, ...restUserFiels } = updatedUser;
+    const { password, guildFilter, feedFilter, ...restUserFields } = updatedUser;
     return NextResponse.json(
       {
-        updatedUser: restUserFiels,
+        updatedUser: restUserFields,
         success: true,
       },
       {

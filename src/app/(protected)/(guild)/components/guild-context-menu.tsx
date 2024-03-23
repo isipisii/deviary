@@ -14,8 +14,11 @@ import { useDisclosure } from "@nextui-org/react";
 import ConfirmationModal from "@/components/ui/confirmation-modal";
 import { useLeaveGuild } from "@/lib/services/guild.api";
 import { useModalStore } from "@/lib/store/useModalStore";
+import { FaRegEdit } from "react-icons/fa";
+import { useRouter } from "next/navigation";
 
 export default function GuildContextMenu({ guild }: { guild: TGuild }) {
+  const router = useRouter()
   const { isOpen, onOpenChange, onOpen, onClose } = useDisclosure();
   const { mutate: leaveGuildMutation, isPending } = useLeaveGuild(onClose);
   const { openGuildMembersModal, openGuildJoinRequestsModal } = useModalStore(
@@ -26,17 +29,18 @@ export default function GuildContextMenu({ guild }: { guild: TGuild }) {
     { text: "Members", key: "members", icon: TbUsers },
     { text: "Join Requests", key: "join-requests", icon: LuBoxes },
     { text: "Share guild", key: "share", icon: TbShare3 },
+    { text: "Edit guild", key: "edit-guild", icon: FaRegEdit},
     { text: "Leave guild", key: "leave", icon: PiSignOutBold },
   ];
 
   const filteredItems = !guild.isPrivate
-    ? dropdownItems.filter((item) => item.key !== "join-requests")
+    ? dropdownItems.filter((item) => item.key !== "join-requests" && item.key !== "edit-guild")
     : guild.isGuildCreator || guild.isModerator
       ? dropdownItems
       : guild.isBelong
-        ? dropdownItems.filter((item) => item.key !== "join-requests")
+        ? dropdownItems.filter((item) => item.key !== "join-requests" && item.key !== "edit-guild")
         : dropdownItems.filter(
-            (item) => item.key !== "leave" && item.key !== "join-requests",
+            (item) => item.key !== "leave" && item.key !== "join-requests" && item.key !== "edit-guild",
           );
 
   return (
@@ -103,6 +107,19 @@ export default function GuildContextMenu({ guild }: { guild: TGuild }) {
                   className="rounded-lg"
                   startContent={<item.icon />}
                   onClick={openGuildMembersModal}
+                >
+                  {item.text}
+                </DropdownItem>
+              );
+            }
+
+            if (item.key === "edit-guild") {
+              return (
+                <DropdownItem
+                  key={item.key}
+                  className="rounded-lg"
+                  startContent={<item.icon />}
+                  onClick={() => router.push(`/edit-guild/${guild.id}`)}
                 >
                   {item.text}
                 </DropdownItem>

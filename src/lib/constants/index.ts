@@ -11,7 +11,10 @@ import {
   LuSettings,
   LuPencilLine,
   LuTrash,
+  LuUser2
 } from "react-icons/lu";
+
+import { HiOutlinePaintBrush } from "react-icons/hi2";
 
 import { FaRegBookmark, FaBookmark } from "react-icons/fa6";
 import { FiCopy } from "react-icons/fi";
@@ -102,7 +105,7 @@ export const sideBarNavs: ISideBarNav[] = [
       },
       {
         title: "Settings",
-        href: "/settings",
+        href: "/settings/profile",
         icon: LuSettings,
       },
     ],
@@ -128,6 +131,19 @@ export const mobileSideNavItems = sideBarNavs
         }
       : nav,
   );
+
+  export const settingsSideNavItems = [
+    {
+      title: "Profile",
+      href: "/settings/profile",
+      icon: LuUser2,
+    },
+    {
+      title: "Appearance",
+      href: "/settings/appearance",
+      icon: HiOutlinePaintBrush,
+    },
+  ]
 
 export const postContextMenuItems = [
   {

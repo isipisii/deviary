@@ -43,10 +43,11 @@ export default function OnBoardingForm({ user }: IOnboardingForm) {
   const isButtonDisabled = !(!!watch("name")) || isPending
 
   function handleOnboard(formValues: TOnBoardingSchema) {
-    const { name, githubLink, facebookLink, bio } = formValues;
+    const { name, githubLink, facebookLink, bio, username } = formValues;
     const form = new FormData();
   
     form.append("name", name);
+    form.append("username", name);
     form.append("bio", bio as string);
     form.append("githubLink", githubLink as string)
     form.append("facebookLink", facebookLink as string)
@@ -85,6 +86,18 @@ export default function OnBoardingForm({ user }: IOnboardingForm) {
           errorMessage={errors.name?.message}
           isInvalid={!!errors.name}
           {...register("name")}
+        />
+        <Input
+          label="Username"
+          placeholder="Enter your username"
+          size="md"
+          radius="lg"
+          variant="bordered"
+          isDisabled={isPending}
+          defaultValue={user.email.split("@").at(0)} 
+          errorMessage={errors.username?.message}
+          isInvalid={!!errors.username}
+          {...register("username")}
         />
         <Textarea
           label="Bio"

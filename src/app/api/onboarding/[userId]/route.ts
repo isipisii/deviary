@@ -11,6 +11,7 @@ export const PATCH = async (request: NextRequest, { params }: { params: { userId
 
     const name = body.get("name")
     const bio = body.get("bio")
+    const username = body.get("username")
     const imageFile = body.get("imageFile")
     const githubProfileLink = body.get("githubLink")
     const facebookProfileLink = body.get("facebookLink")
@@ -21,7 +22,8 @@ export const PATCH = async (request: NextRequest, { params }: { params: { userId
         githubLink: githubProfileLink,
         facebookLink: facebookProfileLink,
         name,
-        bio
+        bio,
+        username
     })
 
     try {
@@ -52,6 +54,17 @@ export const PATCH = async (request: NextRequest, { params }: { params: { userId
             message: "User not found",
             success: false
         }, { status: 404 })
+
+        const existingUsername = await db.user.findFirst({
+            where: {
+               username: parsedOnboardingData.data.username
+            }
+        })
+
+        if(existingUsername) return NextResponse.json({
+            message: "This username is already existing",
+            success: false
+        }, { status: 400 })
 
         if(imageFile) {
             const response = await utapi.uploadFiles(imageFile)
@@ -84,6 +97,7 @@ export const PATCH = async (request: NextRequest, { params }: { params: { userId
                 bio: parsedOnboardingData.data.bio ,
                 ...(uploadedImage && { image: uploadedImage}),
                 onboarded: true,
+                username: parsedOnboardingData.data.username
             },  
             select: {
                 id: true,

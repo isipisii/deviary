@@ -2,9 +2,17 @@ import { db } from "@/lib/prisma";
 import { NextResponse, NextRequest } from "next/server";
 import { getServerSideSession } from "@/lib/auth";
 import { getPusherInstance } from "@/lib/pusher/server";
-import { userSelectedFields } from "../notifications/route";
+// import { userSelectedFields } from "../notifications/route";
 
 const pusherServer = getPusherInstance();
+
+const userSelectedFields = {
+  name: true,
+  email: true,
+  image: true,
+  username: true,
+  id: true
+}
 
 export const GET = async (request: NextRequest) => {
   const session = await getServerSideSession();
@@ -56,18 +64,14 @@ export const GET = async (request: NextRequest) => {
           include: {
             user: {
               select: {
-                name: true,
-                email: true,
-                image: true,
+                ...userSelectedFields
               },
             },
             parent: {
               include: {
                 user: {
                   select: {
-                    name: true,
-                    email: true,
-                    image: true,
+                   ...userSelectedFields
                   },
                 },
               },
