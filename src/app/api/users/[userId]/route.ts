@@ -140,7 +140,7 @@ export const PATCH = async (
     }
 
     if (backgroundImage) {
-      if(user?.backgroundImage?.imageKey) {
+      if(user?.backgroundImage?.imageKey && backgroundImage) {
         await utapi.deleteFiles(user.backgroundImage.imageKey)
       }     
 
