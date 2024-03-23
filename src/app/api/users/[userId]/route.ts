@@ -76,10 +76,7 @@ export const PATCH = async (
   const facebookProfileLink = body.get("facebookLink");
 
   let uploadedProfileImage;
-  let uploadedBackgroundImage = {
-    imageUrl: "",
-    imageKey: "",
-  };
+  let uploadedBackgroundImage;
 
   try {
     if (!session)
@@ -130,7 +127,7 @@ export const PATCH = async (
     if (profileImage) {
       if(user.image) {
         const url = new URL(user.image)
-        const imageId = url.pathname.split("/").at(-1)?.split(".").at(0) ?? "";
+        const imageId = url.pathname.split("/").at(-1);
 
         if(imageId) await utapi.deleteFiles(imageId)
       }
@@ -140,13 +137,15 @@ export const PATCH = async (
     }
 
     if (backgroundImage) {
-      if(user?.backgroundImage?.imageKey && backgroundImage) {
+      if(user?.backgroundImage?.imageKey) {
         await utapi.deleteFiles(user.backgroundImage.imageKey)
       }     
 
       const response = await utapi.uploadFiles(backgroundImage);
-      uploadedBackgroundImage.imageUrl = response.data?.url as string;
-      uploadedBackgroundImage.imageKey = response.data?.key as string;
+      uploadedBackgroundImage = {
+        imageUrl: response.data?.url as string,
+        imageKey: response.data?.key as string
+      }
     }
 
     await db.social.upsert({
@@ -177,8 +176,8 @@ export const PATCH = async (
         }),
         ...(uploadedBackgroundImage && {
           backgroundImage: {
-            imageKey: uploadedBackgroundImage.imageKey,
-            imageUrl: uploadedBackgroundImage.imageUrl,
+            imageKey: uploadedBackgroundImage.imageKey as string,
+            imageUrl: uploadedBackgroundImage.imageUrl as string,
           },
         }),
       },
