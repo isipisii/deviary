@@ -7,9 +7,11 @@ type TUser = {
   id: readonly string;
   email: string;
   onboarded?: boolean;
+  username: string
   name: string;
   bio?: string;
   image: string;
+  backgroundImage?: TImage
   social?: {
     facebook?: string
     github?: string
