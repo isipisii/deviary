@@ -15,13 +15,12 @@ import { RiArticleFill } from "react-icons/ri";
 import PostsSkeletonLoader from "@/components/skeleton-loaders/posts-skeleton-loader";
 import DiaryCard from "@/components/shared/diary-card";
 import BlogPostCard from "@/components/shared/blog-post-card";
+import { LuNewspaper } from "react-icons/lu";
 
-// TODO: MAKE THE POST ACTIONS FUNCTIONAL AND CREATE EDIT PROFILE
 export default function UserProfileTabs() {
   const [selectedTabItem, setSelectedTabItem] = useState("posts");
   const router = useRouter();
   const pathname = usePathname();
-  const searchParams = useSearchParams();
 
   useEffect(() => {
     const params = new URLSearchParams();
@@ -57,7 +56,7 @@ export default function UserProfileTabs() {
         key="posts"
         title={
           <div className="flex items-center space-x-2">
-            <FaCode />
+            <LuNewspaper />
             <span>Posts</span>
           </div>
         }
