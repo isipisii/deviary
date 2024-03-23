@@ -43,10 +43,11 @@ export default function OnBoardingForm({ user }: IOnboardingForm) {
   const isButtonDisabled = !(!!watch("name")) || isPending
 
   function handleOnboard(formValues: TOnBoardingSchema) {
-    const { name, githubLink, facebookLink, bio } = formValues;
+    const { name, githubLink, facebookLink, bio, username } = formValues;
     const form = new FormData();
   
     form.append("name", name);
+    form.append("username", name);
     form.append("bio", bio as string);
     form.append("githubLink", githubLink as string)
     form.append("facebookLink", facebookLink as string)
