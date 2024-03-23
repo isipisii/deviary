@@ -86,6 +86,18 @@ export default function OnBoardingForm({ user }: IOnboardingForm) {
           isInvalid={!!errors.name}
           {...register("name")}
         />
+        <Input
+          label="Username"
+          placeholder="Enter your username"
+          size="md"
+          radius="lg"
+          variant="bordered"
+          isDisabled={isPending}
+          defaultValue={user.email.split("@").at(0)} 
+          errorMessage={errors.username?.message}
+          isInvalid={!!errors.username}
+          {...register("username")}
+        />
         <Textarea
           label="Bio"
           placeholder="Short description about yourself"
