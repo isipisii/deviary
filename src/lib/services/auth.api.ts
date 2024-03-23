@@ -35,7 +35,6 @@ export function useOnboard(updateSessionAndToken: (data?: any) => Promise<Sessio
         toast.success("Profile updated")  
         // updates the session in client and jwt in server 
         await updateSessionAndToken({ name: data.name, image: data.image, onboarded: data.onboarded })
-      
         router.push("/feed")
       },
       onError: (error: AxiosError<ErrorResponse>) => {
