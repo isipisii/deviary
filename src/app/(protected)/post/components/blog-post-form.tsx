@@ -64,7 +64,6 @@ export default function BlogPostForm({ postToEdit }: { postToEdit?: Partial<TPos
             labelPlacement="inside"
             isRequired
             label="Title"
-            radius="lg"
             size="sm"
             variant="bordered"
             defaultValue={postToEdit?.blog?.title || ""}
@@ -78,7 +77,7 @@ export default function BlogPostForm({ postToEdit }: { postToEdit?: Partial<TPos
           />
           <MarkdownEditor markdown={content} setValue={setContent} />
           <div className="flex items-center justify-between">
-            <UploadButton
+            {/* <UploadButton
             // button: "bg-light rounded-xl ut-button:bg-light ut-uploading:bg-light ut-uploading:cursor-not-allowed",
               appearance={{
                 allowedContent: "hidden",
@@ -111,7 +110,7 @@ export default function BlogPostForm({ postToEdit }: { postToEdit?: Partial<TPos
               onUploadError={(error: Error) => {
                 toast.error("Something went wrong")
               }}
-            />
+            /> */}
             <Button 
               type="submit" 
               color="secondary" 
