@@ -1,6 +1,3 @@
-"use client"
-
-import { memo } from "react";
 import { Button } from "@nextui-org/react";
 import { ChangeEvent } from "react";
 import { FaImage } from "react-icons/fa";
@@ -12,7 +9,7 @@ interface ILoadThumbnail {
     handleFileChange: (e: ChangeEvent<HTMLInputElement>) => void;
 }
   
-function LoadThumbnail({ selectedImage, handleFileChange, handleRemoveImage }: ILoadThumbnail) {
+export default function LoadThumbnail({ selectedImage, handleFileChange, handleRemoveImage }: ILoadThumbnail) {
   return (
     <div 
         className="flex flex-col items-center gap-2 relative 
@@ -52,5 +49,3 @@ function LoadThumbnail({ selectedImage, handleFileChange, handleRemoveImage }: I
     </div>
   )
 }
-
-export default memo(LoadThumbnail)
