@@ -2,6 +2,38 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { QueryKeys } from "../constants";
 import axios, { AxiosError } from "axios";
 import { toast } from "sonner";
+import { Session } from "next-auth";
+import { useRouter } from "next/navigation";
+import { updateRoute } from "../actions";
+
+export function useUpdateUserProfile(updateSessionAndToken: (data?: any) => Promise<Session | null>) {
+  const router = useRouter()
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationKey: ["updateUserProfile"],
+    mutationFn: async ({ formData, userId }: { formData: FormData; userId: string }) => {
+      const res = await axios.patch(`/api/users/${userId}`, formData)
+      return res.data.updatedUser as TUser
+    },
+    onSuccess: async (user) => {
+      // updates the session in client and jwt in server 
+      await updateSessionAndToken({ name: user.name, image: user.image, onboarded: user.onboarded })
+
+      await queryClient.invalidateQueries({queryKey: [QueryKeys.User, user.id]})
+      await queryClient.invalidateQueries({queryKey: [QueryKeys.PostsByAuthor, null, user.id]})
+      await queryClient.invalidateQueries({queryKey: [QueryKeys.PostsByAuthor, "CODE_DIARY", user.id]})
+      await queryClient.invalidateQueries({queryKey: [QueryKeys.PostsByAuthor, "BLOG_POST", user.id]})
+
+      toast.success("Profile updated")  
+      updateRoute("/settings/profile")
+      router.push(`/profile/${user.id}`)
+    },
+    onError: (error: AxiosError<ErrorResponse>) => {
+      toast.error(error.response?.data.message)
+    },
+  })
+}
 
 export async function  getUserById(userId: string) {
   const res = await axios.get(`/api/users/${userId}`)
