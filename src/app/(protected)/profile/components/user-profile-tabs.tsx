@@ -22,7 +22,6 @@ export default function UserProfileTabs() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const currentTab = searchParams.get("tab")?.toString();
 
   useEffect(() => {
     const params = new URLSearchParams();
@@ -74,7 +73,7 @@ export default function UserProfileTabs() {
           </div>
         }
       >
-        <BlogPosts selectedTab={currentTab} />
+        <BlogPosts />
       </Tab>
       <Tab
         key="code_diary"
@@ -85,7 +84,7 @@ export default function UserProfileTabs() {
           </div>
         }
       >
-        <Diaries selectedTab={currentTab} />
+        <Diaries />
       </Tab>
     </Tabs>
   );
@@ -145,7 +144,7 @@ function Posts() {
   );
 }
 
-function BlogPosts({ selectedTab }: { selectedTab?: string }) {
+function BlogPosts() {
   const { userId } = useParams<{ userId: string }>();
   const { ref, inView } = useInView();
   const { fetchNextPage, hasNextPage, isFetchingNextPage, data, isLoading } =
@@ -179,7 +178,7 @@ function BlogPosts({ selectedTab }: { selectedTab?: string }) {
   );
 }
 
-function Diaries({ selectedTab }: { selectedTab?: string }) {
+function Diaries() {
   const { userId } = useParams<{ userId: string }>();
   const { ref, inView } = useInView();
   const { fetchNextPage, hasNextPage, isFetchingNextPage, data, isLoading } =
