@@ -1,6 +1,6 @@
 import { Avatar, Button } from "@nextui-org/react";
 import React, { ChangeEvent } from "react";
-import { FaImage } from "react-icons/fa6";
+import { LuCamera } from "react-icons/lu";
 import { IoClose } from "react-icons/io5";
 
 interface ILoadAvatar {
@@ -36,12 +36,12 @@ export default function LoadAvatar({
         <Avatar
           showFallback
           fallback={
-            <FaImage className="text-[2rem]"  />
+            <LuCamera className="text-[2rem]"  />
           }
           radius="full"
           className="h-[130px] w-[130px]"
           src={selectedImage || initialImage}
-          classNames={{ base: "border-borderColor border hover:bg-light bg-transparent cursor-pointer" }}
+          classNames={{ base: "border-borderColor border-2 hover:bg-light bg-transparent cursor-pointer" }}
         />
       </label>
       <input
