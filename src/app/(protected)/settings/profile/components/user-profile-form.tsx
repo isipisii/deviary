@@ -24,14 +24,14 @@ export default function UserProfileForm({ user }: { user: TUser }) {
     selectedImageFile: selectedAvatarImageFile,
     handleFileChange: handleAvatarImageChange,
     handleRemoveImage: handleRemoveAvatarImage,
-  } = useLoadImageFile(user.image); 
+  } = useLoadImageFile(user.image);
 
   // for cover image
   const {
     selectedImage: selectedCoverImage,
     selectedImageFile: selectedCoverImageFile,
-    handleFileChange:handleCoverImageFileChange,
-    handleRemoveImage: handleRemoveCoverImage
+    handleFileChange: handleCoverImageFileChange,
+    handleRemoveImage: handleRemoveCoverImage,
   } = useLoadImageFile(user?.backgroundImage?.imageUrl);
 
   const { mutate: updateUserProfileMutation, isPending } =
@@ -65,7 +65,7 @@ export default function UserProfileForm({ user }: { user: TUser }) {
 
   return (
     <form
-      className="flex flex-col gap-4"
+      className="z-[5] flex flex-col gap-4"
       onSubmit={handleSubmit(handleUpdateUserProfile)}
     >
       <div className="flex gap-3">
