@@ -8,7 +8,7 @@ export default function ThemeRadioGroup() {
   const { theme, setTheme } = useTheme();
 
   return (
-    <RadioGroup value={theme} onValueChange={setTheme}>
+    <RadioGroup value={theme} onValueChange={setTheme} className="z-[5]">
       <CustomRadio value="light" size="sm" color="secondary">
         Light
       </CustomRadio>
