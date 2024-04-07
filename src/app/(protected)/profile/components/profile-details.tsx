@@ -1,9 +1,18 @@
+"use client";
+
 import React from "react";
-import { Avatar, Image } from "@nextui-org/react";
+import { Avatar, Button, Image } from "@nextui-org/react";
 import { FaGithub, FaFacebook } from "react-icons/fa";
+import { FiSettings } from "react-icons/fi";
 import formatDate from "@/utils/formatDate";
+import CustomTooltip from "@/components/ui/custom-tooltip";
+import Link from "next/link";
+import { useSession } from "next-auth/react";
 
 export default function ProfileDetails({ user }: { user?: TUser }) {
+  const { data } = useSession();
+  const isAuthenticatedUsersProfile = data?.user.id === user?.id;
+
   function getSocialUsername(url: string) {
     return new URL(url).pathname.split("").slice(1).join("");
   }
@@ -25,12 +34,30 @@ export default function ProfileDetails({ user }: { user?: TUser }) {
             isBordered
             className="h-[90px] w-[90px] md:h-[130px] md:w-[130px]"
           />
+
           <div>
-            <h2 className="text-[1.4rem] font-bold md:text-2xl">
-              {user?.name}
-            </h2>
+            <div className="flex justify-between ">
+              <h2 className="text-[1.4rem] font-bold md:text-2xl">
+                {user?.name}
+              </h2>
+              <CustomTooltip content="Profile settings">
+                {isAuthenticatedUsersProfile && (
+                  <Button
+                    isIconOnly
+                    as={Link}
+                    href="/settings/profile"
+                    color="secondary"
+                    variant="light"
+                    className="rounded-lg"
+                  >
+                    <FiSettings className="text-xl" />
+                  </Button>
+                )}
+              </CustomTooltip>
+            </div>
+
             <p className="text-sm">
-              @{user?.name.toLowerCase()}{" "}
+              @{user?.username}{" "}
               <span className="font-semibold text-navTextColor">
                 {" "}
                 • Joined {formatDate(user?.createdAt as Date)}
